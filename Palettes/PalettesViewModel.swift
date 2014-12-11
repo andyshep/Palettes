@@ -59,25 +59,27 @@ class PalettesViewModel: NSObject, UICollectionViewDataSource {
     func loadPalettes(request:NSURLRequest) -> Void {
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
-        NetworkController.loadURLRequest(request, completion: { (data, error) -> Void in
-            if error != nil {
-                println("error: \(error)")
-            }
-            else if let objs = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: nil) as? NSArray {
+        let signal = NetworkController.signalForRequest(request)
+        
+        signal.subscribeNext({ (result) -> Void in
+            let data = result! as NSData
+            if let objs = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as? NSArray {
                 var palettes: [Palette] = []
-                
+
                 for obj in objs {
                     if let dictionary = obj as? NSDictionary {
                         let palette = Palette(dictionary)
                         palettes.append(palette)
                     }
                 }
-                
+
                 self.palettes += palettes
                 self.collectionView.reloadData()
                 
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             }
+        }, error: { (error) -> Void in
+            println("error: \(error)")
         })
     }
 }

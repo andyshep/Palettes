@@ -12,7 +12,29 @@ typealias NetworkCompletion = (data:NSData?, error:NSError!) -> Void
 
 class NetworkController: NSObject {
     
-    class func loadURLRequest(request:NSURLRequest, completion:NetworkCompletion) {
+    class func signalForRequest(request:NSURLRequest) -> RACSignal {
+        let signal = RACSignal.createSignal { (subscriber) -> RACDisposable! in
+            let task = self.task(request, completion: { (data, error) -> Void in
+                if error != nil {
+                    subscriber.sendError(error)
+                }
+                else {
+                    subscriber.sendNext(data)
+                    subscriber.sendCompleted()
+                }
+            })
+            
+            task.resume()
+            
+            return RACDisposable(block: { () -> Void in
+                task.cancel()
+            })
+        }
+        
+        return signal.replayLazily()
+    }
+    
+    class func task(request:NSURLRequest, completion:NetworkCompletion) -> NSURLSessionTask {
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
             if error == nil {
                 if let httpResponse = response as? NSHTTPURLResponse {
@@ -35,6 +57,6 @@ class NetworkController: NSObject {
             }
         })
         
-        task.resume()
+        return task
     }
 }

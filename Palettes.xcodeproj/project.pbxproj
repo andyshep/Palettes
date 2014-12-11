@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		452256810D1502961064E431 /* libPods-PalettesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB3B63C1C244E094E5389CEB /* libPods-PalettesTests.a */; };
+		B19358C61BCD917FBC84EBB5 /* libPods-Palettes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D89AB9527A43CD6EF29B6C35 /* libPods-Palettes.a */; };
 		F77A444B1A3A5D64004C0990 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A444A1A3A5D64004C0990 /* AppDelegate.swift */; };
 		F77A44521A3A5D64004C0990 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F77A44511A3A5D64004C0990 /* Images.xcassets */; };
 		F77A44551A3A5D64004C0990 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F77A44531A3A5D64004C0990 /* LaunchScreen.xib */; };
@@ -33,6 +35,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5488DD2F9E08469414FE67AE /* Pods-PalettesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PalettesTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PalettesTests/Pods-PalettesTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5A58EEB63084ECEA0A451EA2 /* Pods-PalettesTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PalettesTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PalettesTests/Pods-PalettesTests.release.xcconfig"; sourceTree = "<group>"; };
+		D66E7F3F324FE620C82ADFCF /* Pods-Palettes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Palettes.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Palettes/Pods-Palettes.debug.xcconfig"; sourceTree = "<group>"; };
+		D89AB9527A43CD6EF29B6C35 /* libPods-Palettes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Palettes.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB3B63C1C244E094E5389CEB /* libPods-PalettesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PalettesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F766D39E1A3A5F24003E4A7C /* Palettes-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Palettes-Bridging-Header.h"; sourceTree = "<group>"; };
 		F77A44451A3A5D64004C0990 /* Palettes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Palettes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F77A44491A3A5D64004C0990 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F77A444A1A3A5D64004C0990 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -50,6 +58,7 @@
 		F77A44701A3A5D95004C0990 /* PalettesViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PalettesViewModel.swift; sourceTree = "<group>"; };
 		F77A44711A3A5D95004C0990 /* UIColor+HexColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+HexColors.swift"; sourceTree = "<group>"; };
 		F77A447B1A3A5DD2004C0990 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FA2E52F1AA940E4429907847 /* Pods-Palettes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Palettes.release.xcconfig"; path = "Pods/Target Support Files/Pods-Palettes/Pods-Palettes.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B19358C61BCD917FBC84EBB5 /* libPods-Palettes.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,18 +74,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				452256810D1502961064E431 /* libPods-PalettesTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2A38D708577607A20FCEAF8B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D89AB9527A43CD6EF29B6C35 /* libPods-Palettes.a */,
+				EB3B63C1C244E094E5389CEB /* libPods-PalettesTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F77A443C1A3A5D64004C0990 = {
 			isa = PBXGroup;
 			children = (
 				F77A44471A3A5D64004C0990 /* Palettes */,
 				F77A445D1A3A5D64004C0990 /* PalettesTests */,
 				F77A44461A3A5D64004C0990 /* Products */,
+				FCD50A479E108067024B5BBE /* Pods */,
+				2A38D708577607A20FCEAF8B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -91,6 +113,7 @@
 		F77A44471A3A5D64004C0990 /* Palettes */ = {
 			isa = PBXGroup;
 			children = (
+				F766D39E1A3A5F24003E4A7C /* Palettes-Bridging-Header.h */,
 				F77A447A1A3A5DD2004C0990 /* Main.storyboard */,
 				F77A444A1A3A5D64004C0990 /* AppDelegate.swift */,
 				F77A446A1A3A5D95004C0990 /* ColourLovers.swift */,
@@ -133,6 +156,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		FCD50A479E108067024B5BBE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D66E7F3F324FE620C82ADFCF /* Pods-Palettes.debug.xcconfig */,
+				FA2E52F1AA940E4429907847 /* Pods-Palettes.release.xcconfig */,
+				5488DD2F9E08469414FE67AE /* Pods-PalettesTests.debug.xcconfig */,
+				5A58EEB63084ECEA0A451EA2 /* Pods-PalettesTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -140,9 +174,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F77A44641A3A5D64004C0990 /* Build configuration list for PBXNativeTarget "Palettes" */;
 			buildPhases = (
+				DFAEDF301047BD6634EFC0BA /* Check Pods Manifest.lock */,
 				F77A44411A3A5D64004C0990 /* Sources */,
 				F77A44421A3A5D64004C0990 /* Frameworks */,
 				F77A44431A3A5D64004C0990 /* Resources */,
+				61C3D64261DEB80D77F22CB3 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -157,9 +193,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F77A44671A3A5D64004C0990 /* Build configuration list for PBXNativeTarget "PalettesTests" */;
 			buildPhases = (
+				99D667776B8ACC5FD347E22E /* Check Pods Manifest.lock */,
 				F77A44561A3A5D64004C0990 /* Sources */,
 				F77A44571A3A5D64004C0990 /* Frameworks */,
 				F77A44581A3A5D64004C0990 /* Resources */,
+				08CCB77DE4A655A4D4C72702 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -227,6 +265,69 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		08CCB77DE4A655A4D4C72702 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PalettesTests/Pods-PalettesTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		61C3D64261DEB80D77F22CB3 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Palettes/Pods-Palettes-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		99D667776B8ACC5FD347E22E /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		DFAEDF301047BD6634EFC0BA /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F77A44411A3A5D64004C0990 /* Sources */ = {
@@ -362,26 +463,31 @@
 		};
 		F77A44651A3A5D64004C0990 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D66E7F3F324FE620C82ADFCF /* Pods-Palettes.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Palettes/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Palettes/Palettes-Bridging-Header.h";
 			};
 			name = Debug;
 		};
 		F77A44661A3A5D64004C0990 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA2E52F1AA940E4429907847 /* Pods-Palettes.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Palettes/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Palettes/Palettes-Bridging-Header.h";
 			};
 			name = Release;
 		};
 		F77A44681A3A5D64004C0990 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5488DD2F9E08469414FE67AE /* Pods-PalettesTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -401,6 +507,7 @@
 		};
 		F77A44691A3A5D64004C0990 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A58EEB63084ECEA0A451EA2 /* Pods-PalettesTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -433,6 +540,7 @@
 				F77A44661A3A5D64004C0990 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F77A44671A3A5D64004C0990 /* Build configuration list for PBXNativeTarget "PalettesTests" */ = {
 			isa = XCConfigurationList;
@@ -441,6 +549,7 @@
 				F77A44691A3A5D64004C0990 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
