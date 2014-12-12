@@ -13,12 +13,14 @@ class Palette: NSObject, Printable {
     let username: String
     let colors: [UIColor]
     let widths: [NSNumber]
+    let id: NSNumber
     
     override var description: String {
         return self.title
     }
     
     init(_ dictionary:NSDictionary) {
+        self.id = dictionary.numberValueForKey("id")
         self.title = dictionary.stringValueForKey("title")
         self.username = dictionary.stringValueForKey("userName")
         self.widths = dictionary.numberArrayValueForKey("colorWidths")
@@ -27,30 +29,5 @@ class Palette: NSObject, Printable {
         })
         
         super.init()
-    }
-}
-
-extension NSDictionary {
-    func stringValueForKey(key: String) -> String! {
-        if let string = self[key] as? String {
-            return string
-        }
-        return ""
-    }
-    
-    func numberArrayValueForKey(key: String) -> [NSNumber]! {
-        if let numbers = self.valueForKey(key) as? [NSNumber] {
-            return numbers
-        }
-        
-        return []
-    }
-    
-    func stringArrayValueForKey(key: String) -> [NSString]! {
-        if let strings = self.valueForKey(key) as? [NSString] {
-            return strings
-        }
-        
-        return []
     }
 }

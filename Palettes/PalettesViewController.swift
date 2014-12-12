@@ -18,7 +18,7 @@ class PalettesViewController: UIViewController {
         super.viewDidLoad()
 
         self.title = "Palettes"
-        self.collectionView.backgroundColor = UIColor.lightGrayColor()
+        self.collectionView.backgroundColor = UIColor.blackColor()
         
         self.viewModel = PalettesViewModel(collectionView)
         
