@@ -26,6 +26,7 @@
 		F77A447C1A3A5DD2004C0990 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F77A447A1A3A5DD2004C0990 /* Main.storyboard */; };
 		F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */; };
 		F7C1A4561A3A8F530000B2C7 /* NSDictionary+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */; };
+		F7C1A4591A3A96190000B2C7 /* ReactiveCocoaBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4581A3A96190000B2C7 /* ReactiveCocoaBindings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		F77A447B1A3A5DD2004C0990 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaletteColorView.swift; sourceTree = "<group>"; };
 		F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDictionary+Parsing.swift"; sourceTree = "<group>"; };
+		F7C1A4581A3A96190000B2C7 /* ReactiveCocoaBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactiveCocoaBindings.swift; sourceTree = "<group>"; };
 		FA2E52F1AA940E4429907847 /* Pods-Palettes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Palettes.release.xcconfig"; path = "Pods/Target Support Files/Pods-Palettes/Pods-Palettes.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -135,16 +137,15 @@
 				F77A444A1A3A5D64004C0990 /* AppDelegate.swift */,
 				F7C1A4541A3A8D180000B2C7 /* Model */,
 				F7C1A4511A3A87850000B2C7 /* View */,
+				F7C1A45B1A3AB6020000B2C7 /* Controller */,
+				F7C1A45A1A3AB5EE0000B2C7 /* ViewModel */,
 				F766D3A31A3A8398003E4A7C /* Extensions */,
 				F77A447A1A3A5DD2004C0990 /* Main.storyboard */,
-				F766D39E1A3A5F24003E4A7C /* Palettes-Bridging-Header.h */,
-				F77A446A1A3A5D95004C0990 /* ColourLovers.swift */,
-				F77A446B1A3A5D95004C0990 /* NetworkController.swift */,
-				F77A446F1A3A5D95004C0990 /* PalettesViewController.swift */,
-				F77A44701A3A5D95004C0990 /* PalettesViewModel.swift */,
 				F77A44511A3A5D64004C0990 /* Images.xcassets */,
 				F77A44531A3A5D64004C0990 /* LaunchScreen.xib */,
 				F77A44481A3A5D64004C0990 /* Supporting Files */,
+				F766D39E1A3A5F24003E4A7C /* Palettes-Bridging-Header.h */,
+				F7C1A4581A3A96190000B2C7 /* ReactiveCocoaBindings.swift */,
 			);
 			path = Palettes;
 			sourceTree = "<group>";
@@ -190,6 +191,24 @@
 				F77A446C1A3A5D95004C0990 /* Palette.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		F7C1A45A1A3AB5EE0000B2C7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				F77A44701A3A5D95004C0990 /* PalettesViewModel.swift */,
+			);
+			name = ViewModel;
+			sourceTree = "<group>";
+		};
+		F7C1A45B1A3AB6020000B2C7 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				F77A446A1A3A5D95004C0990 /* ColourLovers.swift */,
+				F77A446B1A3A5D95004C0990 /* NetworkController.swift */,
+				F77A446F1A3A5D95004C0990 /* PalettesViewController.swift */,
+			);
+			name = Controller;
 			sourceTree = "<group>";
 		};
 		FCD50A479E108067024B5BBE /* Pods */ = {
@@ -378,6 +397,7 @@
 				F77A444B1A3A5D64004C0990 /* AppDelegate.swift in Sources */,
 				F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */,
 				F77A44731A3A5D95004C0990 /* NetworkController.swift in Sources */,
+				F7C1A4591A3A96190000B2C7 /* ReactiveCocoaBindings.swift in Sources */,
 				F77A44791A3A5D95004C0990 /* UIColor+HexColors.swift in Sources */,
 				F77A44741A3A5D95004C0990 /* Palette.swift in Sources */,
 				F766D3A01A3A8042003E4A7C /* NSData+JSON.swift in Sources */,

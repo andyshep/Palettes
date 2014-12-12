@@ -9,15 +9,13 @@
 import UIKit
 
 class PalettesViewModel: NSObject, UICollectionViewDataSource {
-    weak var collectionView: UICollectionView!
-    private var palettes: [Palette] = []
+    dynamic var palettes: [Palette] = []
     private let reuseIdentifier = "PaletteCell"
     
     init(_ collectionView:UICollectionView) {
-        self.collectionView = collectionView
         super.init()
         
-        self.collectionView.registerClass(PaletteCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.registerClass(PaletteCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     }
     
     // MARK: - UICollectionViewDataSource
@@ -31,9 +29,7 @@ class PalettesViewModel: NSObject, UICollectionViewDataSource {
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PaletteCell", forIndexPath: indexPath) as PaletteCell
-        
         cell.palette = self.palettes[indexPath.row]
         
         if self.palettes.count - 15 <= indexPath.row {
@@ -44,6 +40,7 @@ class PalettesViewModel: NSObject, UICollectionViewDataSource {
     }
     
     // MARK: - Private
+    
     func loadPalettes() -> Void {
         let parameters = ["format": "json", "showPaletteWidths": "1", "numResults": "100"]
         let request = ColourLovers.TopPalettes.request(parameters)
@@ -72,9 +69,8 @@ class PalettesViewModel: NSObject, UICollectionViewDataSource {
                         palettes.append(palette)
                     }
                 }
-
+                
                 self.palettes += palettes
-                self.collectionView.reloadData()
                 
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             }

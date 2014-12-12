@@ -25,6 +25,10 @@ class PalettesViewController: UIViewController {
         self.collectionView.collectionViewLayout = PalettesFlowLayout()
         self.collectionView.dataSource = self.viewModel
         
+        RACObserve(self.viewModel, "palettes").subscribeNext { (_) -> Void in
+            self.collectionView.reloadData()
+        }
+        
         self.viewModel.loadPalettes()
     }
 
