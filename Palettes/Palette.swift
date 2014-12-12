@@ -29,5 +29,7 @@ class Palette: NSObject, Printable {
         })
         
         super.init()
+        
+        assert(self.colors.count == self.widths.count, "color and color width should be equal")
     }
 }

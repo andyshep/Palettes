@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias NetworkCompletion = (data:NSData?, error:NSError!) -> Void
+typealias TaskCompletion = (data: NSData!, error: NSError!) -> Void
 
 class NetworkController: NSObject {
     
@@ -28,8 +28,8 @@ class NetworkController: NSObject {
         return subject
     }
     
-    class func task(request:NSURLRequest, completion:NetworkCompletion) -> NSURLSessionTask {
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+    class func task(request:NSURLRequest, completion:TaskCompletion) -> NSURLSessionTask {
+        return NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
             if error == nil {
                 if let httpResponse = response as? NSHTTPURLResponse {
                     switch httpResponse.statusCode {
@@ -50,7 +50,5 @@ class NetworkController: NSObject {
                 })
             }
         })
-        
-        return task
     }
 }

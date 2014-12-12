@@ -9,20 +9,12 @@
 import UIKit
 
 class PalettesViewModel: NSObject, UICollectionViewDataSource {
-    dynamic var palettes: [Palette] = []
+    dynamic var palettes: [PaletteViewModel] = []
+    dynamic var loading: NSNumber = NSNumber(bool: false)
+    
     private let reuseIdentifier = "PaletteCell"
     
-    init(_ collectionView:UICollectionView) {
-        super.init()
-        
-        collectionView.registerClass(PaletteCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-    }
-    
     // MARK: - UICollectionViewDataSource
-    
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return 1
-    }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.palettes.count
@@ -30,7 +22,7 @@ class PalettesViewModel: NSObject, UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PaletteCell", forIndexPath: indexPath) as PaletteCell
-        cell.palette = self.palettes[indexPath.row]
+        cell.viewModel = self.palettes[indexPath.row]
         
         if self.palettes.count - 15 <= indexPath.row {
             self.loadPalettes(self.palettes.count)
@@ -39,40 +31,31 @@ class PalettesViewModel: NSObject, UICollectionViewDataSource {
         return cell
     }
     
-    // MARK: - Private
+    // MARK: - Load Palettes
     
     func loadPalettes() -> Void {
-        let parameters = ["format": "json", "showPaletteWidths": "1", "numResults": "100"]
-        let request = ColourLovers.TopPalettes.request(parameters)
-        self.loadPalettes(request)
+        self.loadPalettes(0)
     }
+    
+    // MARK: - Private
     
     func loadPalettes(offset:Int) -> Void {
-        let parameters = ["format": "json", "showPaletteWidths": "1", "numResults": "50", "resultOffset": String(offset)]
-        let request = ColourLovers.TopPalettes.request(parameters)
-        self.loadPalettes(request)
-    }
-    
-    func loadPalettes(request:NSURLRequest) -> Void {
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        self.loading = NSNumber(bool: true)
         
-        let signal = NetworkController.signalForRequest(request)
-        
-        signal.subscribeNext({ (result) -> Void in
-            let data = result! as NSData
-            if let objs = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as? NSArray {
-                var palettes: [Palette] = []
-
-                for obj in objs {
+        let request = ColourLovers.TopPalettes.request(offset)
+        NetworkController.signalForRequest(request).subscribeNext({ (result) -> Void in
+            if let data = result as? NSData {
+                let sequence: RACSequence = data.asArray().rac_sequence
+                let palettes = sequence.map({ (obj) -> AnyObject! in
                     if let dictionary = obj as? NSDictionary {
-                        let palette = Palette(dictionary)
-                        palettes.append(palette)
+                        let palette = PaletteViewModel(palette: Palette(dictionary))
+                        return palette
                     }
-                }
+                    return nil
+                }).array
                 
-                self.palettes += palettes
-                
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                self.palettes += palettes as [PaletteViewModel]
+                self.loading = NSNumber(bool: false)
             }
         }, error: { (error) -> Void in
             println("error: \(error)")

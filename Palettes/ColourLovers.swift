@@ -11,7 +11,6 @@ import Foundation
 typealias Parameters = [String: String]
 
 enum ColourLovers {
-    case Random
     case TopPalettes
     case Palette(String)
 }
@@ -31,8 +30,6 @@ extension ColourLovers: Path {
     
     var path: String {
         switch self {
-        case .Random:
-            return "\(self.baseURL)/random"
         case .TopPalettes:
             return "\(self.baseURL)/palettes/top"
         case .Palette(let id):
@@ -42,6 +39,11 @@ extension ColourLovers: Path {
 }
 
 extension ColourLovers: Request {
+    func request(offset:Int) -> NSURLRequest {
+        let parameters = ["format": "json", "showPaletteWidths": "1", "numResults": "50", "resultOffset": String(offset)]
+        return self.request(parameters)
+    }
+    
     func request(parameters: Parameters) -> NSURLRequest {
         let path = self.path
         let queryString = self.queryStringWithParameters(parameters)
@@ -51,7 +53,6 @@ extension ColourLovers: Request {
     }
     
     func queryStringWithParameters(parameters:Parameters) -> String {
-        // Helper method for building query string from Dictionary
         var queryString = ""
         for parameter in parameters {
             if queryString != "" {

@@ -10,13 +10,11 @@ import UIKit
 
 class PaletteCell: UICollectionViewCell {
     
-    var palette: Palette? {
+    var viewModel: PaletteViewModel? {
         didSet {
-            self.colorView.palette = palette
-            self.titleLabel.text = palette?.title
-            self.subtitleLabel.text = palette?.id.stringValue
-            
-            self.setNeedsDisplay()
+            self.titleLabel.text = viewModel?.name
+            self.subtitleLabel.text = viewModel?.id
+            self.colorView.colors = viewModel?.colors
         }
     }
     
@@ -52,6 +50,8 @@ class PaletteCell: UICollectionViewCell {
         self.addConstraints(subtitleLabelConstraints)
     }
     
+    // MARK: - Constraints
+    
     lazy var titleLabelConstraints: [AnyObject] = {
         var constraints: [AnyObject] = []
         
@@ -82,8 +82,8 @@ class PaletteCell: UICollectionViewCell {
         var constraints: [AnyObject] = []
         
         let views = ["colorView": self.colorView]
-        let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[colorView]-0-|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: views)
-        let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[colorView]-40-|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: views)
+        let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-8-[colorView]-8-|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: views)
+        let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-8-[colorView]-40-|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: views)
         
         constraints += horizontalConstraints
         constraints += verticalConstraints

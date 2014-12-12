@@ -9,9 +9,9 @@
 import UIKit
 
 class PalettesFlowLayout: UICollectionViewFlowLayout {
+    
     override init() {
         super.init()
-        
         self.itemSize = CGSizeMake(UIScreen.mainScreen().bounds.width - 16.0, 172.0)
     }
 

@@ -12,8 +12,9 @@ extension UIColor {
     
     // http://stackoverflow.com/a/27203691
     
-    class func hexColor(hex:String) -> UIColor {
-        var colorString: String = hex.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet() as NSCharacterSet).uppercaseString
+    class func hexColor(string: String) -> UIColor {
+        let set = NSCharacterSet.whitespaceAndNewlineCharacterSet() as NSCharacterSet
+        var colorString = string.stringByTrimmingCharactersInSet(set).uppercaseString
         
         if (colorString.hasPrefix("#")) {
             colorString = colorString.substringFromIndex(advance(colorString.startIndex, 1))
@@ -23,13 +24,13 @@ extension UIColor {
             return UIColor.grayColor()
         }
         
-        var rgbValue:UInt32 = 0
+        var rgbValue: UInt32 = 0
         NSScanner(string: colorString).scanHexInt(&rgbValue)
         
         return UIColor(
-            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            red:   CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
             green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            blue:  CGFloat(rgbValue & 0x0000FF) / 255.0,
             alpha: CGFloat(1.0)
         )
     }

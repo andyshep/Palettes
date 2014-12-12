@@ -10,7 +10,7 @@ import UIKit
 
 class PaletteColorView: UIView {
     
-    var palette: Palette? {
+    var colors: [PaletteColor]? {
         didSet {
             self.setNeedsDisplay()
         }
@@ -18,14 +18,13 @@ class PaletteColorView: UIView {
 
     override func drawRect(rect: CGRect) {
         var offset = CGRectGetMinX(rect)
+        let colors = self.colors ?? [PaletteColor]()
         
-        for index in 0..<self.palette!.widths.count {
-            let color = self.palette!.colors[index]
-            let colorWidth = self.palette!.widths[index]
-            let width = CGRectGetWidth(rect) * CGFloat(colorWidth.floatValue)
+        for color in colors {
+            let width = CGRectGetWidth(rect) * CGFloat(color.width)
             let path = UIBezierPath(rect: CGRectMake(offset, 0, width, CGRectGetHeight(rect)))
             
-            color.setFill()
+            color.fillColor.setFill()
             path.fill()
             
             offset += width

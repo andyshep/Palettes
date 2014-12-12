@@ -18,15 +18,21 @@ class PalettesViewController: UIViewController {
         super.viewDidLoad()
 
         self.title = "Palettes"
-        self.collectionView.backgroundColor = UIColor.blackColor()
         
-        self.viewModel = PalettesViewModel(collectionView)
-        
+        self.collectionView.registerClass(PaletteCell.self, forCellWithReuseIdentifier: "PaletteCell")
         self.collectionView.collectionViewLayout = PalettesFlowLayout()
+        self.collectionView.backgroundColor = UIColor.blackColor()
+        self.collectionView.indicatorStyle = .White
+        
+        self.viewModel = PalettesViewModel()
         self.collectionView.dataSource = self.viewModel
         
         RACObserve(self.viewModel, "palettes").subscribeNext { (_) -> Void in
             self.collectionView.reloadData()
+        }
+        
+        RACObserve(self.viewModel, "loading").subscribeNext { (loading) -> Void in
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = loading.boolValue
         }
         
         self.viewModel.loadPalettes()
