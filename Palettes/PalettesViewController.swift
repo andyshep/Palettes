@@ -12,7 +12,7 @@ class PalettesViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    private var viewModel: PalettesViewModel!
+    private let contentStore = PalettesContentStore()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,18 +24,11 @@ class PalettesViewController: UIViewController {
         self.collectionView.backgroundColor = UIColor.blackColor()
         self.collectionView.indicatorStyle = .White
         
-        self.viewModel = PalettesViewModel()
-        self.collectionView.dataSource = self.viewModel
+        self.collectionView.dataSource = self.contentStore
         
-        RACObserve(self.viewModel, "palettes").subscribeNext { (_) -> Void in
+        RACObserve(self.contentStore, "fetchedResultsController.fetchedObjects").subscribeNext { (_) -> Void in
             self.collectionView.reloadData()
         }
-        
-        RACObserve(self.viewModel, "loading").subscribeNext { (loading) -> Void in
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = loading.boolValue
-        }
-        
-        self.viewModel.loadPalettes()
     }
 
     override func didReceiveMemoryWarning() {
