@@ -20,7 +20,7 @@ protocol Path {
 }
 
 protocol Request {
-    func request(parameters: Parameters) -> NSURLRequest
+    func request(offset:Int) -> NSURLRequest
 }
 
 extension ColourLovers: Path {
@@ -39,6 +39,10 @@ extension ColourLovers: Path {
 }
 
 extension ColourLovers: Request {
+    func request() -> NSURLRequest {
+        return self.request(0)
+    }
+    
     func request(offset:Int) -> NSURLRequest {
         let parameters = ["format": "json", "showPaletteWidths": "1", "numResults": "50", "resultOffset": String(offset)]
         return self.request(parameters)

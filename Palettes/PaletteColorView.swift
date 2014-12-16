@@ -10,7 +10,11 @@ import UIKit
 
 class PaletteColorView: UIView {
     
-    var colors: [PaletteColor]? = []
+    var colors: [PaletteColor]? {
+        didSet {
+            self.setNeedsLayout()
+        }
+    }
     
     override func layoutSublayersOfLayer(layer: CALayer!) {
         let rect = layer.bounds

@@ -1,5 +1,5 @@
 //
-//  Palettes.swift
+//  Palette.swift
 //  Palettes
 //
 //  Created by Andrew Shepard on 12/16/14.

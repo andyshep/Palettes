@@ -26,27 +26,29 @@ class BasicIncrementalStore : NSIncrementalStore {
                 return self.entitiesForFetchRequest(fetchRequest, inContext: context)
             }
         }
+        
         return nil
     }
     
     override func newValuesForObjectWithID(objectID: NSManagedObjectID, withContext context: NSManagedObjectContext, error: NSErrorPointer) -> NSIncrementalStoreNode? {
-        let values = cache.objectForKey(objectID) as NSDictionary
-        var node = NSIncrementalStoreNode(objectID: objectID, withValues: values, version: 1)
-        return node
+        if let values = cache.objectForKey(objectID) as? NSDictionary {
+            return NSIncrementalStoreNode(objectID: objectID, withValues: values, version: 1)
+        }
+        
+        return nil
     }
 
     func entitiesForFetchRequest(request:NSFetchRequest, inContext context:NSManagedObjectContext) -> NSArray! {
-        var entities = NSMutableArray()
+        var entities: [Palette] = []
         let items = DataController.loadPalettesFromJSON()
         
         for item: AnyObject in items {
             if let dictionary = item as? NSDictionary {
                 var objectId = self.objectIdForNewObjectOfEntity(request.entity!, cacheValues: item)
-                var obj = context.objectWithID(objectId)
-                
-                obj.transform(dictionary)
-                
-                entities.addObject(obj)
+                if let palette = context.objectWithID(objectId) as? Palette {
+                    palette.transform(dictionary)
+                    entities.append(palette)
+                }
             }
         }
         
@@ -56,15 +58,14 @@ class BasicIncrementalStore : NSIncrementalStore {
     func objectIdForNewObjectOfEntity(entityDescription:NSEntityDescription, cacheValues values:AnyObject!) -> NSManagedObjectID! {
         if let dict = values as? NSDictionary {
             let nativeKey = entityDescription.name
-            let referenceId: AnyObject! = dict.objectForKey("id")?.stringValue
-            let objectId = self.newObjectIDForEntity(entityDescription, referenceObject: referenceId)
             
-            cache.setObject(values, forKey: objectId)
-            
-            return objectId
+            if let referenceId = dict.objectForKey("id")?.stringValue {
+                let objectId = self.newObjectIDForEntity(entityDescription, referenceObject: referenceId)
+                cache.setObject(values, forKey: objectId)
+                return objectId
+            }
         }
-        else {
-            return nil
-        }
+        
+        return nil
     }
 }

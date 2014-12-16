@@ -34,6 +34,7 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     }
     
     // MARK: - NSFetchedResultsControllerDelegate
+    
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         // TODO: implement
     }
