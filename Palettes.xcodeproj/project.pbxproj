@@ -14,6 +14,7 @@
 		F72F216B1A3FA0DA00FA397C /* palettes.json in Resources */ = {isa = PBXBuildFile; fileRef = F72F216A1A3FA0DA00FA397C /* palettes.json */; };
 		F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F72F216C1A3FA1AE00FA397C /* Palettes.xcdatamodeld */; };
 		F75B0DCC1A40286F00B0F10D /* ArrayTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */; };
+		F76557301A40E7AD00956E11 /* PALIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */; };
 		F766D3A01A3A8042003E4A7C /* NSData+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */; };
 		F77A444B1A3A5D64004C0990 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A444A1A3A5D64004C0990 /* AppDelegate.swift */; };
 		F77A44521A3A5D64004C0990 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F77A44511A3A5D64004C0990 /* Images.xcassets */; };
@@ -28,6 +29,7 @@
 		F77A44791A3A5D95004C0990 /* UIColor+HexColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A44711A3A5D95004C0990 /* UIColor+HexColors.swift */; };
 		F77A447C1A3A5DD2004C0990 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F77A447A1A3A5DD2004C0990 /* Main.storyboard */; };
 		F78C88EB1A3B65F200145D3B /* PaletteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78C88EA1A3B65F200145D3B /* PaletteViewModel.swift */; };
+		F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79165EA1A420613006E601E /* NSURL+Directories.swift */; };
 		F7A532E31A400FB500D90606 /* BasicIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A532E21A400FB500D90606 /* BasicIncrementalStore.swift */; };
 		F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */; };
 		F7C1A4561A3A8F530000B2C7 /* NSDictionary+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */; };
@@ -57,6 +59,7 @@
 		F72F216A1A3FA0DA00FA397C /* palettes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = palettes.json; sourceTree = "<group>"; };
 		F72F216D1A3FA1AE00FA397C /* Palettes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Palettes.xcdatamodel; sourceTree = "<group>"; };
 		F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTransformer.swift; sourceTree = "<group>"; };
+		F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PALIncrementalStore.swift; sourceTree = "<group>"; };
 		F766D39E1A3A5F24003E4A7C /* Palettes-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Palettes-Bridging-Header.h"; sourceTree = "<group>"; };
 		F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+JSON.swift"; sourceTree = "<group>"; };
 		F77A44451A3A5D64004C0990 /* Palettes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Palettes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +79,7 @@
 		F77A44711A3A5D95004C0990 /* UIColor+HexColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+HexColors.swift"; sourceTree = "<group>"; };
 		F77A447B1A3A5DD2004C0990 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F78C88EA1A3B65F200145D3B /* PaletteViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaletteViewModel.swift; sourceTree = "<group>"; };
+		F79165EA1A420613006E601E /* NSURL+Directories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+Directories.swift"; sourceTree = "<group>"; };
 		F7A532E21A400FB500D90606 /* BasicIncrementalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicIncrementalStore.swift; sourceTree = "<group>"; };
 		F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaletteColorView.swift; sourceTree = "<group>"; };
 		F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDictionary+Parsing.swift"; sourceTree = "<group>"; };
@@ -120,6 +124,7 @@
 				F77A44711A3A5D95004C0990 /* UIColor+HexColors.swift */,
 				F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */,
 				F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */,
+				F79165EA1A420613006E601E /* NSURL+Directories.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -205,6 +210,7 @@
 				F7EB5C571A402C3C00989A04 /* Palette.swift */,
 				F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */,
 				F7A532E21A400FB500D90606 /* BasicIncrementalStore.swift */,
+				F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */,
 				F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */,
 				F7EB5C591A402D6A00989A04 /* NSManagedObject+Palette.swift */,
 				F72F216C1A3FA1AE00FA397C /* Palettes.xcdatamodeld */,
@@ -416,6 +422,8 @@
 				F75B0DCC1A40286F00B0F10D /* ArrayTransformer.swift in Sources */,
 				F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */,
 				F77A44721A3A5D95004C0990 /* ColourLovers.swift in Sources */,
+				F76557301A40E7AD00956E11 /* PALIncrementalStore.swift in Sources */,
+				F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */,
 				F77A44761A3A5D95004C0990 /* PalettesFlowLayout.swift in Sources */,
 				F77A444B1A3A5D64004C0990 /* AppDelegate.swift in Sources */,
 				F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */,

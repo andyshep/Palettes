@@ -24,6 +24,7 @@ class PalettesViewController: UIViewController {
         self.collectionView.backgroundColor = UIColor.blackColor()
         self.collectionView.indicatorStyle = .White
         
+        self.contentStore.collectionView = self.collectionView
         self.collectionView.dataSource = self.contentStore
         
         RACObserve(self.contentStore, "fetchedResultsController.fetchedObjects").subscribeNext { (_) -> Void in

@@ -71,11 +71,12 @@ class CoreDataManager: NSObject {
     // MARK: - Private
     
     private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
-        NSPersistentStoreCoordinator.registerStoreClass(BasicIncrementalStore.self, forStoreType: "BasicIncrementalStore")
-        let storeType = "BasicIncrementalStore"
+//        NSPersistentStoreCoordinator.registerStoreClass(BasicIncrementalStore.self, forStoreType: "BasicIncrementalStore")
+        NSPersistentStoreCoordinator.registerStoreClass(PALIncrementalStore.self, forStoreType: "PALIncrementalStore")
+        let storeType = "PALIncrementalStore"
         
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("Palettes.sqlite")
+        let url = NSURL.applicationDocumentsDirectory().URLByAppendingPathComponent("Palettes.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
         
@@ -107,10 +108,5 @@ class CoreDataManager: NSObject {
     private lazy var managedObjectModel: NSManagedObjectModel = {
         let modelURL = NSBundle.mainBundle().URLForResource("Palettes", withExtension: "momd")!
         return NSManagedObjectModel(contentsOfURL: modelURL)!
-    }()
-    
-    private lazy var applicationDocumentsDirectory: NSURL = {
-        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] as NSURL
     }()
 }

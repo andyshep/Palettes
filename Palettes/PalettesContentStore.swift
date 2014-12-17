@@ -12,6 +12,8 @@ import CoreData
 class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
     private let reuseIdentifier = "PaletteCell"
     
+    weak var collectionView: UICollectionView? = nil
+    
     // MARK: - UICollectionViewDataSource
     
     override init() {
@@ -37,6 +39,9 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         // TODO: implement
+        println("changed!!")
+        
+        self.collectionView?.reloadData()
     }
     
     // MARK: - Private
