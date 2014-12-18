@@ -20,6 +20,10 @@ class PALIncrementalStore : NSIncrementalStore {
     let backingObjectIDCache = NSCache()
     let registeredObjectIDsMap = NSMutableDictionary()
     
+    class var storeType: String {
+        return NSStringFromClass(PALIncrementalStore.self)
+    }
+    
     lazy var backingPersistentStoreCoordinator: NSPersistentStoreCoordinator = {
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.model)
         
@@ -55,7 +59,7 @@ class PALIncrementalStore : NSIncrementalStore {
     lazy var model: NSManagedObjectModel = {
         let model = self.persistentStoreCoordinator?.managedObjectModel.copy() as NSManagedObjectModel
         for obj : AnyObject in model.entities {
-            if let entity = obj as? NSEntityDescription {
+            if var entity = obj as? NSEntityDescription {
                 if entity.superentity != nil {
                     continue
                 }
@@ -89,7 +93,7 @@ class PALIncrementalStore : NSIncrementalStore {
     
     override func loadMetadata(error: NSErrorPointer) -> Bool {
         var uuid = NSProcessInfo.processInfo().globallyUniqueString
-        self.metadata = [NSStoreTypeKey : "PALIncrementalStore", NSStoreUUIDKey: uuid]
+        self.metadata = [NSStoreTypeKey : PALIncrementalStore.storeType, NSStoreUUIDKey: uuid]
         
         // TODO: support schema migration
         
@@ -107,7 +111,7 @@ class PALIncrementalStore : NSIncrementalStore {
     }
     
     override func newValuesForObjectWithID(objectID: NSManagedObjectID, withContext context: NSManagedObjectContext, error: NSErrorPointer) -> NSIncrementalStoreNode? {
-        var fetchRequest = NSFetchRequest(entityName: objectID.entity.name!)
+        let fetchRequest = NSFetchRequest(entityName: objectID.entity.name!)
         fetchRequest.resultType = NSFetchRequestResultType.DictionaryResultType
         fetchRequest.fetchLimit = 1
         fetchRequest.includesSubentities = false
@@ -123,19 +127,19 @@ class PALIncrementalStore : NSIncrementalStore {
             results = privateContext.executeFetchRequest(fetchRequest, error: &error)
         }
         
-        var attributeValues = (results?.count > 0) ? results?.last as NSDictionary : NSDictionary()
-        var node = NSIncrementalStoreNode(objectID: objectID, withValues: attributeValues, version: 1)
+        let attributeValues = (results?.count > 0) ? results?.last as NSDictionary : NSDictionary()
+        let node = NSIncrementalStoreNode(objectID: objectID, withValues: attributeValues, version: 1)
         
         return node
     }
 
     override func obtainPermanentIDsForObjects(array: [AnyObject], error: NSErrorPointer) -> [AnyObject]? {
-        var ids = NSMutableArray()
+        var ids: [AnyObject] = []
         for obj : AnyObject in array {
             let mobj = obj as NSManagedObject
             let refObj = NSProcessInfo.processInfo().globallyUniqueString
             let moid = self.newObjectIDForEntity(mobj.entity, referenceObject: refObj)
-            ids.addObject(moid)
+            ids.append(moid)
         }
         
         return ids
@@ -237,29 +241,26 @@ class PALIncrementalStore : NSIncrementalStore {
         
         var error: NSError? = nil
         let backingContext = self.backingManagedObjectContext
-        var cacheFetchRequest = request.copy() as NSFetchRequest
+        let cacheFetchRequest = request.copy() as NSFetchRequest
         cacheFetchRequest.entity = NSEntityDescription.entityForName(fetchRequest.entityName!, inManagedObjectContext: backingContext)
         
         if fetchRequest.resultType == .ManagedObjectResultType {
-            cacheFetchRequest.resultType = .DictionaryResultType
+            cacheFetchRequest.resultType = .ManagedObjectResultType
             cacheFetchRequest.propertiesToFetch = [kPALResourceIdentifierAttributeName]
             let results: NSArray = backingContext.executeFetchRequest(cacheFetchRequest, error: &error)!
-            var mutableObjs = NSMutableArray()
+            var mutableObjs: [AnyObject] = []
             let resourceIds = results.valueForKeyPath(kPALResourceIdentifierAttributeName) as NSArray
             for obj: AnyObject in resourceIds {
                 let resourceId = obj as NSString
                 let objectId = self.objectIDForEntity(fetchRequest.entity!, withResourceIdentifier: resourceId)
                 let managedObject = context.objectWithID(objectId!) as Palette
+
+                let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, resourceId)
+                let backingObj = results.filteredArrayUsingPredicate(predicate!).first as Palette
                 
-                managedObject.name = ""
-                managedObject.id = ""
-                managedObject.username = ""
-                managedObject.colors = []
+                managedObject.transform(palette: backingObj)
                 
-                let key = "__pal__" + resourceId
-//                managedObject.setValue(resourceId, forKey: key)
-                
-                mutableObjs.addObject(managedObject)
+                mutableObjs.append(managedObject)
             }
             
             return mutableObjs
@@ -301,33 +302,33 @@ class PALIncrementalStore : NSIncrementalStore {
                     let name = paletteObj.stringValueForKey("title")
                     let uniqueId = paletteObj.numberValueForKey("id").stringValue
                     
-                    var managedObject: NSManagedObject? = nil
-                    var backingObj: NSManagedObject? = nil
+                    var managedObject: Palette? = nil
+                    var backingObj: Palette? = nil
                     var error: NSError? = nil
                     
                     context.performBlockAndWait({ () -> Void in
                         // determine the object id based on the uniqueId of the entity
                         let objectId = self.objectIDForEntity(entity, withResourceIdentifier: uniqueId)
                         if objectId != nil {
-                            managedObject = context.existingObjectWithID(objectId!, error: &error)
+                            managedObject = context.existingObjectWithID(objectId!, error: &error) as? Palette
                         }
                     })
                     
-                    managedObject?.transform(paletteObj)
+                    managedObject?.transform(dictionary: paletteObj)
                     
                     var backingObjId = self.objectIDFromPrivateContextForEntity(entity, withResourceIdentifier: uniqueId)
                     backingContext.performBlockAndWait(){
                         if backingObjId != nil {
-                            backingObj = backingContext.existingObjectWithID(backingObjId!, error: &error)
+                            backingObj = backingContext.existingObjectWithID(backingObjId!, error: &error) as? Palette
                         } else {
-                            backingObj = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: backingContext) as? NSManagedObject
+                            backingObj = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: backingContext) as? Palette
                             backingObj?.managedObjectContext?.obtainPermanentIDsForObjects([backingObj!], error: &error)
                         }
                     }
                     
                     // TODO: set last modified too
                     backingObj?.setValue(uniqueId, forKey: kPALResourceIdentifierAttributeName)
-                    backingObj?.transform(paletteObj)
+                    backingObj?.transform(dictionary: paletteObj)
                     
                     if backingObjId != nil {
                         context.insertObject(managedObject!)
@@ -350,9 +351,8 @@ class PALIncrementalStore : NSIncrementalStore {
         }
         
         var managedObjectId: NSManagedObjectID? = nil
-        var objectIDsByResourceIdentifier: NSDictionary? = self.registeredObjectIDsMap.objectForKey(entity.name!) as? NSDictionary
-        if objectIDsByResourceIdentifier != nil {
-            managedObjectId = objectIDsByResourceIdentifier!.objectForKey(resourceIdentifier!) as? NSManagedObjectID
+        if let objectIDsByResourceIdentifier = self.registeredObjectIDsMap.objectForKey(entity.name!) as? NSDictionary {
+            managedObjectId = objectIDsByResourceIdentifier.objectForKey(resourceIdentifier!) as? NSManagedObjectID
         }
         
         if managedObjectId == nil {
@@ -375,7 +375,7 @@ class PALIncrementalStore : NSIncrementalStore {
             return backingObjectId
         }
         
-        var fetchRequest = NSFetchRequest(entityName: entity.name!)
+        let fetchRequest = NSFetchRequest(entityName: entity.name!)
         fetchRequest.resultType = NSFetchRequestResultType.ManagedObjectIDResultType
         fetchRequest.fetchLimit = 1
         

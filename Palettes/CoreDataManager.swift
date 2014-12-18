@@ -71,9 +71,8 @@ class CoreDataManager: NSObject {
     // MARK: - Private
     
     private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
-//        NSPersistentStoreCoordinator.registerStoreClass(BasicIncrementalStore.self, forStoreType: "BasicIncrementalStore")
-        NSPersistentStoreCoordinator.registerStoreClass(PALIncrementalStore.self, forStoreType: "PALIncrementalStore")
-        let storeType = "PALIncrementalStore"
+        let storeType = PALIncrementalStore.storeType
+        NSPersistentStoreCoordinator.registerStoreClass(PALIncrementalStore.self, forStoreType: storeType)
         
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let url = NSURL.applicationDocumentsDirectory().URLByAppendingPathComponent("Palettes.sqlite")
@@ -84,14 +83,6 @@ class CoreDataManager: NSObject {
         
         if coordinator!.addPersistentStoreWithType(storeType, configuration: nil, URL: url, options: options, error: &error) == nil {
             coordinator = nil
-            
-            // Report any error we received
-            let dict = NSMutableDictionary()
-            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
-            dict[NSLocalizedFailureReasonErrorKey] = failureReason
-            dict[NSUnderlyingErrorKey] = error
-            error = NSError(domain: "org.andyshep.Ascent.ErrorDomain", code: 9999, userInfo: dict)
-            
             if let code = error?.code {
                 if code == NSMigrationMissingMappingModelError {
                     println("Error, migration failed. Delete model at \(url)")

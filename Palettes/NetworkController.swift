@@ -29,25 +29,36 @@ class NetworkController: NSObject {
     }
     
     class func task(request:NSURLRequest, completion:TaskCompletion) -> NSURLSessionTask {
-        return NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-            if error == nil {
+        
+        let finished: TaskCompletion = {(data, error) in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                completion(data: data, error: error)
+            })
+        }
+        
+        let success: NSData -> Void = {(data) in
+            finished(data: data, error: nil)
+        }
+        
+        let error: NSError! -> Void = {(error) in
+            finished(data: nil, error: error)
+        }
+        
+        return NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, err) -> Void in
+            if err == nil {
                 if let httpResponse = response as? NSHTTPURLResponse {
                     switch httpResponse.statusCode {
                     case 200...204:
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            completion(data: data, error: error)
-                        })
+                        success(data)
                     default:
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            completion(data: nil, error: error)
-                        })
+                        error(err)
                     }
+                } else {
+                    error(err)
                 }
             }
             else {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    completion(data: nil, error: error)
-                })
+                error(err)
             }
         })
     }

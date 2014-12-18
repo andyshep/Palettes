@@ -18,3 +18,9 @@ class Palette: NSManagedObject {
     @NSManaged var colors: [AnyObject]
     @NSManaged var widths: [AnyObject]
 }
+
+extension Palette: Printable {
+    override var description: String {
+        return "\(self.id) : \(self.name)"
+    }
+}

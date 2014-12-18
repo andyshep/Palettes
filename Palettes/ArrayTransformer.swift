@@ -25,6 +25,6 @@ class ArrayTransformer: NSValueTransformer {
         if let data = value as? NSData {
             return NSKeyedUnarchiver.unarchiveObjectWithData(data)
         }
-        return nil
+        return []
     }
 }

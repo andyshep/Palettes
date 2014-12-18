@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		452256810D1502961064E431 /* libPods-PalettesTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB3B63C1C244E094E5389CEB /* libPods-PalettesTests.a */; };
 		B19358C61BCD917FBC84EBB5 /* libPods-Palettes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D89AB9527A43CD6EF29B6C35 /* libPods-Palettes.a */; };
+		F71375D31A4362720061D86D /* Palette+AttributeMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */; };
 		F7199F301A3F53A700CA4FFB /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */; };
 		F72F21691A3F9F9600FA397C /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72F21681A3F9F9600FA397C /* DataController.swift */; };
 		F72F216B1A3FA0DA00FA397C /* palettes.json in Resources */ = {isa = PBXBuildFile; fileRef = F72F216A1A3FA0DA00FA397C /* palettes.json */; };
@@ -30,12 +31,10 @@
 		F77A447C1A3A5DD2004C0990 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F77A447A1A3A5DD2004C0990 /* Main.storyboard */; };
 		F78C88EB1A3B65F200145D3B /* PaletteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78C88EA1A3B65F200145D3B /* PaletteViewModel.swift */; };
 		F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79165EA1A420613006E601E /* NSURL+Directories.swift */; };
-		F7A532E31A400FB500D90606 /* BasicIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A532E21A400FB500D90606 /* BasicIncrementalStore.swift */; };
 		F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */; };
 		F7C1A4561A3A8F530000B2C7 /* NSDictionary+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */; };
 		F7C1A4591A3A96190000B2C7 /* ReactiveCocoaBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4581A3A96190000B2C7 /* ReactiveCocoaBindings.swift */; };
 		F7EB5C581A402C3C00989A04 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB5C571A402C3C00989A04 /* Palette.swift */; };
-		F7EB5C5A1A402D6A00989A04 /* NSManagedObject+Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB5C591A402D6A00989A04 /* NSManagedObject+Palette.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +53,7 @@
 		D66E7F3F324FE620C82ADFCF /* Pods-Palettes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Palettes.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Palettes/Pods-Palettes.debug.xcconfig"; sourceTree = "<group>"; };
 		D89AB9527A43CD6EF29B6C35 /* libPods-Palettes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Palettes.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB3B63C1C244E094E5389CEB /* libPods-PalettesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PalettesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Palette+AttributeMapping.swift"; sourceTree = "<group>"; };
 		F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		F72F21681A3F9F9600FA397C /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F72F216A1A3FA0DA00FA397C /* palettes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = palettes.json; sourceTree = "<group>"; };
@@ -80,12 +80,10 @@
 		F77A447B1A3A5DD2004C0990 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F78C88EA1A3B65F200145D3B /* PaletteViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaletteViewModel.swift; sourceTree = "<group>"; };
 		F79165EA1A420613006E601E /* NSURL+Directories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURL+Directories.swift"; sourceTree = "<group>"; };
-		F7A532E21A400FB500D90606 /* BasicIncrementalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicIncrementalStore.swift; sourceTree = "<group>"; };
 		F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaletteColorView.swift; sourceTree = "<group>"; };
 		F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDictionary+Parsing.swift"; sourceTree = "<group>"; };
 		F7C1A4581A3A96190000B2C7 /* ReactiveCocoaBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactiveCocoaBindings.swift; sourceTree = "<group>"; };
 		F7EB5C571A402C3C00989A04 /* Palette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
-		F7EB5C591A402D6A00989A04 /* NSManagedObject+Palette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Palette.swift"; sourceTree = "<group>"; };
 		FA2E52F1AA940E4429907847 /* Pods-Palettes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Palettes.release.xcconfig"; path = "Pods/Target Support Files/Pods-Palettes/Pods-Palettes.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -208,11 +206,10 @@
 			isa = PBXGroup;
 			children = (
 				F7EB5C571A402C3C00989A04 /* Palette.swift */,
+				F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */,
 				F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */,
-				F7A532E21A400FB500D90606 /* BasicIncrementalStore.swift */,
 				F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */,
 				F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */,
-				F7EB5C591A402D6A00989A04 /* NSManagedObject+Palette.swift */,
 				F72F216C1A3FA1AE00FA397C /* Palettes.xcdatamodeld */,
 			);
 			name = Model;
@@ -420,6 +417,7 @@
 				F77A44781A3A5D95004C0990 /* PalettesContentStore.swift in Sources */,
 				F77A44771A3A5D95004C0990 /* PalettesViewController.swift in Sources */,
 				F75B0DCC1A40286F00B0F10D /* ArrayTransformer.swift in Sources */,
+				F71375D31A4362720061D86D /* Palette+AttributeMapping.swift in Sources */,
 				F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */,
 				F77A44721A3A5D95004C0990 /* ColourLovers.swift in Sources */,
 				F76557301A40E7AD00956E11 /* PALIncrementalStore.swift in Sources */,
@@ -428,11 +426,9 @@
 				F77A444B1A3A5D64004C0990 /* AppDelegate.swift in Sources */,
 				F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */,
 				F72F21691A3F9F9600FA397C /* DataController.swift in Sources */,
-				F7A532E31A400FB500D90606 /* BasicIncrementalStore.swift in Sources */,
 				F77A44731A3A5D95004C0990 /* NetworkController.swift in Sources */,
 				F7C1A4591A3A96190000B2C7 /* ReactiveCocoaBindings.swift in Sources */,
 				F77A44791A3A5D95004C0990 /* UIColor+HexColors.swift in Sources */,
-				F7EB5C5A1A402D6A00989A04 /* NSManagedObject+Palette.swift in Sources */,
 				F766D3A01A3A8042003E4A7C /* NSData+JSON.swift in Sources */,
 				F78C88EB1A3B65F200145D3B /* PaletteViewModel.swift in Sources */,
 				F77A44751A3A5D95004C0990 /* PaletteCell.swift in Sources */,
