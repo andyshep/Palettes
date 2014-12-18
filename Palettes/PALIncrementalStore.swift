@@ -9,32 +9,42 @@
 import Foundation
 import CoreData
 
-let kPALResourceIdentifierAttributeName: NSString = "__pal__resourceIdentifier"
+let kPALResourceIdentifierAttributeName = "__pal__resourceIdentifier"
 let kPALLastModifiedAttributeName = "__pal__lastModified"
 
 typealias InsertOrUpdateCompletion = (managedObjects:AnyObject, backingObjects:AnyObject) -> Void
 
 @objc(PALIncrementalStore)
+
+/// An Incremental Store subclass for retrieving Palette from the Colour Lovers API
 class PALIncrementalStore : NSIncrementalStore {
-    let cache = NSMutableDictionary()
-    let backingObjectIDCache = NSCache()
-    let registeredObjectIDsMap = NSMutableDictionary()
+    
+    /// The cache of managed object ids
+    private let cache = NSMutableDictionary()
+    
+    /// The cache of managed object ids for the backing store
+    private let backingObjectIDCache = NSCache()
+    
+    /// A map of registered objects ids
+    private let registeredObjectIDsMap = NSMutableDictionary()
     
     class var storeType: String {
         return NSStringFromClass(PALIncrementalStore.self)
     }
     
+    // MARK: - Lazy Accessors
+    
+    /// The persistent store coordinator attached to the backing store.
     lazy var backingPersistentStoreCoordinator: NSPersistentStoreCoordinator = {
-        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.model)
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.augmentedModel)
         
+        var error: NSError? = nil
         let storeType = NSSQLiteStoreType
         let url = NSURL.applicationDocumentsDirectory().URLByAppendingPathComponent("PALIncrementalStore.sqlite")
-        var error: NSError? = nil
-        
-        let options = [NSMigratePersistentStoresAutomaticallyOption: NSNumber(bool: true), NSInferMappingModelAutomaticallyOption: NSNumber(bool: true)];
+        let options = [NSMigratePersistentStoresAutomaticallyOption: NSNumber(bool: true),
+                       NSInferMappingModelAutomaticallyOption: NSNumber(bool: true)];
         
         if coordinator.addPersistentStoreWithType(storeType, configuration: nil, URL: url, options: options, error: &error) == nil {
-            
             if let code = error?.code {
                 if code == NSMigrationMissingMappingModelError {
                     println("Error, migration failed. Delete model at \(url)")
@@ -49,6 +59,7 @@ class PALIncrementalStore : NSIncrementalStore {
         return coordinator
     }()
     
+    /// The managed object context for the backing store
     lazy var backingManagedObjectContext: NSManagedObjectContext = {
         let context = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
         context.persistentStoreCoordinator = self.backingPersistentStoreCoordinator
@@ -56,10 +67,11 @@ class PALIncrementalStore : NSIncrementalStore {
         return context
     }()
     
-    lazy var model: NSManagedObjectModel = {
-        let model = self.persistentStoreCoordinator?.managedObjectModel.copy() as NSManagedObjectModel
-        for obj : AnyObject in model.entities {
-            if var entity = obj as? NSEntityDescription {
+    /// The model for the backing store, augment with custom attributes
+    lazy var augmentedModel: NSManagedObjectModel = {
+        let augmentedModel = self.persistentStoreCoordinator?.managedObjectModel.copy() as NSManagedObjectModel
+        for object in augmentedModel.entities {
+            if let entity = object as? NSEntityDescription {
                 if entity.superentity != nil {
                     continue
                 }
@@ -71,31 +83,24 @@ class PALIncrementalStore : NSIncrementalStore {
                 
                 var lastModifiedProperty = NSAttributeDescription()
                 lastModifiedProperty.name = kPALLastModifiedAttributeName
-                lastModifiedProperty.attributeType = NSAttributeType.StringAttributeType
+                lastModifiedProperty.attributeType = NSAttributeType.DateAttributeType
                 lastModifiedProperty.indexed = false
                 
                 var newProperties = NSArray(objects: lastModifiedProperty, resourceIdProperty)
                 var existingProperties = NSArray(array: entity.properties)
                 newProperties = newProperties.arrayByAddingObjectsFromArray(existingProperties)
                 entity.properties = newProperties
-                
-                // TODO: set custom attributes for modification time
-                // these would be used by the row cache
             }
         }
         
-        return model
+        return augmentedModel
     }()
     
-    override init(persistentStoreCoordinator root: NSPersistentStoreCoordinator, configurationName name: String?, URL url: NSURL, options: [NSObject : AnyObject]?) {
-        super.init(persistentStoreCoordinator: root, configurationName: name, URL: url, options: options)
-    }
+    // MARK: - NSIncrementalStore
     
     override func loadMetadata(error: NSErrorPointer) -> Bool {
         var uuid = NSProcessInfo.processInfo().globallyUniqueString
         self.metadata = [NSStoreTypeKey : PALIncrementalStore.storeType, NSStoreUUIDKey: uuid]
-        
-        // TODO: support schema migration
         
         return true
     }
@@ -104,8 +109,6 @@ class PALIncrementalStore : NSIncrementalStore {
         if request.requestType == .FetchRequestType {
             return self.executeFetchRequest(request, withContext: context, error: error)
         }
-        
-        // TODO: implement save requests
         
         return nil
     }
@@ -132,64 +135,18 @@ class PALIncrementalStore : NSIncrementalStore {
         
         return node
     }
-
-    override func obtainPermanentIDsForObjects(array: [AnyObject], error: NSErrorPointer) -> [AnyObject]? {
-        var ids: [AnyObject] = []
-        for obj : AnyObject in array {
-            let mobj = obj as NSManagedObject
-            let refObj = NSProcessInfo.processInfo().globallyUniqueString
-            let moid = self.newObjectIDForEntity(mobj.entity, referenceObject: refObj)
-            ids.append(moid)
-        }
-        
-        return ids
-    }
     
     // MARK: - Private
     
-    func objectIdForNewObjectOfEntity(entityDescription:NSEntityDescription, cacheValues values:AnyObject!) -> NSManagedObjectID! {
-        if let dict = values as? NSDictionary {
-            let nativeKey = entityDescription.name
-            let referenceId: AnyObject! = dict.objectForKey(nativeKey!)
-            let objectId = self.newObjectIDForEntity(entityDescription, referenceObject: referenceId)
-            
-            cache.setObject(values, forKey: objectId)
-            
-            return objectId
-        }
-        
-        return nil
-    }
+    /**
+        Executes a fetch request within the context provided
     
-    override func managedObjectContextDidRegisterObjectsWithIDs(objectIDs: [AnyObject]) {
-        super.managedObjectContextDidRegisterObjectsWithIDs(objectIDs)
-        
-        for obj : AnyObject in objectIDs {
-            let objectId = obj as NSManagedObjectID
-            var referenceObj : AnyObject! = self.referenceObjectForObjectID(objectId)
-            if referenceObj != nil {
-                continue
-            }
-            
-            referenceObj = "__pal__" + referenceObj.description
-            
-            var objectIDsByResourceIdentifier : (AnyObject!) = self.registeredObjectIDsMap.objectForKey(objectId.entity.name!)
-            if objectIDsByResourceIdentifier == nil {
-                objectIDsByResourceIdentifier = NSMutableDictionary()
-            }
-            
-            objectIDsByResourceIdentifier.setObject(objectId, forKey: referenceObj)
-            self.registeredObjectIDsMap.setObject(objectIDsByResourceIdentifier, forKey: objectId.entity.name!)
-        }
-    }
+        :param: request The request for the store.
+        :param: context The context to execure the request within
+        :param: error If an error occurs, on return contains an `NSError` object that describes the problem.
     
-    override func managedObjectContextDidUnregisterObjectsWithIDs(objectIDs: [AnyObject]) {
-        super.managedObjectContextDidUnregisterObjectsWithIDs(objectIDs)
-        
-        for objectId : AnyObject in objectIDs {
-            // TODO: implement, unregister objects
-        }
-    }
+        :returns: An optional array of managed objects
+    */
     
     func executeFetchRequest(request: NSPersistentStoreRequest!, withContext context: NSManagedObjectContext!, error: NSErrorPointer) -> [AnyObject]! {
         let fetchRequest = request as NSFetchRequest
@@ -212,7 +169,7 @@ class PALIncrementalStore : NSIncrementalStore {
                 childContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
                 
                 childContext.performBlockAndWait(){
-                    let result = self.insertOrUpdateObjects(palettes, ofEntity: fetchRequest.entity!, context: childContext, completionHandler:{(managedObjects: AnyObject, backingObjects: AnyObject) -> Void in
+                    let result = self.insertOrUpdateObjects(palettes, ofEntity: fetchRequest.entity!, context: childContext, completion:{(managedObjects: AnyObject, backingObjects: AnyObject) -> Void in
                         
                         var error: NSError? = nil
                         let childObjects = childContext.registeredObjects
@@ -247,8 +204,8 @@ class PALIncrementalStore : NSIncrementalStore {
         if fetchRequest.resultType == .ManagedObjectResultType {
             cacheFetchRequest.resultType = .ManagedObjectResultType
             cacheFetchRequest.propertiesToFetch = [kPALResourceIdentifierAttributeName]
-            let results: NSArray = backingContext.executeFetchRequest(cacheFetchRequest, error: &error)!
-            var mutableObjs: [AnyObject] = []
+            let results = backingContext.executeFetchRequest(cacheFetchRequest, error: &error)! as NSArray
+            var managedObjs: [AnyObject] = []
             let resourceIds = results.valueForKeyPath(kPALResourceIdentifierAttributeName) as NSArray
             for obj: AnyObject in resourceIds {
                 let resourceId = obj as NSString
@@ -259,11 +216,9 @@ class PALIncrementalStore : NSIncrementalStore {
                 let backingObj = results.filteredArrayUsingPredicate(predicate!).first as Palette
                 
                 managedObject.transform(palette: backingObj)
-                
-                mutableObjs.append(managedObject)
+                managedObjs.append(managedObject)
             }
-            
-            return mutableObjs
+            return managedObjs
         }
         else if fetchRequest.resultType == .ManagedObjectIDResultType {
             let objectIds = backingContext.executeFetchRequest(fetchRequest, error: &error)
@@ -277,99 +232,116 @@ class PALIncrementalStore : NSIncrementalStore {
         }
     }
     
-    func insertOrUpdateObjects(result: AnyObject?, ofEntity entity: NSEntityDescription, context: NSManagedObjectContext, completionHandler: InsertOrUpdateCompletion) -> Bool {
-        if result == nil {
-            return false
-        }
+    /**
+        Insert or updates an entity set from the result provided
         
-        let backingContext = self.backingManagedObjectContext
-        // TODO: grab last modified from server response, save on cache object
-        // track mod date via custom attribute
+        :param: result An set of `NSManagedObjects` that has been retrieved
+        :param: entity A valid entity within the model
+        :param: context A managed object context
+        :param: completion A function that accepts inserted objects and backing objects
         
-        let objects = result as? NSArray
-            if objects == nil {
-            return false
-        }
+        :returns: success A Bool representing success or failure
+    */
+    
+    func insertOrUpdateObjects(result: [AnyObject]?, ofEntity entity: NSEntityDescription, context: NSManagedObjectContext, completion: InsertOrUpdateCompletion) -> Bool {
+        
+        if let objects = result {
+            var managedObjects: [AnyObject] = []
+            var backingObjects: [AnyObject] = []
             
-        var mutableManagedObjects = NSMutableArray()
-        var mutableBackingObjects = NSMutableArray()
-            
-        if let objects = result as? [AnyObject] {
             for obj in objects {
                 if let paletteObj = obj as? NSDictionary {
-                    // find the shell palette, by the id
-                    
                     let name = paletteObj.stringValueForKey("title")
                     let uniqueId = paletteObj.numberValueForKey("id").stringValue
                     
-                    var managedObject: Palette? = nil
-                    var backingObj: Palette? = nil
                     var error: NSError? = nil
+                    var managedObject: Palette? = nil
+                    var backingObject: Palette? = nil
                     
                     context.performBlockAndWait({ () -> Void in
-                        // determine the object id based on the uniqueId of the entity
-                        let objectId = self.objectIDForEntity(entity, withResourceIdentifier: uniqueId)
-                        if objectId != nil {
-                            managedObject = context.existingObjectWithID(objectId!, error: &error) as? Palette
+                        if let objectId = self.objectIDForEntity(entity, withResourceIdentifier: uniqueId) {
+                            managedObject = context.existingObjectWithID(objectId, error: &error) as? Palette
                         }
                     })
                     
                     managedObject?.transform(dictionary: paletteObj)
                     
-                    var backingObjId = self.objectIDFromPrivateContextForEntity(entity, withResourceIdentifier: uniqueId)
+                    var backingObjectId = self.objectIDFromBackingContextForEntity(entity, withResourceIdentifier: uniqueId)
+                    let backingContext = self.backingManagedObjectContext
                     backingContext.performBlockAndWait(){
-                        if backingObjId != nil {
-                            backingObj = backingContext.existingObjectWithID(backingObjId!, error: &error) as? Palette
-                        } else {
-                            backingObj = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: backingContext) as? Palette
-                            backingObj?.managedObjectContext?.obtainPermanentIDsForObjects([backingObj!], error: &error)
+                        if backingObjectId != nil {
+                            backingObject = backingContext.existingObjectWithID(backingObjectId!, error: &error) as? Palette
+                        }
+                        else {
+                            backingObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: backingContext) as? Palette
+                            backingObject?.managedObjectContext?.obtainPermanentIDsForObjects([backingObject!], error: &error)
                         }
                     }
                     
-                    // TODO: set last modified too
-                    backingObj?.setValue(uniqueId, forKey: kPALResourceIdentifierAttributeName)
-                    backingObj?.transform(dictionary: paletteObj)
+                    // API doesn't support last modified date
+                    backingObject?.setValue(NSDate(), forKey: kPALLastModifiedAttributeName)
+                    backingObject?.setValue(uniqueId, forKey: kPALResourceIdentifierAttributeName)
+                    backingObject?.transform(dictionary: paletteObj)
                     
-                    if backingObjId != nil {
+                    if backingObjectId != nil {
                         context.insertObject(managedObject!)
                     }
                     
-                    mutableManagedObjects.addObject(managedObject!)
-                    mutableBackingObjects.addObject(backingObj!)
+                    managedObjects.append(managedObject!)
+                    backingObjects.append(backingObject!)
                 }
             }
-        }
-
-        completionHandler(managedObjects:mutableManagedObjects, backingObjects:mutableBackingObjects)
             
-        return true
+            completion(managedObjects: managedObjects, backingObjects: backingObjects)
+            return true
+        }
+        
+        return false
     }
     
-    func objectIDForEntity(entity:NSEntityDescription, withResourceIdentifier resourceIdentifier:NSString?) -> NSManagedObjectID? {
-        if resourceIdentifier == nil {
+    /**
+        Finds an objectID for an entity using an associated resource identifier.
+    
+        :param: entity A valid entity within the model
+        :param: identifier A resource identifier
+        
+        :returns: objectId
+    */
+    
+    func objectIDForEntity(entity:NSEntityDescription, withResourceIdentifier identifier:NSString?) -> NSManagedObjectID? {
+        if identifier == nil {
             return nil
         }
         
         var managedObjectId: NSManagedObjectID? = nil
         if let objectIDsByResourceIdentifier = self.registeredObjectIDsMap.objectForKey(entity.name!) as? NSDictionary {
-            managedObjectId = objectIDsByResourceIdentifier.objectForKey(resourceIdentifier!) as? NSManagedObjectID
+            managedObjectId = objectIDsByResourceIdentifier.objectForKey(identifier!) as? NSManagedObjectID
         }
         
         if managedObjectId == nil {
-            var referenceObject = resourceIdentifier! as NSString
-            referenceObject = "__pal__" + referenceObject
+            let referenceObject = "__pal__" + identifier!
             managedObjectId = self.newObjectIDForEntity(entity, referenceObject: referenceObject)
         }
         
         return managedObjectId
     }
     
-    func objectIDFromPrivateContextForEntity(entity:NSEntityDescription, withResourceIdentifier resourceIdentifier:NSString?) -> NSManagedObjectID? {
-        if resourceIdentifier == nil {
+    /**
+        Finds an objectID for an entity using an associated resource identifier. The objectId returned
+        will belong to the backing context
+        
+        :param: entity A valid entity within the model
+        :param: identifier A resource identifier
+        
+        :returns: objectId
+    */
+    
+    func objectIDFromBackingContextForEntity(entity:NSEntityDescription, withResourceIdentifier identifier:NSString?) -> NSManagedObjectID? {
+        if identifier == nil {
             return nil
         }
         
-        let objectId = self.objectIDForEntity(entity, withResourceIdentifier: resourceIdentifier)
+        let objectId = self.objectIDForEntity(entity, withResourceIdentifier: identifier)
         var backingObjectId: NSManagedObjectID? = backingObjectIDCache.objectForKey(objectId!) as? NSManagedObjectID
         if backingObjectId != nil {
             return backingObjectId
@@ -379,7 +351,7 @@ class PALIncrementalStore : NSIncrementalStore {
         fetchRequest.resultType = NSFetchRequestResultType.ManagedObjectIDResultType
         fetchRequest.fetchLimit = 1
         
-        let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, resourceIdentifier!)
+        let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, identifier!)
         fetchRequest.predicate = predicate
         
         var error: NSError? = nil
