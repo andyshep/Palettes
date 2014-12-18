@@ -12,7 +12,6 @@
 		F71375D31A4362720061D86D /* Palette+AttributeMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */; };
 		F7199F301A3F53A700CA4FFB /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */; };
 		F72F21691A3F9F9600FA397C /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72F21681A3F9F9600FA397C /* DataController.swift */; };
-		F72F216B1A3FA0DA00FA397C /* palettes.json in Resources */ = {isa = PBXBuildFile; fileRef = F72F216A1A3FA0DA00FA397C /* palettes.json */; };
 		F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F72F216C1A3FA1AE00FA397C /* Palettes.xcdatamodeld */; };
 		F75B0DCC1A40286F00B0F10D /* ArrayTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */; };
 		F76557301A40E7AD00956E11 /* PALIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */; };
@@ -56,7 +55,6 @@
 		F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Palette+AttributeMapping.swift"; sourceTree = "<group>"; };
 		F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		F72F21681A3F9F9600FA397C /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
-		F72F216A1A3FA0DA00FA397C /* palettes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = palettes.json; sourceTree = "<group>"; };
 		F72F216D1A3FA1AE00FA397C /* Palettes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Palettes.xcdatamodel; sourceTree = "<group>"; };
 		F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTransformer.swift; sourceTree = "<group>"; };
 		F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PALIncrementalStore.swift; sourceTree = "<group>"; };
@@ -169,7 +167,6 @@
 		F77A44481A3A5D64004C0990 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				F72F216A1A3FA0DA00FA397C /* palettes.json */,
 				F77A44491A3A5D64004C0990 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -333,7 +330,6 @@
 				F77A447C1A3A5DD2004C0990 /* Main.storyboard in Resources */,
 				F77A44551A3A5D64004C0990 /* LaunchScreen.xib in Resources */,
 				F77A44521A3A5D64004C0990 /* Images.xcassets in Resources */,
-				F72F216B1A3FA0DA00FA397C /* palettes.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

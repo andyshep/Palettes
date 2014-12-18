@@ -16,7 +16,7 @@ typealias InsertOrUpdateCompletion = (managedObjects:AnyObject, backingObjects:A
 
 @objc(PALIncrementalStore)
 
-/// An Incremental Store subclass for retrieving Palette from the Colour Lovers API
+/// An Incremental Store subclass for retrieving Palettes from the Colour Lovers API
 class PALIncrementalStore : NSIncrementalStore {
     
     /// The cache of managed object ids
