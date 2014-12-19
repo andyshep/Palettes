@@ -86,7 +86,8 @@ class CoreDataManager: NSObject {
             if let code = error?.code {
                 if code == NSMigrationMissingMappingModelError {
                     println("Error, migration failed. Delete model at \(url)")
-                } else {
+                }
+                else {
                     println("Error creating persistent store: \(error?.description)")
                 }
             }

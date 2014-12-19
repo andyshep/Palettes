@@ -10,6 +10,10 @@ import UIKit
 
 class PaletteCell: UICollectionViewCell {
     
+    class var reuseIdentifier: String {
+        return "PaletteCell"
+    }
+    
     var viewModel: PaletteViewModel? {
         didSet {
             self.titleLabel.text = viewModel?.name

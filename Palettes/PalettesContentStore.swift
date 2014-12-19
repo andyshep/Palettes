@@ -9,48 +9,78 @@
 import UIKit
 import CoreData
 
-class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
-    private let reuseIdentifier = "PaletteCell"
+class PalettesContentStore: NSObject, UICollectionViewDataSource {
+    private var objects: [Palette] = []
     
-    weak var collectionView: UICollectionView? = nil
+    weak var collectionView: UICollectionView? {
+        didSet {
+            self.objects = []
+            self.collectionView?.reloadData()
+            self.executeFetchRequest(offset: 0)
+        }
+    }
     
     // MARK: - UICollectionViewDataSource
     
     override init() {
         super.init()
-        self.fetchedResultsController.delegate = self
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (fetchedResultsController.sections?[section] as NSFetchedResultsSectionInfo).numberOfObjects ?? 0
+        return self.objects.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PaletteCell", forIndexPath: indexPath) as PaletteCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PaletteCell.reuseIdentifier, forIndexPath: indexPath) as PaletteCell
         let palette = self.objectAtIndexPath(indexPath)
         
         let viewModel = PaletteViewModel(palette: palette)
         cell.viewModel = viewModel
         
+        if indexPath.row + 10 > self.objects.count {
+            self.executeFetchRequest(offset: self.objects.count)
+        }
+        
         return cell
-    }
-    
-    // MARK: - NSFetchedResultsControllerDelegate
-    
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        self.collectionView?.reloadData()
     }
     
     // MARK: - Private
     
-    var fetchedResultsController: NSFetchedResultsController = {
-        let sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        let fetchedResultsController = CoreDataManager.sharedManager.fetchedResultsControllerForEntityName("Palette", sortDescriptors: sortDescriptors)
-        return fetchedResultsController
-    }()
+    func executeFetchRequest(#offset: Int) -> Void {
+        let request = palettesFetchRequest(offset: offset)
+        let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
+            let count = result.finalResult?.count
+            if count > 0 {
+                println("executeFetchRequest received \(count!) objects")
+                
+                if let palettes = result.finalResult as? [Palette] {
+                    self.objects += palettes
+                    self.collectionView?.reloadData()
+                }
+            }
+            else {
+                println("received no objects...")
+            }
+        }
+        
+        let context = CoreDataManager.sharedManager.managedObjectContext
+        context?.performBlock({ () -> Void in
+            var error: NSError?
+            let result = context?.executeRequest(asyncRequest, error: &error)
+        })
+    }
+    
+    func palettesFetchRequest(#offset:Int) -> NSFetchRequest {
+        let request = NSFetchRequest(entityName: Palette.entityName)
+        request.fetchOffset = offset
+        request.fetchLimit = 30
+        request.sortDescriptors = Palette.defaultSortDescriptors
+        
+        return request
+    }
     
     func objectAtIndexPath(indexPath:NSIndexPath) -> Palette {
-        let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as Palette
+        let object = self.objects[indexPath.row]
         return object
     }
 }

@@ -24,3 +24,13 @@ extension Palette: Printable {
         return "\(self.id) : \(self.name)"
     }
 }
+
+extension Palette {
+    class var entityName: String {
+        return "Palette"
+    }
+    
+    class var defaultSortDescriptors: [NSSortDescriptor] {
+        return [NSSortDescriptor(key: "name", ascending: true)]
+    }
+}

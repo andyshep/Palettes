@@ -19,17 +19,13 @@ class PalettesViewController: UIViewController {
 
         self.title = "Palettes"
         
-        self.collectionView.registerClass(PaletteCell.self, forCellWithReuseIdentifier: "PaletteCell")
+        self.collectionView.registerClass(PaletteCell.self, forCellWithReuseIdentifier: PaletteCell.reuseIdentifier)
         self.collectionView.collectionViewLayout = PalettesFlowLayout()
         self.collectionView.backgroundColor = UIColor.blackColor()
         self.collectionView.indicatorStyle = .White
         
         self.contentStore.collectionView = self.collectionView
         self.collectionView.dataSource = self.contentStore
-        
-        RACObserve(self.contentStore, "fetchedResultsController.fetchedObjects").subscribeNext { (_) -> Void in
-            self.collectionView.reloadData()
-        }
     }
 
     override func didReceiveMemoryWarning() {
