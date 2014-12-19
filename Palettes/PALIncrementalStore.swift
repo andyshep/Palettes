@@ -86,10 +86,11 @@ class PALIncrementalStore : NSIncrementalStore {
                 lastModifiedProperty.attributeType = NSAttributeType.DateAttributeType
                 lastModifiedProperty.indexed = false
                 
-                var newProperties = NSArray(objects: lastModifiedProperty, resourceIdProperty)
-                var existingProperties = NSArray(array: entity.properties)
-                newProperties = newProperties.arrayByAddingObjectsFromArray(existingProperties)
-                entity.properties = newProperties
+                var properties = entity.properties
+                properties.append(resourceIdProperty)
+                properties.append(lastModifiedProperty)
+                
+                entity.properties = properties
             }
         }
         
@@ -244,7 +245,6 @@ class PALIncrementalStore : NSIncrementalStore {
     */
     
     func insertOrUpdateObjects(result: [AnyObject]?, ofEntity entity: NSEntityDescription, context: NSManagedObjectContext, completion: InsertOrUpdateCompletion) -> Bool {
-        
         if let objects = result {
             var managedObjects: [AnyObject] = []
             var backingObjects: [AnyObject] = []
