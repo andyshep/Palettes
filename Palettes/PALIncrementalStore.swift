@@ -162,22 +162,21 @@ class PALIncrementalStore : NSIncrementalStore {
             cacheFetchRequest.resultType = .ManagedObjectResultType
             cacheFetchRequest.propertiesToFetch = [kPALResourceIdentifierAttributeName]
             
-            var managedObjs: [AnyObject] = []
             let results = backingContext.executeFetchRequest(cacheFetchRequest, error: &error)! as NSArray
-            let resourceIds = results.valueForKeyPath(kPALResourceIdentifierAttributeName) as NSArray
+            let resourceIds = results.valueForKeyPath(kPALResourceIdentifierAttributeName) as [NSString]
             
-            for obj: AnyObject in resourceIds {
-                let resourceId = obj as NSString
+            let managedObjects = resourceIds.map({ (resourceId: NSString) -> NSManagedObject in
                 let objectId = self.objectIDForEntity(fetchRequest.entity!, withResourceIdentifier: resourceId)
                 let managedObject = context.objectWithID(objectId!) as Palette
-
+                
                 let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, resourceId)
                 let backingObj = results.filteredArrayUsingPredicate(predicate!).first as Palette
                 
                 managedObject.transform(palette: backingObj)
-                managedObjs.append(managedObject)
-            }
-            return managedObjs
+                return managedObject
+            })
+            
+            return managedObjects
         }
         else if fetchRequest.resultType == .ManagedObjectIDResultType {
             let objectIds = backingContext.executeFetchRequest(fetchRequest, error: &error)
@@ -314,7 +313,7 @@ class PALIncrementalStore : NSIncrementalStore {
         
         var error: NSError? = nil
         let privateContext = self.backingManagedObjectContext
-        privateContext.performBlockAndWait(){
+        privateContext.performBlockAndWait() {
             if let results = privateContext.executeFetchRequest(fetchRequest, error: &error) {
                 backingObjectId = results.last as? NSManagedObjectID
             }
@@ -334,14 +333,10 @@ class PALIncrementalStore : NSIncrementalStore {
         
         NetworkController.task(httpRequest, completion: { (data, error) -> Void in
             var err: NSError?
-            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as NSArray
-            
-            var palettes: [AnyObject] = []
-            for obj in jsonResult {
-                if let paletteObj = obj as? NSDictionary {
-                    palettes.append(paletteObj)
-                }
-            }
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as [AnyObject]
+            let palettes = jsonResult.filter({ (obj: AnyObject) -> Bool in
+                return (obj is NSDictionary)
+            })
             
             context.performBlockAndWait(){
                 let childContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
@@ -363,12 +358,14 @@ class PALIncrementalStore : NSIncrementalStore {
                             }
                         }
                         
-                        context.performBlockAndWait(){
-                            for obj in childObjects.allObjects {
+                        context.performBlockAndWait() {
+                            let objects = childObjects.allObjects
+                            
+                            objects.map({ (obj: AnyObject) -> Void in
                                 let childObject = obj as NSManagedObject
                                 let parentObject = context.objectWithID(childObject.objectID)
                                 context.refreshObject(parentObject, mergeChanges: true)
-                            }
+                            })
                         }
                         
                         println("incremental store finished saving \(palettes.count) from the network")
