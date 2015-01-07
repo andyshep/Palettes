@@ -110,6 +110,9 @@ class PALIncrementalStore : NSIncrementalStore {
         if request.requestType == .FetchRequestType {
             return self.executeFetchRequest(request, withContext: context, error: error)
         }
+        else if request.requestType == .SaveRequestType {
+            return self.executeSaveRequest(request, withContext: context, error: error)
+        }
         
         return nil
     }
@@ -188,6 +191,11 @@ class PALIncrementalStore : NSIncrementalStore {
         else {
             return nil
         }
+    }
+    
+    func executeSaveRequest(request: NSPersistentStoreRequest!, withContext context: NSManagedObjectContext!, error: NSErrorPointer) -> [AnyObject]! {
+        println("save requests not yet implemented")
+        return []
     }
     
     /**
@@ -366,6 +374,11 @@ class PALIncrementalStore : NSIncrementalStore {
                                 let parentObject = context.objectWithID(childObject.objectID)
                                 context.refreshObject(parentObject, mergeChanges: true)
                             })
+                            
+                            var error: NSError? = nil
+                            if !context.save(&error) {
+                                println("error: \(error)")
+                            }
                         }
                         
                         println("incremental store finished saving \(palettes.count) from the network")
