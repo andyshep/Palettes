@@ -11,6 +11,8 @@
 		B19358C61BCD917FBC84EBB5 /* libPods-Palettes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D89AB9527A43CD6EF29B6C35 /* libPods-Palettes.a */; };
 		F71375D31A4362720061D86D /* Palette+AttributeMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */; };
 		F7199F301A3F53A700CA4FFB /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */; };
+		F72BEE0A1A5EFE50001FF832 /* palettes.json in Resources */ = {isa = PBXBuildFile; fileRef = F72BEE091A5EFE50001FF832 /* palettes.json */; };
+		F72BEE0C1A5F10BF001FF832 /* CachingIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */; };
 		F72F21691A3F9F9600FA397C /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72F21681A3F9F9600FA397C /* DataController.swift */; };
 		F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F72F216C1A3FA1AE00FA397C /* Palettes.xcdatamodeld */; };
 		F75B0DCC1A40286F00B0F10D /* ArrayTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */; };
@@ -56,6 +58,8 @@
 		EB3B63C1C244E094E5389CEB /* libPods-PalettesTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PalettesTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Palette+AttributeMapping.swift"; sourceTree = "<group>"; };
 		F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		F72BEE091A5EFE50001FF832 /* palettes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = palettes.json; sourceTree = "<group>"; };
+		F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachingIncrementalStore.swift; sourceTree = "<group>"; };
 		F72F21681A3F9F9600FA397C /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F72F216D1A3FA1AE00FA397C /* Palettes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Palettes.xcdatamodel; sourceTree = "<group>"; };
 		F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTransformer.swift; sourceTree = "<group>"; };
@@ -171,6 +175,7 @@
 		F77A44481A3A5D64004C0990 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F72BEE091A5EFE50001FF832 /* palettes.json */,
 				F77A44491A3A5D64004C0990 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -209,6 +214,7 @@
 				F7EB5C571A402C3C00989A04 /* Palette.swift */,
 				F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */,
 				F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */,
+				F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */,
 				F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */,
 				F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */,
 				F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */,
@@ -336,6 +342,7 @@
 				F77A447C1A3A5DD2004C0990 /* Main.storyboard in Resources */,
 				F77A44551A3A5D64004C0990 /* LaunchScreen.xib in Resources */,
 				F77A44521A3A5D64004C0990 /* Images.xcassets in Resources */,
+				F72BEE0A1A5EFE50001FF832 /* palettes.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,6 +435,7 @@
 				F77A44761A3A5D95004C0990 /* PalettesFlowLayout.swift in Sources */,
 				F77A444B1A3A5D64004C0990 /* AppDelegate.swift in Sources */,
 				F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */,
+				F72BEE0C1A5F10BF001FF832 /* CachingIncrementalStore.swift in Sources */,
 				F72F21691A3F9F9600FA397C /* DataController.swift in Sources */,
 				F77A44731A3A5D95004C0990 /* NetworkController.swift in Sources */,
 				F7C1A4591A3A96190000B2C7 /* ReactiveCocoaBindings.swift in Sources */,

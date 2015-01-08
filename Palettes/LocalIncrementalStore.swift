@@ -57,18 +57,14 @@ class LocalIncrementalStore : NSIncrementalStore {
     */
     
     func entitiesForFetchRequest(request:NSFetchRequest, inContext context:NSManagedObjectContext) -> [AnyObject] {
-        var entities: [Palette] = []
         let items = self.loadPalettesFromJSON()
         
-        for item: AnyObject in items {
-            if let dictionary = item as? NSDictionary {
-                let objectId = self.objectIdForNewObjectOfEntity(request.entity!, cacheValues: item)
-                if let palette = context.objectWithID(objectId) as? Palette {
-                    palette.transform(dictionary: dictionary)
-                    entities.append(palette)
-                }
-            }
-        }
+        let entities = items.map({ (item: NSDictionary) -> Palette in
+            let objectId = self.objectIdForNewObjectOfEntity(request.entity!, cacheValues: item)
+            let palette = context.objectWithID(objectId) as Palette
+            palette.transform(dictionary: item)
+            return palette
+        })
         
         return entities
     }
@@ -102,9 +98,9 @@ class LocalIncrementalStore : NSIncrementalStore {
     :returns: Array of Palette objects in dictionary form.
     */
     
-    func loadPalettesFromJSON() -> [AnyObject] {
-        let filePath: String? = NSBundle.mainBundle().pathForResource("palettes", ofType: "json")
+    func loadPalettesFromJSON() -> [NSDictionary] {
         var err: NSError?
+        let filePath: String? = NSBundle.mainBundle().pathForResource("palettes", ofType: "json")
         let data: NSData = NSData(contentsOfFile: filePath!)!
         let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as [AnyObject]
         
@@ -112,16 +108,9 @@ class LocalIncrementalStore : NSIncrementalStore {
             println("error: \(err)")
         }
         
-//        let palettes = jsonResult.filter({ (obj: AnyObject) -> Bool in
-//            return (obj is NSDictionary)
-//        }) as [NSDictionary]
-        
-        var palettes: [AnyObject] = []
-        for obj in jsonResult {
-            if let paletteObj = obj as? NSDictionary {
-                palettes.append(paletteObj)
-            }
-        }
+        let palettes = jsonResult.filter({ (obj: AnyObject) -> Bool in
+            return (obj is NSDictionary)
+        }) as [NSDictionary]
         
         return palettes
     }

@@ -163,7 +163,27 @@ class PALIncrementalStore : NSIncrementalStore {
         let backingContext = self.backingManagedObjectContext
 
         if fetchRequest.resultType == .ManagedObjectResultType {
-            let managedObjects = self.fetchRemoteObjectsWithRequest(fetchRequest, context: context)
+            self.fetchRemoteObjectsWithRequest(fetchRequest, context: context)
+            
+            let cacheFetchRequest = request.copy() as NSFetchRequest
+            cacheFetchRequest.entity = NSEntityDescription.entityForName(fetchRequest.entityName!, inManagedObjectContext: backingContext)
+            cacheFetchRequest.resultType = .ManagedObjectResultType
+            cacheFetchRequest.propertiesToFetch = [kPALResourceIdentifierAttributeName]
+            
+            let results = backingContext.executeFetchRequest(cacheFetchRequest, error: &error)! as NSArray
+            let resourceIds = results.valueForKeyPath(kPALResourceIdentifierAttributeName) as [NSString]
+            
+            let managedObjects = resourceIds.map({ (resourceId: NSString) -> NSManagedObject in
+                let objectId = self.objectIDForEntity(fetchRequest.entity!, withResourceIdentifier: resourceId)
+                let managedObject = context.objectWithID(objectId!) as Palette
+                
+                let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, resourceId)
+                let backingObj = results.filteredArrayUsingPredicate(predicate!).first as Palette
+                
+                managedObject.transform(palette: backingObj)
+                return managedObject
+            })
+            
             return managedObjects
         }
         else if fetchRequest.resultType == .ManagedObjectIDResultType {
@@ -319,64 +339,20 @@ class PALIncrementalStore : NSIncrementalStore {
         return backingObjectId
     }
     
-    func fetchRemoteObjectsWithRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> [AnyObject] {
+    func fetchRemoteObjectsWithRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Void {
         let offset = fetchRequest.fetchOffset
         let limit = fetchRequest.fetchLimit
         let httpRequest = ColourLovers.TopPalettes.request(offset: offset, limit: limit)
         
-        var error: NSError? = nil
-        var response: NSURLResponse? = nil
-        let data = NSURLConnection.sendSynchronousRequest(httpRequest, returningResponse: &response, error: &error)
-        
-        let jsonResult = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &error) as [AnyObject]
-        let palettes = jsonResult.filter({ (obj: AnyObject) -> Bool in
-            return (obj is NSDictionary)
-        })
-        
-        var objs = []
-        
-        context.performBlockAndWait(){
-            let childContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-            childContext.parentContext = context
-            childContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        NetworkController.task(httpRequest, completion: { (data, error) -> Void in
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as [AnyObject]
+            let palettes = jsonResult.filter({ (obj: AnyObject) -> Bool in
+                return (obj is NSDictionary)
+            })
             
-            childContext.performBlockAndWait(){
-                let result = self.insertOrUpdateObjects(palettes, ofEntity: fetchRequest.entity!, context: childContext, completion:{(managedObjects: AnyObject, backingObjects: AnyObject) -> Void in
-                    
-                    var error: NSError? = nil
-                    let childObjects = childContext.registeredObjects
-                    if !childContext.save(&error) {
-                        println("error: \(error)")
-                    }
-                    
-                    self.backingManagedObjectContext.performBlockAndWait() {
-                        if !self.backingManagedObjectContext.save(&error) {
-                            println("error: \(error)")
-                        }
-                    }
-                    
-                    context.performBlockAndWait() {
-                        let objects = childObjects.allObjects
-                        
-                        objects.map({ (obj: AnyObject) -> Void in
-                            let childObject = obj as NSManagedObject
-                            let parentObject = context.objectWithID(childObject.objectID)
-                            context.refreshObject(parentObject, mergeChanges: true)
-                        })
-                        
-                        var error: NSError? = nil
-                        if !context.save(&error) {
-                            println("error: \(error)")
-                        }
-                        
-                        objs = objects
-                    }
-                    
-                    println("incremental store finished saving \(palettes.count) from the network")
-                })
-            }
-        }
-        
-        return objs
+            // TODO: handle result
+            
+        }).resume()
     }
 }
