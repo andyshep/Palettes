@@ -33,6 +33,8 @@
 		F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */; };
 		F7C1A4561A3A8F530000B2C7 /* NSDictionary+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */; };
 		F7C1A4591A3A96190000B2C7 /* ReactiveCocoaBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4581A3A96190000B2C7 /* ReactiveCocoaBindings.swift */; };
+		F7E2D8AA1A5E404A00995BC0 /* LocalIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */; };
+		F7E2D8AC1A5E407A00995BC0 /* RemoteIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */; };
 		F7EB5C581A402C3C00989A04 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB5C571A402C3C00989A04 /* Palette.swift */; };
 /* End PBXBuildFile section */
 
@@ -81,6 +83,8 @@
 		F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaletteColorView.swift; sourceTree = "<group>"; };
 		F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDictionary+Parsing.swift"; sourceTree = "<group>"; };
 		F7C1A4581A3A96190000B2C7 /* ReactiveCocoaBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactiveCocoaBindings.swift; sourceTree = "<group>"; };
+		F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalIncrementalStore.swift; sourceTree = "<group>"; };
+		F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteIncrementalStore.swift; sourceTree = "<group>"; };
 		F7EB5C571A402C3C00989A04 /* Palette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
 		FA2E52F1AA940E4429907847 /* Pods-Palettes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Palettes.release.xcconfig"; path = "Pods/Target Support Files/Pods-Palettes/Pods-Palettes.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -205,6 +209,8 @@
 				F7EB5C571A402C3C00989A04 /* Palette.swift */,
 				F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */,
 				F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */,
+				F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */,
+				F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */,
 				F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */,
 				F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */,
 				F72F216C1A3FA1AE00FA397C /* Palettes.xcdatamodeld */,
@@ -417,6 +423,7 @@
 				F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */,
 				F77A44721A3A5D95004C0990 /* ColourLovers.swift in Sources */,
 				F76557301A40E7AD00956E11 /* PALIncrementalStore.swift in Sources */,
+				F7E2D8AA1A5E404A00995BC0 /* LocalIncrementalStore.swift in Sources */,
 				F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */,
 				F77A44761A3A5D95004C0990 /* PalettesFlowLayout.swift in Sources */,
 				F77A444B1A3A5D64004C0990 /* AppDelegate.swift in Sources */,
@@ -424,6 +431,7 @@
 				F72F21691A3F9F9600FA397C /* DataController.swift in Sources */,
 				F77A44731A3A5D95004C0990 /* NetworkController.swift in Sources */,
 				F7C1A4591A3A96190000B2C7 /* ReactiveCocoaBindings.swift in Sources */,
+				F7E2D8AC1A5E407A00995BC0 /* RemoteIncrementalStore.swift in Sources */,
 				F77A44791A3A5D95004C0990 /* UIColor+HexColors.swift in Sources */,
 				F766D3A01A3A8042003E4A7C /* NSData+JSON.swift in Sources */,
 				F78C88EB1A3B65F200145D3B /* PaletteViewModel.swift in Sources */,

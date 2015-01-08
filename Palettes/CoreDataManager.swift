@@ -71,8 +71,8 @@ class CoreDataManager: NSObject {
     // MARK: - Private
     
     private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
-        let storeType = PALIncrementalStore.storeType
-        NSPersistentStoreCoordinator.registerStoreClass(PALIncrementalStore.self, forStoreType: storeType)
+//        let storeType = LocalIncrementalStore.storeType
+        let storeType = RemoteIncrementalStore.storeType
         
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let url = NSURL.applicationDocumentsDirectory().URLByAppendingPathComponent("Palettes.sqlite")

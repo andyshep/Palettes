@@ -37,9 +37,9 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource {
         let viewModel = PaletteViewModel(palette: palette)
         cell.viewModel = viewModel
         
-        if indexPath.row + 10 > self.objects.count {
-            self.executeFetchRequest(offset: self.objects.count)
-        }
+//        if indexPath.row + 10 > self.objects.count {
+//            self.executeFetchRequest(offset: self.objects.count)
+//        }
         
         return cell
     }
@@ -62,12 +62,10 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource {
                 println("received no objects...")
             }
         }
-        
+
+        var error: NSError?
         let context = CoreDataManager.sharedManager.managedObjectContext
-        context?.performBlock({ () -> Void in
-            var error: NSError?
-            let result = context?.executeRequest(asyncRequest, error: &error)
-        })
+        let result = context?.executeRequest(asyncRequest, error: &error)
     }
     
     func palettesFetchRequest(#offset:Int) -> NSFetchRequest {
