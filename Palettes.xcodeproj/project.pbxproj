@@ -13,7 +13,6 @@
 		F72F21691A3F9F9600FA397C /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72F21681A3F9F9600FA397C /* DataController.swift */; };
 		F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F72F216C1A3FA1AE00FA397C /* Palettes.xcdatamodeld */; };
 		F75B0DCC1A40286F00B0F10D /* ArrayTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */; };
-		F76557301A40E7AD00956E11 /* PALIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */; };
 		F766D3A01A3A8042003E4A7C /* NSData+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */; };
 		F77A444B1A3A5D64004C0990 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A444A1A3A5D64004C0990 /* AppDelegate.swift */; };
 		F77A44521A3A5D64004C0990 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F77A44511A3A5D64004C0990 /* Images.xcassets */; };
@@ -55,7 +54,6 @@
 		F72F21681A3F9F9600FA397C /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F72F216D1A3FA1AE00FA397C /* Palettes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Palettes.xcdatamodel; sourceTree = "<group>"; };
 		F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTransformer.swift; sourceTree = "<group>"; };
-		F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PALIncrementalStore.swift; sourceTree = "<group>"; };
 		F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+JSON.swift"; sourceTree = "<group>"; };
 		F77A44451A3A5D64004C0990 /* Palettes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Palettes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F77A44491A3A5D64004C0990 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -174,7 +172,6 @@
 				F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */,
 				F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */,
 				F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */,
-				F765572F1A40E7AD00956E11 /* PALIncrementalStore.swift */,
 				F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */,
 				F72F216C1A3FA1AE00FA397C /* Palettes.xcdatamodeld */,
 			);
@@ -306,7 +303,6 @@
 				F7B42DE01A5F57B1004F7198 /* Palette+AttributeMapping.swift in Sources */,
 				F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */,
 				F77A44721A3A5D95004C0990 /* ColourLovers.swift in Sources */,
-				F76557301A40E7AD00956E11 /* PALIncrementalStore.swift in Sources */,
 				F7E2D8AA1A5E404A00995BC0 /* LocalIncrementalStore.swift in Sources */,
 				F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */,
 				F77A44761A3A5D95004C0990 /* PalettesFlowLayout.swift in Sources */,
