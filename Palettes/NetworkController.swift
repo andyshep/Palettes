@@ -12,22 +12,6 @@ typealias TaskCompletion = (data: NSData!, error: NSError!) -> Void
 
 class NetworkController: NSObject {
     
-    class func signalForRequest(request:NSURLRequest) -> RACSignal {
-        let subject = RACReplaySubject()
-        
-        self.task(request, completion: { (data, error) -> Void in
-            if error != nil {
-                subject.sendError(error)
-            }
-            else {
-                subject.sendNext(data)
-                subject.sendCompleted()
-            }
-        }).resume()
-        
-        return subject
-    }
-    
     class func task(request:NSURLRequest, completion:TaskCompletion) -> NSURLSessionTask {
         
         let finished: TaskCompletion = {(data, error) in
