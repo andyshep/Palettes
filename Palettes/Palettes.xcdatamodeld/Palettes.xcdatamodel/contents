@@ -4,10 +4,11 @@
         <attribute name="colors" optional="YES" attributeType="Transformable" valueTransformerName="Palettes.ArrayTransformer" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="String" defaultValueString="-1" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" defaultValueString="empty" syncable="YES"/>
+        <attribute name="rank" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" defaultValueString="empty" syncable="YES"/>
         <attribute name="widths" optional="YES" attributeType="Transformable" valueTransformerName="Palettes.ArrayTransformer" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Palette" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="Palette" positionX="-63" positionY="-18" width="128" height="135"/>
     </elements>
 </model>

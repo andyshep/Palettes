@@ -13,6 +13,7 @@ class Palette: NSManagedObject {
 
     @NSManaged var id: String
     @NSManaged var name: String
+    @NSManaged var rank: NSNumber
     @NSManaged var username: String
     
     @NSManaged var colors: [AnyObject]
@@ -31,6 +32,6 @@ extension Palette {
     }
     
     class var defaultSortDescriptors: [NSSortDescriptor] {
-        return [NSSortDescriptor(key: "name", ascending: true)]
+        return [NSSortDescriptor(key: "rank", ascending: true)]
     }
 }
