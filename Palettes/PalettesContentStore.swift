@@ -27,6 +27,7 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return self.objects.count
         return self.fetchedResultsController.fetchedObjects?.count ?? 0
     }
     
@@ -36,10 +37,6 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
         
         let viewModel = PaletteViewModel(palette: palette)
         cell.viewModel = viewModel
-        
-//        if indexPath.row + 10 > self.objects.count {
-//            self.executeFetchRequest(offset: self.objects.count)
-//        }
         
         return cell
     }
@@ -56,7 +53,6 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
         }
         
         let context = CoreDataManager.sharedManager.managedObjectContext!
-        
         let fetchRequest = self.palettesFetchRequest(offset: 0)
         
         let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: "Palettes")
@@ -69,27 +65,34 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     
     // MARK: - Private
     
-//    func executeFetchRequest(#offset: Int) -> Void {
-//        let request = palettesFetchRequest(offset: offset)
-//        let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
-//            let count = result.finalResult?.count
-//            if count > 0 {
-//                println("executeFetchRequest received \(count!) objects")
-//                
-//                if let palettes = result.finalResult as? [Palette] {
-//                    self.objects += palettes
-//                    self.collectionView?.reloadData()
-//                }
-//            }
-//            else {
-//                println("received no objects...")
-//            }
-//        }
-//
-//        var error: NSError?
-//        let context = CoreDataManager.sharedManager.managedObjectContext
-//        let result = context?.executeRequest(asyncRequest, error: &error)
-//    }
+    /**
+    Executes an asynchronous fetch reqest for the model objects at an offset
+    
+    :param: offset The index into the collection to begin retrieving objects from
+    
+    */
+    
+    func executeFetchRequest(#offset: Int) -> Void {
+        let request = palettesFetchRequest(offset: offset)
+        let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
+            let count = result.finalResult?.count
+            if count > 0 {
+                if let palettes = result.finalResult as? [Palette] {
+                    self.objects += palettes
+                    self.collectionView?.reloadData()
+                }
+            }
+        }
+
+        var error: NSError?
+        let context = CoreDataManager.sharedManager.managedObjectContext
+        let result = context?.executeRequest(asyncRequest, error: &error)
+    }
+    
+    /**
+    Executes the fetch request associated with the fetched results controller
+    
+    */
     
     func performFetch() -> Void {
         var error: NSError? = nil

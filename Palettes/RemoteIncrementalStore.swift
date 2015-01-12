@@ -10,6 +10,8 @@ import CoreData
 
 @objc(RemoteIncrementalStore)
 class RemoteIncrementalStore : NSIncrementalStore {
+    
+    /// The cache of managed object ids
     private let cache = NSMutableDictionary()
     
     class var storeType: String {
@@ -20,6 +22,8 @@ class RemoteIncrementalStore : NSIncrementalStore {
         NSPersistentStoreCoordinator.registerStoreClass(self, forStoreType:self.storeType)
     }
     
+    // MARK: - NSIncrementalStore
+    
     override func loadMetadata(error: NSErrorPointer) -> Bool {
         let uuid = NSProcessInfo.processInfo().globallyUniqueString
         self.metadata = [NSStoreTypeKey : RemoteIncrementalStore.storeType, NSStoreUUIDKey : uuid]
@@ -29,9 +33,6 @@ class RemoteIncrementalStore : NSIncrementalStore {
     override func executeRequest(request: NSPersistentStoreRequest, withContext context: NSManagedObjectContext, error: NSErrorPointer) -> AnyObject? {
         if request.requestType == .FetchRequestType {
             return self.executeFetchRequest(request, withContext: context, error: error)
-        }
-        else if request.requestType == .SaveRequestType {
-            return self.executeSaveRequest(request, withContext: context, error: error)
         }
         
         return nil
@@ -46,6 +47,15 @@ class RemoteIncrementalStore : NSIncrementalStore {
     }
     
     // MARK: - Private
+    
+    /**
+    Returns a new object id for the entity, and caches the values provided.
+    
+    :param: entityDescription
+    :param: values
+    
+    :returns: A managed object ID
+    */
 
     func objectIdForNewObjectOfEntity(entityDescription:NSEntityDescription, cacheValues values:AnyObject!) -> NSManagedObjectID! {
         if let dict = values as? NSDictionary {
@@ -85,23 +95,7 @@ class RemoteIncrementalStore : NSIncrementalStore {
     }
     
     /**
-    Executes a save request within the context provided
-    
-    :param: request The request for the store.
-    :param: context The context to execure the request within
-    :param: error If an error occurs, on return contains an `NSError` object that describes the problem.
-    
-    :returns: An optional array of managed objects
-    */
-    
-    func executeSaveRequest(request: NSPersistentStoreRequest!, withContext context: NSManagedObjectContext!, error: NSErrorPointer) -> [AnyObject]! {
-        println("save requests not yet implemented")
-        
-        return []
-    }
-    
-    /**
-    Fetch remote objects
+    Fetches the remote objects associated with a request
     
     :param: fetchRequest The request for the store.
     :param: context The context to execure the request within

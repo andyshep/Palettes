@@ -10,15 +10,19 @@ import CoreData
 
 @objc(LocalIncrementalStore)
 class LocalIncrementalStore : NSIncrementalStore {
+    
+    /// The cache of managed object ids
     private let cache = NSMutableDictionary()
+    
+    class var storeType: String {
+        return NSStringFromClass(LocalIncrementalStore.self)
+    }
     
     override class func initialize() {
         NSPersistentStoreCoordinator.registerStoreClass(self, forStoreType:self.storeType)
     }
     
-    class var storeType: String {
-        return NSStringFromClass(LocalIncrementalStore.self)
-    }
+    // MARK: - NSIncrementalStore
     
     override func loadMetadata(error: NSErrorPointer) -> Bool {
         let uuid = NSProcessInfo.processInfo().globallyUniqueString

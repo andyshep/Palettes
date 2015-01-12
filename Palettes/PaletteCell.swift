@@ -17,7 +17,7 @@ class PaletteCell: UICollectionViewCell {
     var viewModel: PaletteViewModel? {
         didSet {
             self.titleLabel.text = viewModel?.name
-            self.subtitleLabel.text = viewModel?.id
+            self.subtitleLabel.text = viewModel?.rank
             self.colorView.colors = viewModel?.colors
         }
     }

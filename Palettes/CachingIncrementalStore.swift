@@ -71,7 +71,7 @@ class CachingIncrementalStore : NSIncrementalStore {
         return context
     }()
     
-    /// The model for the backing store, augment with custom attributes
+    /// The model for the backing store, augmented with custom attributes
     lazy var augmentedModel: NSManagedObjectModel = {
         let augmentedModel = self.persistentStoreCoordinator?.managedObjectModel.copy() as NSManagedObjectModel
         for object in augmentedModel.entities {
@@ -195,7 +195,8 @@ class CachingIncrementalStore : NSIncrementalStore {
     }
     
     /**
-    Insert or updates an entity set from the result provided
+    Insert or updates an entity set from the result provided. The entity set will be inserted into context provide
+    and into the backing context. The completion function will be called with valid references to the update objects.
     
     :param: result An set of `NSManagedObjects` that has been retrieved
     :param: entity A valid entity within the model
@@ -330,6 +331,14 @@ class CachingIncrementalStore : NSIncrementalStore {
         return backingObjectId
     }
     
+    /**
+    Fetches remote objects associated with a request. The remote objects will be inserted or updated
+    into the context provided. The objects will also be saved into the backing context.
+    
+    :param: fetchRequest The fetch request used to return remote objects.
+    :param: identifier A context
+    */
+    
     func fetchRemoteObjectsWithRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Void {
         let offset = fetchRequest.fetchOffset
         let limit = fetchRequest.fetchLimit
@@ -364,8 +373,6 @@ class CachingIncrementalStore : NSIncrementalStore {
                                 context.refreshObject(parentObject, mergeChanges: true)
                             })
                         }
-                        
-                        println("incremental store finished refreshing \(palettes.count) from the network")
                     })
                 }
             }

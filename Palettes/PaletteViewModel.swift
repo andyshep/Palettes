@@ -22,8 +22,8 @@ class PaletteViewModel: NSObject {
         return self.palette.name
     }()
     
-    lazy var id: String = {
-        return self.palette.id
+    lazy var rank: String = {
+        return self.palette.rank.stringValue
     }()
     
     lazy var colors: [PaletteColor] = {
