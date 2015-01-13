@@ -340,11 +340,8 @@ class CachingIncrementalStore : NSIncrementalStore {
     */
     
     func fetchRemoteObjectsWithRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Void {
-        let offset = fetchRequest.fetchOffset
-        let limit = fetchRequest.fetchLimit
-        let httpRequest = ColourLovers.TopPalettes.request(offset: offset, limit: limit)
         
-        NetworkController.task(httpRequest, completion: { (data, error) -> Void in
+        let responseHandler: (NSData -> Void) = {(data) in
             var err: NSError?
             let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as [AnyObject]
             let palettes = jsonResult.filter({ (obj: AnyObject) -> Bool in
@@ -376,7 +373,19 @@ class CachingIncrementalStore : NSIncrementalStore {
                     })
                 }
             }
-            
+        }
+        
+        let offset = fetchRequest.fetchOffset
+        let limit = fetchRequest.fetchLimit
+        let httpRequest = ColourLovers.TopPalettes.request(offset: offset, limit: limit)
+        
+        NetworkController.task(httpRequest, result: { (taskResult) -> Void in
+            switch taskResult {
+            case .Success(let data):
+                responseHandler(data)
+            case .Failure(let reason):
+                println(reason.description())
+            }
         }).resume()
     }
 }
