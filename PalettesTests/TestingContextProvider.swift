@@ -39,6 +39,7 @@ struct TestingContextProvider {
         
         let managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = psc
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         
         XCTAssertNotNil(managedObjectContext, "context should not be nil")
         

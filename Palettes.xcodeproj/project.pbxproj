@@ -44,10 +44,13 @@
 		F7E2D8AA1A5E404A00995BC0 /* LocalIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */; };
 		F7E2D8AC1A5E407A00995BC0 /* RemoteIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */; };
 		F7EB5C581A402C3C00989A04 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB5C571A402C3C00989A04 /* Palette.swift */; };
-		F7FD53281A647FFA00737800 /* RemoteIncrementalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD53271A647FFA00737800 /* RemoteIncrementalStoreTests.swift */; };
 		F7FD532A1A64804500737800 /* TestingContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD53291A64804500737800 /* TestingContextProvider.swift */; };
 		F7FD532B1A6481DF00737800 /* RemoteIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */; };
 		F7FD532C1A6481ED00737800 /* ColourLovers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A446A1A3A5D95004C0990 /* ColourLovers.swift */; };
+		F7FD532F1A6490B100737800 /* CachingIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */; };
+		F7FD53301A6490BF00737800 /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A446B1A3A5D95004C0990 /* NetworkController.swift */; };
+		F7FD53311A649F5400737800 /* CachingIncrementalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD532D1A64908A00737800 /* CachingIncrementalStoreTests.swift */; };
+		F7FD53321A649F5700737800 /* RemoteIncrementalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD53271A647FFA00737800 /* RemoteIncrementalStoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +97,7 @@
 		F7EB5C571A402C3C00989A04 /* Palette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
 		F7FD53271A647FFA00737800 /* RemoteIncrementalStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteIncrementalStoreTests.swift; sourceTree = "<group>"; };
 		F7FD53291A64804500737800 /* TestingContextProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestingContextProvider.swift; sourceTree = "<group>"; };
+		F7FD532D1A64908A00737800 /* CachingIncrementalStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachingIncrementalStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -158,6 +162,7 @@
 				F7FD53291A64804500737800 /* TestingContextProvider.swift */,
 				F77A44601A3A5D64004C0990 /* LocalIncrementalStoreTests.swift */,
 				F7FD53271A647FFA00737800 /* RemoteIncrementalStoreTests.swift */,
+				F7FD532D1A64908A00737800 /* CachingIncrementalStoreTests.swift */,
 				F77A445E1A3A5D64004C0990 /* Supporting Files */,
 			);
 			path = PalettesTests;
@@ -348,14 +353,17 @@
 				F7FD532B1A6481DF00737800 /* RemoteIncrementalStore.swift in Sources */,
 				F7C0B8D11A646B3400E0721B /* NSData+JSON.swift in Sources */,
 				F7C0B8C91A64666700E0721B /* Palette.swift in Sources */,
+				F7FD53301A6490BF00737800 /* NetworkController.swift in Sources */,
 				F7C0B8CB1A64667700E0721B /* NSDictionary+Parsing.swift in Sources */,
+				F7FD532F1A6490B100737800 /* CachingIncrementalStore.swift in Sources */,
 				F7C0B8C81A6465CF00E0721B /* LocalIncrementalStore.swift in Sources */,
 				F7C0B8CC1A64668100E0721B /* UIColor+HexColors.swift in Sources */,
-				F7FD53281A647FFA00737800 /* RemoteIncrementalStoreTests.swift in Sources */,
 				F7C0B8CE1A6469CB00E0721B /* NSURL+Directories.swift in Sources */,
 				F7FD532C1A6481ED00737800 /* ColourLovers.swift in Sources */,
+				F7FD53321A649F5700737800 /* RemoteIncrementalStoreTests.swift in Sources */,
 				F7C0B8D01A646B2000E0721B /* ArrayTransformer.swift in Sources */,
 				F77A44611A3A5D64004C0990 /* LocalIncrementalStoreTests.swift in Sources */,
+				F7FD53311A649F5400737800 /* CachingIncrementalStoreTests.swift in Sources */,
 				F7FD532A1A64804500737800 /* TestingContextProvider.swift in Sources */,
 				F7C0B8CA1A64667000E0721B /* Palette+AttributeMapping.swift in Sources */,
 				F7C0B8CF1A646AFD00E0721B /* Palettes.xcdatamodeld in Sources */,
