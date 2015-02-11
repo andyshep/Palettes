@@ -32,7 +32,7 @@ class LocalIncrementalStore : NSIncrementalStore {
     
     override func executeRequest(request: NSPersistentStoreRequest, withContext context: NSManagedObjectContext, error: NSErrorPointer) -> AnyObject? {
         if request.requestType == .FetchRequestType {
-            let fetchRequest = request as NSFetchRequest
+            let fetchRequest = request as! NSFetchRequest
             if fetchRequest.resultType == .ManagedObjectResultType {
                 return self.entitiesForFetchRequest(fetchRequest, inContext: context)
             }
@@ -43,7 +43,7 @@ class LocalIncrementalStore : NSIncrementalStore {
     
     override func newValuesForObjectWithID(objectID: NSManagedObjectID, withContext context: NSManagedObjectContext, error: NSErrorPointer) -> NSIncrementalStoreNode? {
         if let values = cache.objectForKey(objectID) as? NSDictionary {
-            return NSIncrementalStoreNode(objectID: objectID, withValues: values, version: 1)
+            return NSIncrementalStoreNode(objectID: objectID, withValues: values as! [NSObject : AnyObject], version: 1)
         }
         
         return nil
@@ -65,7 +65,7 @@ class LocalIncrementalStore : NSIncrementalStore {
         
         let entities = items.map({ (item: NSDictionary) -> Palette in
             let objectId = self.objectIdForNewObjectOfEntity(request.entity!, cacheValues: item)
-            let palette = context.objectWithID(objectId) as Palette
+            let palette = context.objectWithID(objectId) as! Palette
             palette.transform(dictionary: item)
             return palette
         })
@@ -106,7 +106,7 @@ class LocalIncrementalStore : NSIncrementalStore {
         var err: NSError?
         let filePath: String? = NSBundle.mainBundle().pathForResource("palettes", ofType: "json")
         let data: NSData = NSData(contentsOfFile: filePath!)!
-        let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as [AnyObject]
+        let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as! [AnyObject]
         
         if err != nil {
             println("error: \(err)")
@@ -114,7 +114,7 @@ class LocalIncrementalStore : NSIncrementalStore {
         
         let palettes = jsonResult.filter({ (obj: AnyObject) -> Bool in
             return (obj is NSDictionary)
-        }) as [NSDictionary]
+        }) as! [NSDictionary]
         
         return palettes
     }

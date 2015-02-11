@@ -47,7 +47,7 @@ class CachingIncrementalStoreTests: XCTestCase {
         }
         
         var error: NSError?
-        let results = managedObjectContext?.executeFetchRequest(request, error: &error) as [Palette]
+        let results = managedObjectContext?.executeFetchRequest(request, error: &error) as! [Palette]
         
         XCTAssertLessThanOrEqual(results.count, 0, "there should be no cached results")
         

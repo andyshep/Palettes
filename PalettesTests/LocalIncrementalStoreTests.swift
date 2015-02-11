@@ -33,7 +33,7 @@ class LocalIncrementalStoreTests: XCTestCase {
         request.sortDescriptors = Palette.defaultSortDescriptors
         
         var error: NSError?
-        let results = managedObjectContext?.executeFetchRequest(request, error: &error) as [Palette]
+        let results = managedObjectContext?.executeFetchRequest(request, error: &error) as! [Palette]
         
         XCTAssertGreaterThan(results.count, 0, "results should be greater than zero")
     }

@@ -73,7 +73,7 @@ class CachingIncrementalStore : NSIncrementalStore {
     
     /// The model for the backing store, augmented with custom attributes
     lazy var augmentedModel: NSManagedObjectModel = {
-        let augmentedModel = self.persistentStoreCoordinator?.managedObjectModel.copy() as NSManagedObjectModel
+        let augmentedModel = self.persistentStoreCoordinator?.managedObjectModel.copy() as! NSManagedObjectModel
         for object in augmentedModel.entities {
             if let entity = object as? NSEntityDescription {
                 if entity.superentity != nil {
@@ -124,7 +124,7 @@ class CachingIncrementalStore : NSIncrementalStore {
         fetchRequest.fetchLimit = 1
         fetchRequest.includesSubentities = false
         
-        let refObj = self.referenceObjectForObjectID(objectID) as NSString
+        let refObj = self.referenceObjectForObjectID(objectID) as! NSString
         let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, refObj.description)
         fetchRequest.predicate = predicate
         
@@ -135,8 +135,8 @@ class CachingIncrementalStore : NSIncrementalStore {
             results = privateContext.executeFetchRequest(fetchRequest, error: &error)
         }
         
-        let attributeValues = (results?.count > 0) ? results?.last as NSDictionary : NSDictionary()
-        let node = NSIncrementalStoreNode(objectID: objectID, withValues: attributeValues, version: 1)
+        let attributeValues = (results?.count > 0) ? results?.last as! NSDictionary : NSDictionary()
+        let node = NSIncrementalStoreNode(objectID: objectID, withValues: attributeValues as! [NSObject : AnyObject], version: 1)
         
         return node
     }
@@ -155,26 +155,26 @@ class CachingIncrementalStore : NSIncrementalStore {
     
     func executeFetchRequest(request: NSPersistentStoreRequest!, withContext context: NSManagedObjectContext!, error: NSErrorPointer) -> [AnyObject]! {
         var error: NSError? = nil
-        let fetchRequest = request as NSFetchRequest
+        let fetchRequest = request as! NSFetchRequest
         let backingContext = self.backingManagedObjectContext
         
         if fetchRequest.resultType == .ManagedObjectResultType {
             self.fetchRemoteObjectsWithRequest(fetchRequest, context: context)
             
-            let cacheFetchRequest = request.copy() as NSFetchRequest
+            let cacheFetchRequest = request.copy() as! NSFetchRequest
             cacheFetchRequest.entity = NSEntityDescription.entityForName(fetchRequest.entityName!, inManagedObjectContext: backingContext)
             cacheFetchRequest.resultType = .ManagedObjectResultType
             cacheFetchRequest.propertiesToFetch = [kPALResourceIdentifierAttributeName]
             
             let results = backingContext.executeFetchRequest(cacheFetchRequest, error: &error)! as NSArray
-            let resourceIds = results.valueForKeyPath(kPALResourceIdentifierAttributeName) as [NSString]
+            let resourceIds = results.valueForKeyPath(kPALResourceIdentifierAttributeName) as! [NSString]
             
             let managedObjects = resourceIds.map({ (resourceId: NSString) -> NSManagedObject in
                 let objectId = self.objectIDForEntity(fetchRequest.entity!, withResourceIdentifier: resourceId)
-                let managedObject = context.objectWithID(objectId!) as Palette
+                let managedObject = context.objectWithID(objectId!) as! Palette
                 
                 let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, resourceId)
-                let backingObj = results.filteredArrayUsingPredicate(predicate!).first as Palette
+                let backingObj = results.filteredArrayUsingPredicate(predicate).first as! Palette
                 
                 managedObject.transform(palette: backingObj)
                 return managedObject
@@ -281,7 +281,7 @@ class CachingIncrementalStore : NSIncrementalStore {
         }
         
         if managedObjectId == nil {
-            let referenceObject = "__pal__" + identifier!
+            let referenceObject = "__pal__" + String(identifier!)
             managedObjectId = self.newObjectIDForEntity(entity, referenceObject: referenceObject)
         }
         
@@ -343,7 +343,7 @@ class CachingIncrementalStore : NSIncrementalStore {
         
         let responseHandler: (NSData -> Void) = {(data) in
             var err: NSError?
-            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as [AnyObject]
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as! [AnyObject]
             let palettes = jsonResult.filter({ (obj: AnyObject) -> Bool in
                 return (obj is NSDictionary)
             })
@@ -363,9 +363,9 @@ class CachingIncrementalStore : NSIncrementalStore {
                         }
                         
                         context.performBlockAndWait() {
-                            let objects = childContext.registeredObjects.allObjects
-                            objects.map({ (obj: AnyObject) -> Void in
-                                let childObject = obj as NSManagedObject
+                            let objects = childContext.registeredObjects as NSSet
+                            objects.allObjects.map({ (obj: AnyObject) -> Void in
+                                let childObject = obj as! NSManagedObject
                                 let parentObject = context.objectWithID(childObject.objectID)
                                 context.refreshObject(parentObject, mergeChanges: true)
                             })

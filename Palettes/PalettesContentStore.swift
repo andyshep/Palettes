@@ -32,7 +32,7 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PaletteCell.reuseIdentifier, forIndexPath: indexPath) as PaletteCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PaletteCell.reuseIdentifier, forIndexPath: indexPath) as! PaletteCell
         let palette = self.objectAtIndexPath(indexPath)
         
         let viewModel = PaletteViewModel(palette: palette)
@@ -112,7 +112,7 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     
     func objectAtIndexPath(indexPath:NSIndexPath) -> Palette {
 //        let object = self.objects[indexPath.row]
-        let object = self.fetchedResultsController.fetchedObjects?[indexPath.row] as Palette
+        let object = self.fetchedResultsController.fetchedObjects?[indexPath.row] as! Palette
         return object
     }
 }

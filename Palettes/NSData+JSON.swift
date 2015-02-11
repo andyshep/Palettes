@@ -12,7 +12,7 @@ extension NSData {
     func asDictionary() -> NSDictionary {
         var error : NSError?
         var options = NSJSONReadingOptions.MutableContainers
-        return NSJSONSerialization.JSONObjectWithData(self, options:options, error:&error) as NSDictionary
+        return NSJSONSerialization.JSONObjectWithData(self, options:options, error:&error) as! NSDictionary
     }
     
     func asArray() -> NSArray {

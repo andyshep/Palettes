@@ -17,7 +17,7 @@ extension Palette {
         self.username = dictionary.stringValueForKey("userName")
         self.widths = dictionary.numberArrayValueForKey("colorWidths")
         self.colors = dictionary.stringArrayValueForKey("colors").map({ (string) -> UIColor in
-            return UIColor.hexColor(string)
+            return UIColor.hexColor(string as! String)
         })
         
         assert(colors.count == widths.count, "color and color width should be equal")

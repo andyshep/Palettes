@@ -20,7 +20,7 @@ extension UIColor {
             colorString = colorString.substringFromIndex(advance(colorString.startIndex, 1))
         }
         
-        if (countElements(colorString) != 6) {
+        if (count(colorString) != 6) {
             return UIColor.grayColor()
         }
         

@@ -40,7 +40,7 @@ class RemoteIncrementalStore : NSIncrementalStore {
     
     override func newValuesForObjectWithID(objectID: NSManagedObjectID, withContext context: NSManagedObjectContext, error: NSErrorPointer) -> NSIncrementalStoreNode? {
         if let values = cache.objectForKey(objectID) as? NSDictionary {
-            return NSIncrementalStoreNode(objectID: objectID, withValues: values, version: 1)
+            return NSIncrementalStoreNode(objectID: objectID, withValues: values as! [NSObject : AnyObject], version: 1)
         }
         
         return nil
@@ -83,7 +83,7 @@ class RemoteIncrementalStore : NSIncrementalStore {
     
     func executeFetchRequest(request: NSPersistentStoreRequest!, withContext context: NSManagedObjectContext!, error: NSErrorPointer) -> [AnyObject]! {
         var error: NSError? = nil
-        let fetchRequest = request as NSFetchRequest
+        let fetchRequest = request as! NSFetchRequest
         
         if fetchRequest.resultType == .ManagedObjectResultType {
             let managedObjects = self.fetchRemoteObjectsWithRequest(fetchRequest, context: context)
@@ -112,14 +112,14 @@ class RemoteIncrementalStore : NSIncrementalStore {
         var response: NSURLResponse? = nil
         let data = NSURLConnection.sendSynchronousRequest(httpRequest, returningResponse: &response, error: &error)
         
-        let jsonResult = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &error) as [AnyObject]
+        let jsonResult = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &error) as! [AnyObject]
         let paletteObjs = jsonResult.filter({ (obj: AnyObject) -> Bool in
             return (obj is NSDictionary)
-        }) as [NSDictionary]
+        }) as! [NSDictionary]
         
         let entities = paletteObjs.map({ (item: NSDictionary) -> Palette in
             let objectId = self.objectIdForNewObjectOfEntity(fetchRequest.entity!, cacheValues: item)
-            let palette = context.objectWithID(objectId) as Palette
+            let palette = context.objectWithID(objectId) as! Palette
             palette.transform(dictionary: item)
             return palette
         })

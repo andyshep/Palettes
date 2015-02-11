@@ -19,8 +19,8 @@ struct TestingContextProvider {
         // copy and modify the model so the unit test target can find entities.
         // http://stackoverflow.com/a/25858758
         
-        let testModel = model!.copy() as NSManagedObjectModel
-        for entity in testModel.entities as [NSEntityDescription] {
+        let testModel = model!.copy() as! NSManagedObjectModel
+        for entity in testModel.entities as! [NSEntityDescription] {
             if entity.name == Palette.entityName {
                 entity.managedObjectClassName = "PalettesTests." + Palette.entityName
             }

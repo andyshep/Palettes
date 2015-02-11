@@ -17,7 +17,7 @@ class DataController: NSObject {
         let filePath: String? = NSBundle.mainBundle().pathForResource("palettes", ofType: "json")
         var err: NSError?
         let data: NSData = NSData(contentsOfFile: filePath!)!
-        let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as NSArray
+        let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as! NSArray
         
         if err != nil {
             println("error: \(err!.localizedDescription)")
