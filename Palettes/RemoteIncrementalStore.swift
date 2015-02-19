@@ -63,6 +63,7 @@ class RemoteIncrementalStore : NSIncrementalStore {
             
             if let referenceId = dict.objectForKey("id")?.stringValue {
                 let objectId = self.newObjectIDForEntity(entityDescription, referenceObject: referenceId)
+                let values = Palette.extractAttributeValues(dictionary: dict)
                 cache.setObject(values, forKey: objectId)
                 return objectId
             }
@@ -120,7 +121,6 @@ class RemoteIncrementalStore : NSIncrementalStore {
         let entities = paletteObjs.map({ (item: NSDictionary) -> Palette in
             let objectId = self.objectIdForNewObjectOfEntity(fetchRequest.entity!, cacheValues: item)
             let palette = context.objectWithID(objectId) as! Palette
-            palette.transform(dictionary: item)
             return palette
         })
         

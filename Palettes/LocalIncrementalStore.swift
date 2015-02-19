@@ -11,7 +11,7 @@ import CoreData
 @objc(LocalIncrementalStore)
 class LocalIncrementalStore : NSIncrementalStore {
     
-    /// The cache of managed object ids
+    // The cache of attribute values and managed object ids
     private let cache = NSMutableDictionary()
     
     class var storeType: String {
@@ -66,7 +66,6 @@ class LocalIncrementalStore : NSIncrementalStore {
         let entities = items.map({ (item: NSDictionary) -> Palette in
             let objectId = self.objectIdForNewObjectOfEntity(request.entity!, cacheValues: item)
             let palette = context.objectWithID(objectId) as! Palette
-            palette.transform(dictionary: item)
             return palette
         })
         
@@ -88,6 +87,7 @@ class LocalIncrementalStore : NSIncrementalStore {
             
             if let referenceId = dict.objectForKey("id")?.stringValue {
                 let objectId = self.newObjectIDForEntity(entityDescription, referenceObject: referenceId)
+                let values = Palette.extractAttributeValues(dictionary: dict)
                 cache.setObject(values, forKey: objectId)
                 return objectId
             }

@@ -31,4 +31,21 @@ extension Palette {
         self.widths = palette.widths
         self.colors = palette.colors
     }
+    
+    class func extractAttributeValues(#dictionary: NSDictionary) -> NSDictionary {
+        let values = NSMutableDictionary()
+        
+        let name = dictionary.stringValueForKey("title")
+        let id = dictionary.numberValueForKey("id").stringValue
+        let rank = dictionary.numberValueForKey("rank").integerValue
+        let username = dictionary.stringValueForKey("userName")
+        let widths = dictionary.numberArrayValueForKey("colorWidths")
+        let colors = dictionary.stringArrayValueForKey("colors").map({ (string) -> UIColor in
+            return UIColor.hexColor(string as! String)
+        })
+        
+        assert(colors.count == widths.count, "color and color width should be equal")
+        
+        return ["name": name, "id": id, "rank": rank, "username": username, "widths": widths, "colors": colors]
+    }
 }
