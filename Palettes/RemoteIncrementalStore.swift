@@ -109,19 +109,53 @@ class RemoteIncrementalStore : NSIncrementalStore {
         let httpRequest = ColourLovers.TopPalettes.request(offset, limit: limit)
         
         var response: NSURLResponse? = nil
-        let data = try! NSURLConnection.sendSynchronousRequest(httpRequest, returningResponse: &response)
         
-        let jsonResult = try! NSJSONSerialization.JSONObjectWithData(data, options: []) as! [AnyObject]
-        let paletteObjs = jsonResult.filter({ (obj: AnyObject) -> Bool in
-            return (obj is NSDictionary)
-        }) as! [NSDictionary]
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let session = NSURLSession(configuration: configuration)
         
-        let entities = paletteObjs.map({ (item: NSDictionary) -> Palette in
-            let objectId = self.objectIdForNewObjectOfEntity(fetchRequest.entity!, cacheValues: item)
-            let palette = context.objectWithID(objectId) as! Palette
-            return palette
-        })
+        do {
+            let data = try session.sendSynchronousDataTaskWithRequest(httpRequest, response: &response)
+            guard let results = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? [NSDictionary] else {
+                print("json could not be parsed")
+                return []
+            }
+            
+            let entities = results.map({ (item: NSDictionary) -> Palette in
+                let objectId = self.objectIdForNewObjectOfEntity(fetchRequest.entity!, cacheValues: item)
+                guard let palette = context.objectWithID(objectId) as? Palette else {
+                    fatalError("wrong object type")
+                }
+                return palette
+            })
+            
+            return entities
+        }
+        catch {
+            return []
+        }
+    }
+}
+
+extension NSURLSession {
+    func sendSynchronousDataTaskWithRequest(request: NSURLRequest, inout response: NSURLResponse?) throws -> NSData? {
+        let semaphore = dispatch_semaphore_create(0)
+        var result: NSData? = nil
+        var error: NSError? = nil
         
-        return entities
+        let task = self.dataTaskWithRequest(request) { (data, response, err) -> Void in
+            result = data
+            error = err
+            dispatch_semaphore_signal(semaphore)
+        }
+        
+        task.resume()
+        
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        
+        if let error = error {
+            throw error
+        }
+        
+        return result
     }
 }

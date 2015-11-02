@@ -18,13 +18,13 @@ class PaletteViewModel: NSObject {
         super.init()
     }
     
-    lazy var name: String = {
+    var name: String {
         return self.palette.name
-    }()
+    }
     
-    lazy var rank: String = {
+    var rank: String {
         return self.palette.rank.stringValue
-    }()
+    }
     
     lazy var colors: [PaletteColor] = {
         var colors: [PaletteColor] = []

@@ -14,8 +14,8 @@ typealias LoadCompletion = (objects: [AnyObject]) -> Void
 class DataController: NSObject {
     
     class func loadPalettesFromJSON() -> [AnyObject] {
-        let filePath: String? = NSBundle.mainBundle().pathForResource("palettes", ofType: "json")
-        let data: NSData = NSData(contentsOfFile: filePath!)!
+        guard let filePath = NSBundle.mainBundle().pathForResource("palettes", ofType: "json") else { return [] }
+        guard let data = NSData(contentsOfFile: filePath) else { return [] }
         
         do {
             guard let jsonResult = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? NSArray else {

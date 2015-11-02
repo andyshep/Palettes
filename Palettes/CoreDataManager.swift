@@ -12,16 +12,7 @@ class CoreDataManager: NSObject {
     
     // MARK: - Lifecycle
     
-    class var sharedManager: CoreDataManager {
-        struct Static {
-            static var onceToken: dispatch_once_t = 0
-            static var instance: CoreDataManager? = nil
-        }
-        dispatch_once(&Static.onceToken) {
-            Static.instance = CoreDataManager()
-        }
-        return Static.instance!
-    }
+    static let sharedManager = CoreDataManager()
     
     override init() {
         super.init()

@@ -68,7 +68,9 @@ class LocalIncrementalStore : NSIncrementalStore {
         
         let entities = items.map({ (item: NSDictionary) -> Palette in
             let objectId = self.objectIdForNewObjectOfEntity(request.entity!, cacheValues: item)
-            let palette = context.objectWithID(objectId) as! Palette
+            guard let palette = context.objectWithID(objectId) as? Palette else {
+                fatalError("wrong object found")
+            }
             return palette
         })
         
@@ -110,13 +112,10 @@ class LocalIncrementalStore : NSIncrementalStore {
         let data: NSData = NSData(contentsOfFile: filePath!)!
         
         do {
-            guard let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [AnyObject] else {
+            let results = try NSJSONSerialization.JSONObjectWithData(data, options: [])
+            guard let palettes = results as? [NSDictionary] else {
                 return [[:]]
             }
-            
-            let palettes = result.filter({ (obj: AnyObject) -> Bool in
-                return (obj is NSDictionary)
-            }) as! [NSDictionary]
             
             return palettes
         }
