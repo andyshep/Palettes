@@ -24,26 +24,26 @@ class RemoteIncrementalStore : NSIncrementalStore {
     
     // MARK: - NSIncrementalStore
     
-    override func loadMetadata(error: NSErrorPointer) -> Bool {
+    override func loadMetadata() throws {
         let uuid = NSProcessInfo.processInfo().globallyUniqueString
         self.metadata = [NSStoreTypeKey : RemoteIncrementalStore.storeType, NSStoreUUIDKey : uuid]
-        return true
     }
     
-    override func executeRequest(request: NSPersistentStoreRequest, withContext context: NSManagedObjectContext, error: NSErrorPointer) -> AnyObject? {
+    override func executeRequest(request: NSPersistentStoreRequest, withContext context: NSManagedObjectContext?) throws -> AnyObject {
         if request.requestType == .FetchRequestType {
-            return self.executeFetchRequest(request, withContext: context, error: error)
+            var error: NSError? = nil
+            return self.executeFetchRequest(request, withContext: context, error: &error)
         }
         
-        return nil
+        return []
     }
     
-    override func newValuesForObjectWithID(objectID: NSManagedObjectID, withContext context: NSManagedObjectContext, error: NSErrorPointer) -> NSIncrementalStoreNode? {
-        if let values = cache.objectForKey(objectID) as? NSDictionary {
-            return NSIncrementalStoreNode(objectID: objectID, withValues: values as! [NSObject : AnyObject], version: 1)
+    override func newValuesForObjectWithID(objectID: NSManagedObjectID, withContext context: NSManagedObjectContext) throws -> NSIncrementalStoreNode {
+        guard let values = cache.objectForKey(objectID) as? [String: AnyObject] else {
+            fatalError("values are missing")
         }
         
-        return nil
+        return NSIncrementalStoreNode(objectID: objectID, withValues: values, version: 1)
     }
     
     // MARK: - Private
@@ -59,11 +59,11 @@ class RemoteIncrementalStore : NSIncrementalStore {
 
     func objectIdForNewObjectOfEntity(entityDescription:NSEntityDescription, cacheValues values:AnyObject!) -> NSManagedObjectID! {
         if let dict = values as? NSDictionary {
-            let nativeKey = entityDescription.name
+            let _ = entityDescription.name
             
             if let referenceId = dict.objectForKey("id")?.stringValue {
                 let objectId = self.newObjectIDForEntity(entityDescription, referenceObject: referenceId)
-                let values = Palette.extractAttributeValues(dictionary: dict)
+                let values = Palette.extractAttributeValues(dict)
                 cache.setObject(values, forKey: objectId)
                 return objectId
             }
@@ -83,7 +83,6 @@ class RemoteIncrementalStore : NSIncrementalStore {
     */
     
     func executeFetchRequest(request: NSPersistentStoreRequest!, withContext context: NSManagedObjectContext!, error: NSErrorPointer) -> [AnyObject]! {
-        var error: NSError? = nil
         let fetchRequest = request as! NSFetchRequest
         
         if fetchRequest.resultType == .ManagedObjectResultType {
@@ -107,13 +106,12 @@ class RemoteIncrementalStore : NSIncrementalStore {
     func fetchRemoteObjectsWithRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> [AnyObject] {
         let offset = fetchRequest.fetchOffset
         let limit = fetchRequest.fetchLimit
-        let httpRequest = ColourLovers.TopPalettes.request(offset: offset, limit: limit)
+        let httpRequest = ColourLovers.TopPalettes.request(offset, limit: limit)
         
-        var error: NSError? = nil
         var response: NSURLResponse? = nil
-        let data = NSURLConnection.sendSynchronousRequest(httpRequest, returningResponse: &response, error: &error)
+        let data = try! NSURLConnection.sendSynchronousRequest(httpRequest, returningResponse: &response)
         
-        let jsonResult = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &error) as! [AnyObject]
+        let jsonResult = try! NSJSONSerialization.JSONObjectWithData(data, options: []) as! [AnyObject]
         let paletteObjs = jsonResult.filter({ (obj: AnyObject) -> Bool in
             return (obj is NSDictionary)
         }) as! [NSDictionary]

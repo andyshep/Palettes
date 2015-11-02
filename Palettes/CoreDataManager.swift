@@ -57,11 +57,13 @@ class CoreDataManager: NSObject {
         // nil for section name key path means "no sections".
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil)
         
-        var error: NSError? = nil
-        if !fetchedResultsController.performFetch(&error) {
+        do {
+            try fetchedResultsController.performFetch()
+        }
+        catch (let error) {
             // Replace this implementation with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            println("Unresolved error: \(error)")
+            print("Unresolved error: \(error)")
             abort()
         }
         
@@ -71,9 +73,9 @@ class CoreDataManager: NSObject {
     // MARK: - Private
     
     private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
-//        let storeType = LocalIncrementalStore.storeType
+        let storeType = LocalIncrementalStore.storeType
 //        let storeType = RemoteIncrementalStore.storeType
-        let storeType = CachingIncrementalStore.storeType
+//        let storeType = CachingIncrementalStore.storeType
         
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let url = NSURL.applicationDocumentsDirectory().URLByAppendingPathComponent("Palettes.sqlite")
@@ -82,15 +84,15 @@ class CoreDataManager: NSObject {
         
         let options = [NSMigratePersistentStoresAutomaticallyOption: NSNumber(bool: true), NSInferMappingModelAutomaticallyOption: NSNumber(bool: true)];
         
-        if coordinator!.addPersistentStoreWithType(storeType, configuration: nil, URL: url, options: options, error: &error) == nil {
-            coordinator = nil
-            if let code = error?.code {
-                if code == NSMigrationMissingMappingModelError {
-                    println("Error, migration failed. Delete model at \(url)")
-                }
-                else {
-                    println("Error creating persistent store: \(error?.description)")
-                }
+        do {
+           try coordinator!.addPersistentStoreWithType(storeType, configuration: nil, URL: url, options: options)
+        }
+        catch (let error as NSError) {
+            if error.code == NSMigrationMissingMappingModelError {
+                print("Error, migration failed. Delete model at \(url)")
+            }
+            else {
+                print("Error creating persistent store: \(error.description)")
             }
             abort()
         }

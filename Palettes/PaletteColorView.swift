@@ -16,7 +16,7 @@ class PaletteColorView: UIView {
         }
     }
     
-    override func layoutSublayersOfLayer(layer: CALayer!) {
+    override func layoutSublayersOfLayer(layer: CALayer) {
         let rect = layer.bounds
         let colors = self.colors ?? [PaletteColor]()
         

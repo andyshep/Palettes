@@ -53,7 +53,7 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
         }
         
         let context = CoreDataManager.sharedManager.managedObjectContext!
-        let fetchRequest = self.palettesFetchRequest(offset: 0)
+        let fetchRequest = self.palettesFetchRequest(0)
         
         let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: "Palettes")
         aFetchedResultsController.delegate = self
@@ -72,8 +72,8 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     
     */
     
-    func executeFetchRequest(#offset: Int) -> Void {
-        let request = palettesFetchRequest(offset: offset)
+    func executeFetchRequest(offset: Int) -> Void {
+        let request = palettesFetchRequest(offset)
         let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
             let count = result.finalResult?.count
             if count > 0 {
@@ -84,9 +84,15 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
             }
         }
 
-        var error: NSError?
-        let context = CoreDataManager.sharedManager.managedObjectContext
-        let result = context?.executeRequest(asyncRequest, error: &error)
+        guard let context = CoreDataManager.sharedManager.managedObjectContext else { return }
+        
+        do {
+            try context.executeRequest(asyncRequest)
+        }
+        catch (let error) {
+            print("error executing fetch request: \(error)")
+        }
+        
     }
     
     /**
@@ -95,13 +101,15 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     */
     
     func performFetch() -> Void {
-        var error: NSError? = nil
-        if !self.fetchedResultsController.performFetch(&error) {
-            println("Error performing fetch: \(error)")
+        do {
+            try self.fetchedResultsController.performFetch()
+        }
+        catch (let error) {
+            print("error performing fetch: \(error)")
         }
     }
     
-    func palettesFetchRequest(#offset:Int) -> NSFetchRequest {
+    func palettesFetchRequest(offset:Int) -> NSFetchRequest {
         let request = NSFetchRequest(entityName: Palette.entityName)
         request.fetchOffset = offset
         request.fetchLimit = 30

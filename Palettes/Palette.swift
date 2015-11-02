@@ -20,12 +20,6 @@ class Palette: NSManagedObject {
     @NSManaged var widths: [AnyObject]
 }
 
-extension Palette: Printable {
-    override var description: String {
-        return "\(self.id) : \(self.name)"
-    }
-}
-
 extension Palette {
     class var entityName: String {
         return "Palette"

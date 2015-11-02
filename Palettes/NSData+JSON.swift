@@ -10,19 +10,28 @@ import Foundation
 
 extension NSData {
     func asDictionary() -> NSDictionary {
-        var error : NSError?
-        var options = NSJSONReadingOptions.MutableContainers
-        return NSJSONSerialization.JSONObjectWithData(self, options:options, error:&error) as! NSDictionary
+        do {
+            guard let dictionary = try NSJSONSerialization.JSONObjectWithData(self, options: .MutableContainers) as? NSDictionary else {
+                return [:]
+            }
+            
+            return dictionary
+        }
+        catch {
+            return [:]
+        }
     }
     
     func asArray() -> NSArray {
-        var error : NSError?
-        var options = NSJSONReadingOptions.MutableContainers
-        if let array = NSJSONSerialization.JSONObjectWithData(self, options:options, error:&error) as? NSArray {
+        do {
+            guard let array = try NSJSONSerialization.JSONObjectWithData(self, options: []) as? NSArray else {
+                return []
+            }
+            
             return array
         }
-        else {
-            return NSArray()
+        catch {
+            return []
         }
     }
 }

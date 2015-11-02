@@ -17,10 +17,10 @@ extension UIColor {
         var colorString = string.stringByTrimmingCharactersInSet(set).uppercaseString
         
         if (colorString.hasPrefix("#")) {
-            colorString = colorString.substringFromIndex(advance(colorString.startIndex, 1))
+            colorString = colorString.substringFromIndex(colorString.startIndex.advancedBy(1))
         }
         
-        if (count(colorString) != 6) {
+        if (colorString.characters.count != 6) {
             return UIColor.grayColor()
         }
         

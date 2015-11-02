@@ -33,9 +33,9 @@ class PaletteCell: UICollectionViewCell {
         
         super.init(frame: frame)
         
-        self.colorView.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.titleLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.subtitleLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+        self.colorView.translatesAutoresizingMaskIntoConstraints = false
+        self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         self.backgroundColor = UIColor.whiteColor()
     }
@@ -56,42 +56,39 @@ class PaletteCell: UICollectionViewCell {
     
     // MARK: - Constraints
     
-    lazy var titleLabelConstraints: [AnyObject] = {
-        var constraints: [AnyObject] = []
-        
+    lazy var titleLabelConstraints: [NSLayoutConstraint] = {
         let views = ["titleLabel": self.titleLabel, "colorView": self.colorView]
         let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-8-[titleLabel]", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: views)
         let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("V:[colorView]-8-[titleLabel]-8-|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: views)
         
-        constraints += horizontalConstraints
-        constraints += verticalConstraints
+        var constraints: [NSLayoutConstraint] = []
+        constraints.appendContentsOf(horizontalConstraints)
+        constraints.appendContentsOf(verticalConstraints)
         
         return constraints
     }()
     
-    lazy var subtitleLabelConstraints: [AnyObject] = {
-        var constraints: [AnyObject] = []
-        
+    lazy var subtitleLabelConstraints: [NSLayoutConstraint] = {
         let views = ["subtitleLabel": self.subtitleLabel, "colorView": self.colorView]
         let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:[subtitleLabel]-8-|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: views)
         let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("V:[colorView]-8-[subtitleLabel]-8-|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: views)
         
-        constraints += horizontalConstraints
-        constraints += verticalConstraints
+        var constraints: [NSLayoutConstraint] = []
+        constraints.appendContentsOf(horizontalConstraints)
+        constraints.appendContentsOf(verticalConstraints)
         
         return constraints
-        }()
+    }()
     
-    lazy var colorViewConstraints: [AnyObject] = {
-        var constraints: [AnyObject] = []
-        
+    lazy var colorViewConstraints: [NSLayoutConstraint] = {
         let views = ["colorView": self.colorView]
         let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-8-[colorView]-8-|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: views)
         let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-8-[colorView]-40-|", options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: nil, views: views)
         
-        constraints += horizontalConstraints
-        constraints += verticalConstraints
+        var constraints: [NSLayoutConstraint] = []
+        constraints.appendContentsOf(horizontalConstraints)
+        constraints.appendContentsOf(verticalConstraints)
         
         return constraints
-        }()
+    }()
 }

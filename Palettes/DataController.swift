@@ -15,22 +15,26 @@ class DataController: NSObject {
     
     class func loadPalettesFromJSON() -> [AnyObject] {
         let filePath: String? = NSBundle.mainBundle().pathForResource("palettes", ofType: "json")
-        var err: NSError?
         let data: NSData = NSData(contentsOfFile: filePath!)!
-        let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err) as! NSArray
         
-        if err != nil {
-            println("error: \(err!.localizedDescription)")
-        }
-        
-        var palettes: [AnyObject] = []
-        for obj in jsonResult {
-            if let paletteObj = obj as? NSDictionary {
-                palettes.append(paletteObj)
+        do {
+            guard let jsonResult = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? NSArray else {
+                return []
             }
+            
+            var palettes: [AnyObject] = []
+            for obj in jsonResult {
+                if let paletteObj = obj as? NSDictionary {
+                    palettes.append(paletteObj)
+                }
+            }
+            
+            return palettes
         }
-        
-        return palettes
+        catch (let error) {
+            print("error loading palettes from JSON: \(error)")
+            return []
+        }
     }
     
     class func loadPalettesFromJSON(completion: LoadCompletion) -> Void {
@@ -39,16 +43,20 @@ class DataController: NSObject {
     }
     
     class func loadPalettes(completion: LoadCompletion) -> Void {
+        guard let context = CoreDataManager.sharedManager.managedObjectContext else { return }
         let request = NSFetchRequest(entityName: "Palette")
-        let context = CoreDataManager.sharedManager.managedObjectContext
         
-        var error: NSError?
-        var results = context?.executeFetchRequest(request, error: &error) as? [Palette]
-        if (error == nil && results?.count == 0) {
-            println("no palettes...")
+        do {
+            guard let results = try context.executeFetchRequest(request) as? [Palette] else {
+                completion(objects: [])
+                return
+            }
+            
+            completion(objects: results)
         }
-        else {
-            println("found \(results!.count) palettes!!")
+        catch (let error) {
+            print("error loading palettes from context: \(error)")
+            completion(objects: [])
         }
     }
 }
