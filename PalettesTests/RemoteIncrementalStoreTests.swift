@@ -26,12 +26,17 @@ class RemoteIncrementalStoreTests: XCTestCase {
     }
     
     func testRemoteObjectsCanBeFetched() {
-        let request = self.fetchRequest()
-        
-        var error: NSError?
-        let results = managedObjectContext?.executeFetchRequest(request, error: &error) as! [Palette]
-        
-        XCTAssertGreaterThan(results.count, 0, "results should be greater than zero")
+        do {
+            let request = self.fetchRequest()
+            guard let results = try managedObjectContext?.executeFetchRequest(request) as? [Palette] else {
+                fatalError()
+            }
+            
+            XCTAssertGreaterThan(results.count, 0, "results should be greater than zero")
+        }
+        catch {
+            XCTFail("request should not fail")
+        }
     }
     
     func testRemoteObjectsCanBeFetchedAsynchronously() {
@@ -43,8 +48,7 @@ class RemoteIncrementalStoreTests: XCTestCase {
             expectation.fulfill()
         }
         
-        var error: NSError?
-        let result = self.managedObjectContext?.executeRequest(asyncRequest, error: &error)
+        try! self.managedObjectContext?.executeRequest(asyncRequest)
         
         waitForExpectationsWithTimeout(60, handler:nil)
     }

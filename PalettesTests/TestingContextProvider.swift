@@ -20,7 +20,7 @@ struct TestingContextProvider {
         // http://stackoverflow.com/a/25858758
         
         let testModel = model!.copy() as! NSManagedObjectModel
-        for entity in testModel.entities as! [NSEntityDescription] {
+        for entity in testModel.entities {
             if entity.name == Palette.entityName {
                 entity.managedObjectClassName = "PalettesTests." + Palette.entityName
             }
@@ -31,11 +31,12 @@ struct TestingContextProvider {
         let psc = NSPersistentStoreCoordinator(managedObjectModel: testModel)
         XCTAssertNotNil(psc, "psc should not be nil")
         
-        var error: NSError? = nil
-        if psc.addPersistentStoreWithType(storeType, configuration: nil, URL: nil, options: nil, error: &error) == nil {
+        do {
+            try psc.addPersistentStoreWithType(storeType, configuration: nil, URL: nil, options: nil)
         }
-        
-        XCTAssertNil(error, "error should be nil after adding persistent store")
+        catch {
+           XCTFail("could not add persistent store")
+        }
         
         let managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = psc

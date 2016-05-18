@@ -36,8 +36,6 @@ class CachingIncrementalStoreTests: XCTestCase {
         let expectation = expectationWithDescription("save notification should be observed")
         
         NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil) { (notification) -> Void in
-            println("notification called!")
-            
             struct Static {
                 static var onceToken : dispatch_once_t = 0
             }
@@ -46,10 +44,16 @@ class CachingIncrementalStoreTests: XCTestCase {
             }
         }
         
-        var error: NSError?
-        let results = managedObjectContext?.executeFetchRequest(request, error: &error) as! [Palette]
-        
-        XCTAssertLessThanOrEqual(results.count, 0, "there should be no cached results")
+        do {
+            guard let results = try managedObjectContext?.executeFetchRequest(request) as? [Palette] else {
+                fatalError()
+            }
+            
+            XCTAssertLessThanOrEqual(results.count, 0, "there should be no cached results")
+        }
+        catch {
+            XCTFail("fetch request should not fail")
+        }
         
         waitForExpectationsWithTimeout(60, handler: nil)
     }
@@ -58,7 +62,11 @@ class CachingIncrementalStoreTests: XCTestCase {
         let path = CachingIncrementalStore.storeType + ".sqlite"
         let url = NSURL.applicationDocumentsDirectory().URLByAppendingPathComponent(path)
         
-        var error: NSError? = nil
-        NSFileManager.defaultManager().removeItemAtURL(url, error: &error)
+        do {
+            try NSFileManager.defaultManager().removeItemAtURL(url)
+        }
+        catch {
+            // no-op
+        }
     }
 }

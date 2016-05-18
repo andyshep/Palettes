@@ -32,10 +32,17 @@ class LocalIncrementalStoreTests: XCTestCase {
         request.fetchLimit = 30
         request.sortDescriptors = Palette.defaultSortDescriptors
         
-        var error: NSError?
-        let results = managedObjectContext?.executeFetchRequest(request, error: &error) as! [Palette]
-        
-        XCTAssertGreaterThan(results.count, 0, "results should be greater than zero")
+        do {
+            guard let results = try managedObjectContext?.executeFetchRequest(request) as? [Palette] else {
+                fatalError()
+            }
+            
+            XCTAssertGreaterThan(results.count, 0, "results should be greater than zero")
+        }
+        catch {
+            XCTFail("request should not fail")
+        }
     }
     
 }
+
