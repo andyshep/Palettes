@@ -78,12 +78,12 @@ class CoreDataManager: NSObject {
         do {
            try coordinator!.addPersistentStoreWithType(storeType, configuration: nil, URL: url, options: options)
         }
-        catch (let error as NSError) {
+        catch {
             if error.code == NSMigrationMissingMappingModelError {
                 print("Error, migration failed. Delete model at \(url)")
             }
             else {
-                print("Error creating persistent store: \(error.description)")
+                
             }
             abort()
         }

@@ -28,7 +28,7 @@ class CachingIncrementalStore : NSIncrementalStore {
     private let registeredObjectIDsMap = NSMutableDictionary()
     
     class var storeType: String {
-        return NSStringFromClass(CachingIncrementalStore.self)
+        return String(CachingIncrementalStore)
     }
     
     override class func initialize() {

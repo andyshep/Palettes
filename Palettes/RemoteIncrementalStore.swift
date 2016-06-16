@@ -15,7 +15,7 @@ class RemoteIncrementalStore : NSIncrementalStore {
     private let cache = NSMutableDictionary()
     
     class var storeType: String {
-        return NSStringFromClass(RemoteIncrementalStore.self)
+        return String(RemoteIncrementalStore)
     }
     
     override class func initialize() {
