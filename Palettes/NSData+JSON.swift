@@ -8,10 +8,10 @@
 
 import Foundation
 
-extension NSData {
+extension Data {
     func asDictionary() -> NSDictionary {
         do {
-            guard let dictionary = try NSJSONSerialization.JSONObjectWithData(self, options: .MutableContainers) as? NSDictionary else {
+            guard let dictionary = try JSONSerialization.jsonObject(with: self, options: .mutableContainers) as? NSDictionary else {
                 return [:]
             }
             
@@ -24,7 +24,7 @@ extension NSData {
     
     func asArray() -> NSArray {
         do {
-            guard let array = try NSJSONSerialization.JSONObjectWithData(self, options: []) as? NSArray else {
+            guard let array = try JSONSerialization.jsonObject(with: self, options: []) as? NSArray else {
                 return []
             }
             

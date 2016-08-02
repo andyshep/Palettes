@@ -31,7 +31,7 @@ class PaletteViewModel: NSObject {
         for index in 0..<self.palette.colors.count {
             let color = self.palette.colors[index] as! UIColor
             let width = self.palette.widths[index].doubleValue
-            let element: PaletteColor = (color, width)
+            let element: PaletteColor = (color, width!)
             colors.append(element)
         }
         

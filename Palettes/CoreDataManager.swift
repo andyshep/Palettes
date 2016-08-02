@@ -26,7 +26,7 @@ class CoreDataManager: NSObject {
             return nil
         }
         
-        var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        var managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return managedObjectContext
@@ -34,10 +34,10 @@ class CoreDataManager: NSObject {
     
     // MARK: - Public
     
-    func fetchedResultsControllerForEntityName(name:String, sortDescriptors:Array<NSSortDescriptor>, predicate:NSPredicate! = nil) -> NSFetchedResultsController {
+    func fetchedResultsControllerForEntityName(_ name: String, sortDescriptors: Array<NSSortDescriptor>, predicate: NSPredicate! = nil) -> NSFetchedResultsController<NSManagedObject> {
         let managedObjectContext = self.managedObjectContext
-        let fetchRequest = NSFetchRequest()
-        let entity = NSEntityDescription.entityForName(name, inManagedObjectContext: managedObjectContext!)
+        let fetchRequest = NSFetchRequest<NSManagedObject>()
+        let entity = NSEntityDescription.entity(forEntityName: name, in: managedObjectContext!)
         
         fetchRequest.entity = entity
         fetchRequest.fetchBatchSize = 20
@@ -69,22 +69,16 @@ class CoreDataManager: NSObject {
 //        let storeType = CachingIncrementalStore.storeType
         
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = NSURL.applicationDocumentsDirectory().URLByAppendingPathComponent("Palettes.sqlite")
+        let url = URL.applicationDocumentsDirectory().appendingPathComponent("Palettes.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
         
-        let options = [NSMigratePersistentStoresAutomaticallyOption: NSNumber(bool: true), NSInferMappingModelAutomaticallyOption: NSNumber(bool: true)];
+        let options = [NSMigratePersistentStoresAutomaticallyOption: NSNumber(value: true), NSInferMappingModelAutomaticallyOption: NSNumber(value: true)];
         
         do {
-           try coordinator!.addPersistentStoreWithType(storeType, configuration: nil, URL: url, options: options)
+           try coordinator!.addPersistentStore(ofType: storeType, configurationName: nil, at: url, options: options)
         }
         catch {
-            if error.code == NSMigrationMissingMappingModelError {
-                print("Error, migration failed. Delete model at \(url)")
-            }
-            else {
-                
-            }
             abort()
         }
         
@@ -92,7 +86,7 @@ class CoreDataManager: NSObject {
     }()
     
     private lazy var managedObjectModel: NSManagedObjectModel = {
-        let modelURL = NSBundle.mainBundle().URLForResource("Palettes", withExtension: "momd")!
-        return NSManagedObjectModel(contentsOfURL: modelURL)!
+        let modelURL = Bundle.main.url(forResource: "Palettes", withExtension: "momd")!
+        return NSManagedObjectModel(contentsOf: modelURL)!
     }()
 }

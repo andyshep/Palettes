@@ -10,6 +10,9 @@ import XCTest
 import CoreData
 
 class CachingIncrementalStoreTests: XCTestCase {
+    private static var __once: () = {
+                expectation.fulfill()
+            }()
     var managedObjectContext: NSManagedObjectContext?
     
     override func setUp() {
@@ -33,19 +36,17 @@ class CachingIncrementalStoreTests: XCTestCase {
         request.fetchLimit = 30
         request.sortDescriptors = Palette.defaultSortDescriptors
         
-        let expectation = expectationWithDescription("save notification should be observed")
+        let expectation = self.expectation(withDescription: "save notification should be observed")
         
-        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: nil, queue: nil) { (notification) -> Void in
+        NotificationCenter.default().addObserver(forName: NSNotification.Name.NSManagedObjectContextDidSave, object: nil, queue: nil) { (notification) -> Void in
             struct Static {
-                static var onceToken : dispatch_once_t = 0
+                static var onceToken : Int = 0
             }
-            dispatch_once(&Static.onceToken) {
-                expectation.fulfill()
-            }
+            _ = CachingIncrementalStoreTests.__once
         }
         
         do {
-            guard let results = try managedObjectContext?.executeFetchRequest(request) as? [Palette] else {
+            guard let results = try managedObjectContext?.fetch(request) as? [Palette] else {
                 fatalError()
             }
             
@@ -55,15 +56,15 @@ class CachingIncrementalStoreTests: XCTestCase {
             XCTFail("fetch request should not fail")
         }
         
-        waitForExpectationsWithTimeout(60, handler: nil)
+        waitForExpectations(withTimeout: 60, handler: nil)
     }
     
     func removeSQLCache() -> Void {
         let path = CachingIncrementalStore.storeType + ".sqlite"
-        let url = NSURL.applicationDocumentsDirectory().URLByAppendingPathComponent(path)
+        let url = try! URL.applicationDocumentsDirectory().appendingPathComponent(path)
         
         do {
-            try NSFileManager.defaultManager().removeItemAtURL(url)
+            try FileManager.default().removeItem(at: url)
         }
         catch {
             // no-op

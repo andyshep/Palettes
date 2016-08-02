@@ -28,7 +28,7 @@ class RemoteIncrementalStoreTests: XCTestCase {
     func testRemoteObjectsCanBeFetched() {
         do {
             let request = self.fetchRequest()
-            guard let results = try managedObjectContext?.executeFetchRequest(request) as? [Palette] else {
+            guard let results = try managedObjectContext?.fetch(request) as? [Palette] else {
                 fatalError()
             }
             
@@ -40,7 +40,7 @@ class RemoteIncrementalStoreTests: XCTestCase {
     }
     
     func testRemoteObjectsCanBeFetchedAsynchronously() {
-        let expectation = expectationWithDescription("asynchronous requests should succeed")
+        let expectation = self.expectation(withDescription: "asynchronous requests should succeed")
         
         let request = self.fetchRequest()
         let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
@@ -48,12 +48,12 @@ class RemoteIncrementalStoreTests: XCTestCase {
             expectation.fulfill()
         }
         
-        try! self.managedObjectContext?.executeRequest(asyncRequest)
+        try! self.managedObjectContext?.execute(asyncRequest)
         
-        waitForExpectationsWithTimeout(60, handler:nil)
+        waitForExpectations(withTimeout: 60, handler:nil)
     }
     
-    func fetchRequest() -> NSFetchRequest {
+    func fetchRequest() -> NSFetchRequest<AnyObject> {
         let request = NSFetchRequest(entityName: "Palette")
         request.fetchLimit = 30
         request.sortDescriptors = Palette.defaultSortDescriptors

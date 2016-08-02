@@ -15,7 +15,7 @@ class RemoteIncrementalStore : NSIncrementalStore {
     private let cache = NSMutableDictionary()
     
     class var storeType: String {
-        return String(RemoteIncrementalStore)
+        return String(RemoteIncrementalStore.self)
     }
     
     override class func initialize() {
@@ -25,12 +25,12 @@ class RemoteIncrementalStore : NSIncrementalStore {
     // MARK: - NSIncrementalStore
     
     override func loadMetadata() throws {
-        let uuid = NSProcessInfo.processInfo().globallyUniqueString
+        let uuid = ProcessInfo.processInfo.globallyUniqueString
         self.metadata = [NSStoreTypeKey : RemoteIncrementalStore.storeType, NSStoreUUIDKey : uuid]
     }
     
-    override func executeRequest(request: NSPersistentStoreRequest, withContext context: NSManagedObjectContext?) throws -> AnyObject {
-        if request.requestType == .FetchRequestType {
+    override func execute(_ request: NSPersistentStoreRequest, with context: NSManagedObjectContext?) throws -> AnyObject {
+        if request.requestType == .fetchRequestType {
             var error: NSError? = nil
             return self.executeFetchRequest(request, withContext: context, error: &error)
         }
@@ -38,8 +38,8 @@ class RemoteIncrementalStore : NSIncrementalStore {
         return []
     }
     
-    override func newValuesForObjectWithID(objectID: NSManagedObjectID, withContext context: NSManagedObjectContext) throws -> NSIncrementalStoreNode {
-        guard let values = cache.objectForKey(objectID) as? [String: AnyObject] else {
+    override func newValuesForObject(with objectID: NSManagedObjectID, with context: NSManagedObjectContext) throws -> NSIncrementalStoreNode {
+        guard let values = cache.object(forKey: objectID) as? [String: AnyObject] else {
             fatalError("values are missing")
         }
         
@@ -57,12 +57,12 @@ class RemoteIncrementalStore : NSIncrementalStore {
     :returns: A managed object ID
     */
 
-    func objectIdForNewObjectOfEntity(entityDescription:NSEntityDescription, cacheValues values:AnyObject!) -> NSManagedObjectID! {
+    func objectIdForNewObjectOfEntity(_ entityDescription:NSEntityDescription, cacheValues values:AnyObject!) -> NSManagedObjectID! {
         if let dict = values as? NSDictionary {
             let _ = entityDescription.name
             
-            if let referenceId = dict.objectForKey("id")?.stringValue {
-                let objectId = self.newObjectIDForEntity(entityDescription, referenceObject: referenceId)
+            if let referenceId = dict.object(forKey: "id")?.stringValue {
+                let objectId = self.newObjectID(for: entityDescription, referenceObject: referenceId)
                 let values = Palette.extractAttributeValues(dict)
                 cache.setObject(values, forKey: objectId)
                 return objectId
@@ -82,10 +82,10 @@ class RemoteIncrementalStore : NSIncrementalStore {
     :returns: An optional array of managed objects
     */
     
-    func executeFetchRequest(request: NSPersistentStoreRequest!, withContext context: NSManagedObjectContext!, error: NSErrorPointer) -> [AnyObject]! {
-        let fetchRequest = request as! NSFetchRequest
+    func executeFetchRequest(_ request: NSPersistentStoreRequest!, withContext context: NSManagedObjectContext!, error: NSErrorPointer) -> [AnyObject]! {
+        let fetchRequest = request as! NSFetchRequest<NSManagedObject>
         
-        if fetchRequest.resultType == .ManagedObjectResultType {
+        if fetchRequest.resultType == NSFetchRequestResultType() {
             let managedObjects = self.fetchRemoteObjectsWithRequest(fetchRequest, context: context)
             return managedObjects
         }
@@ -103,26 +103,28 @@ class RemoteIncrementalStore : NSIncrementalStore {
     :returns: An array of managed objects
     */
     
-    func fetchRemoteObjectsWithRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> [AnyObject] {
+    func fetchRemoteObjectsWithRequest(_ fetchRequest: NSFetchRequest<NSManagedObject>, context: NSManagedObjectContext) -> [AnyObject] {
         let offset = fetchRequest.fetchOffset
         let limit = fetchRequest.fetchLimit
-        let httpRequest = ColourLovers.TopPalettes.request(offset, limit: limit)
+        let httpRequest = ColourLovers.topPalettes.request(offset, limit: limit)
         
-        var response: NSURLResponse? = nil
+        var response: URLResponse? = nil
         
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        let session = NSURLSession(configuration: configuration)
+        let configuration = URLSessionConfiguration.default
+        let session = URLSession(configuration: configuration)
         
         do {
             let data = try session.sendSynchronousDataTaskWithRequest(httpRequest, response: &response)
-            guard let results = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? [NSDictionary] else {
+            guard let results = try JSONSerialization.jsonObject(with: data!, options: []) as? [NSDictionary] else {
                 print("json could not be parsed")
                 return []
             }
             
             let entities = results.map({ (item: NSDictionary) -> Palette in
-                let objectId = self.objectIdForNewObjectOfEntity(fetchRequest.entity!, cacheValues: item)
-                guard let palette = context.objectWithID(objectId) as? Palette else {
+                guard let objectId = self.objectIdForNewObjectOfEntity(fetchRequest.entity!, cacheValues: item) else {
+                    fatalError("missing object id")
+                }
+                guard let palette = context.object(with: objectId) as? Palette else {
                     fatalError("wrong object type")
                 }
                 return palette
@@ -136,21 +138,21 @@ class RemoteIncrementalStore : NSIncrementalStore {
     }
 }
 
-extension NSURLSession {
-    func sendSynchronousDataTaskWithRequest(request: NSURLRequest, inout response: NSURLResponse?) throws -> NSData? {
-        let semaphore = dispatch_semaphore_create(0)
-        var result: NSData? = nil
-        var error: NSError? = nil
+extension URLSession {
+    func sendSynchronousDataTaskWithRequest(_ request: URLRequest, response: inout URLResponse?) throws -> Data? {
+        let semaphore = DispatchSemaphore(value: 0)
+        var result: Data? = nil
+        var error: Error? = nil
         
-        let task = self.dataTaskWithRequest(request) { (data, response, err) -> Void in
+        let task = self.dataTask(with: request) { (data, response, err) -> Void in
             result = data
             error = err
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         }
         
         task.resume()
         
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        let _ = semaphore.wait(timeout: DispatchTime.distantFuture)
         
         if let error = error {
             throw error

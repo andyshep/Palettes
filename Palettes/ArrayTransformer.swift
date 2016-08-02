@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ArrayTransformer: NSValueTransformer {
+class ArrayTransformer: ValueTransformer {
     override class func transformedValueClass() -> AnyClass {
         return NSArray.self
     }
@@ -17,13 +17,13 @@ class ArrayTransformer: NSValueTransformer {
         return true
     }
     
-    override func transformedValue(value: AnyObject?) -> AnyObject? {
-        return NSKeyedArchiver.archivedDataWithRootObject(value!)
+    override func transformedValue(_ value: AnyObject?) -> AnyObject? {
+        return NSKeyedArchiver.archivedData(withRootObject: value!)
     }
     
-    override func reverseTransformedValue(value: AnyObject?) -> AnyObject? {
-        if let data = value as? NSData {
-            return NSKeyedUnarchiver.unarchiveObjectWithData(data)
+    override func reverseTransformedValue(_ value: AnyObject?) -> AnyObject? {
+        if let data = value as? Data {
+            return NSKeyedUnarchiver.unarchiveObject(with: data)
         }
         return []
     }

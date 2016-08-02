@@ -12,20 +12,20 @@ extension UIColor {
     
     // http://stackoverflow.com/a/27203691
     
-    class func hexColor(string: String) -> UIColor {
-        let set = NSCharacterSet.whitespaceAndNewlineCharacterSet() as NSCharacterSet
-        var colorString = string.stringByTrimmingCharactersInSet(set).uppercaseString
+    class func hexColor(_ string: String) -> UIColor {
+        let set = CharacterSet.whitespacesAndNewlines
+        var colorString = string.trimmingCharacters(in: set).uppercased()
         
         if (colorString.hasPrefix("#")) {
-            colorString = colorString.substringFromIndex(colorString.startIndex.advancedBy(1))
+            colorString = colorString.substring(from: colorString.index(colorString.startIndex, offsetBy: 1))
         }
         
         if (colorString.characters.count != 6) {
-            return UIColor.grayColor()
+            return UIColor.gray
         }
         
         var rgbValue: UInt32 = 0
-        NSScanner(string: colorString).scanHexInt(&rgbValue)
+        Scanner(string: colorString).scanHexInt32(&rgbValue)
         
         return UIColor(
             red:   CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,

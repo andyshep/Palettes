@@ -11,9 +11,9 @@ import Foundation
 typealias Parameters = [String: String]
 
 enum ColourLovers {
-    case TopPalettes
-    case Palette(String)
-    case PaletteCount
+    case topPalettes
+    case palette(String)
+    case paletteCount
 }
 
 protocol Path {
@@ -21,8 +21,8 @@ protocol Path {
 }
 
 protocol Request {
-    func request(offset:Int) -> NSURLRequest
-    func request(offset:Int, limit:Int) -> NSURLRequest
+    func request(_ offset:Int) -> URLRequest
+    func request(_ offset:Int, limit:Int) -> URLRequest
 }
 
 extension ColourLovers: Path {
@@ -32,44 +32,44 @@ extension ColourLovers: Path {
     
     var path: String {
         switch self {
-        case .TopPalettes:
+        case .topPalettes:
             return "\(self.baseURL)/palettes/top"
-        case .PaletteCount:
+        case .paletteCount:
             return "\(self.baseURL)/stats/palettes"
-        case .Palette(let id):
+        case .palette(let id):
             return "\(self.baseURL)/palettes/\(id)"
         }
     }
 }
 
 extension ColourLovers: Request {
-    func request() -> NSURLRequest {
+    func request() -> URLRequest {
         return self.request(0)
     }
     
-    func request(offset:Int) -> NSURLRequest {
+    func request(_ offset:Int) -> URLRequest {
         let parameters = ["format": "json", "showPaletteWidths": "1", "numResults": "50", "resultOffset": String(offset)]
         return self.request(parameters)
     }
     
-    func request(offset:Int, limit:Int) -> NSURLRequest {
+    func request(_ offset:Int, limit:Int) -> URLRequest {
         let parameters = ["format": "json", "showPaletteWidths": "1", "numResults": String(limit), "resultOffset": String(offset)]
         return self.request(parameters)
     }
     
-    func countRequest() -> NSURLRequest {
+    func countRequest() -> URLRequest {
         return self.request(["format": "json"])
     }
     
-    func request(parameters: Parameters) -> NSURLRequest {
+    func request(_ parameters: Parameters) -> URLRequest {
         let path = self.path
         let queryString = self.queryStringWithParameters(parameters)
         
-        let url = NSURL(string: "\(path)?\(queryString)")
-        return NSURLRequest(URL: url!)
+        let url = URL(string: "\(path)?\(queryString)")
+        return URLRequest(url: url!)
     }
     
-    func queryStringWithParameters(parameters:Parameters) -> String {
+    func queryStringWithParameters(_ parameters:Parameters) -> String {
         var queryString = ""
         for parameter in parameters {
             if queryString != "" {

@@ -12,7 +12,7 @@ class PalettesFlowLayout: UICollectionViewFlowLayout {
     
     override init() {
         super.init()
-        self.itemSize = CGSizeMake(UIScreen.mainScreen().bounds.width - 16.0, 172.0)
+        self.itemSize = CGSize(width: UIScreen.main.bounds.width - 16.0, height: 172.0)
     }
 
     required init(coder aDecoder: NSCoder) {

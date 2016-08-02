@@ -8,9 +8,9 @@
 
 import Foundation
 
-extension NSURL {
-    class func applicationDocumentsDirectory() -> NSURL {
-        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+extension URL {
+    static func applicationDocumentsDirectory() -> URL {
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return urls[urls.count-1]
     }
 }

@@ -16,18 +16,18 @@ class PaletteColorView: UIView {
         }
     }
     
-    override func layoutSublayersOfLayer(layer: CALayer) {
+    override func layoutSublayers(of layer: CALayer) {
         let rect = layer.bounds
         let colors = self.colors ?? [PaletteColor]()
         
-        var offset = CGRectGetMinX(rect)
+        var offset = rect.minX
         
         for color in colors {
-            let width = CGRectGetWidth(rect) * CGFloat(color.width)
+            let width = rect.width * CGFloat(color.width)
             
             let shapeLayer = CAShapeLayer()
-            shapeLayer.frame = CGRectMake(offset, 0, width, CGRectGetHeight(rect))
-            shapeLayer.backgroundColor = color.fillColor.CGColor
+            shapeLayer.frame = CGRect(x: offset, y: 0, width: width, height: rect.height)
+            shapeLayer.backgroundColor = color.fillColor.cgColor
             
             layer.addSublayer(shapeLayer)
             

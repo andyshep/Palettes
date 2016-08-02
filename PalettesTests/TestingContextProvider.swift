@@ -11,9 +11,9 @@ import XCTest
 
 struct TestingContextProvider {
     
-    static func contextWithStoreType(storeType: String) -> NSManagedObjectContext? {
-        let modelURL = NSBundle.mainBundle().URLForResource("Palettes", withExtension: "momd")!
-        let model = NSManagedObjectModel(contentsOfURL: modelURL)
+    static func contextWithStoreType(_ storeType: String) -> NSManagedObjectContext? {
+        let modelURL = Bundle.main().urlForResource("Palettes", withExtension: "momd")!
+        let model = NSManagedObjectModel(contentsOf: modelURL)
         XCTAssertNotNil(model, "model should not be nil")
         
         // copy and modify the model so the unit test target can find entities.
@@ -32,13 +32,13 @@ struct TestingContextProvider {
         XCTAssertNotNil(psc, "psc should not be nil")
         
         do {
-            try psc.addPersistentStoreWithType(storeType, configuration: nil, URL: nil, options: nil)
+            try psc.addPersistentStore(ofType: storeType, configurationName: nil, at: nil, options: nil)
         }
         catch {
            XCTFail("could not add persistent store")
         }
         
-        let managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = psc
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         

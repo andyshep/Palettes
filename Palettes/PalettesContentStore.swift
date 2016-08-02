@@ -26,13 +26,13 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
         super.init()
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 //        return self.objects.count
         return self.fetchedResultsController.fetchedObjects?.count ?? 0
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PaletteCell.reuseIdentifier, forIndexPath: indexPath) as! PaletteCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PaletteCell.reuseIdentifier, for: indexPath) as! PaletteCell
         let palette = self.objectAtIndexPath(indexPath)
         
         let viewModel = PaletteViewModel(palette: palette)
@@ -43,11 +43,11 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     
     // MARK: - NSFetchedResultsControllerDelegate
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.collectionView?.reloadData()
     }
     
-    var fetchedResultsController: NSFetchedResultsController {
+    var fetchedResultsController: NSFetchedResultsController<Palette> {
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
@@ -61,7 +61,7 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
         
         return _fetchedResultsController!
     }
-    var _fetchedResultsController: NSFetchedResultsController? = nil
+    var _fetchedResultsController: NSFetchedResultsController<Palette>? = nil
     
     // MARK: - Private
     
@@ -72,12 +72,12 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     
     */
     
-    func executeFetchRequest(offset: Int) -> Void {
+    func executeFetchRequest(_ offset: Int) -> Void {
         let request = palettesFetchRequest(offset)
         let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
             let count = result.finalResult?.count
             if count > 0 {
-                if let palettes = result.finalResult as? [Palette] {
+                if let palettes = result.finalResult {
                     self.objects += palettes
                     self.collectionView?.reloadData()
                 }
@@ -87,7 +87,7 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
         guard let context = CoreDataManager.sharedManager.managedObjectContext else { return }
         
         do {
-            try context.executeRequest(asyncRequest)
+            try context.execute(asyncRequest)
         }
         catch (let error) {
             print("error executing fetch request: \(error)")
@@ -109,8 +109,8 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
         }
     }
     
-    func palettesFetchRequest(offset:Int) -> NSFetchRequest {
-        let request = NSFetchRequest(entityName: Palette.entityName)
+    func palettesFetchRequest(_ offset:Int) -> NSFetchRequest<Palette> {
+        let request = NSFetchRequest<Palette>(entityName: Palette.entityName)
         request.fetchOffset = offset
         request.fetchLimit = 30
         request.sortDescriptors = Palette.defaultSortDescriptors
@@ -118,9 +118,9 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
         return request
     }
     
-    func objectAtIndexPath(indexPath:NSIndexPath) -> Palette {
+    func objectAtIndexPath(_ indexPath:IndexPath) -> Palette {
 //        let object = self.objects[indexPath.row]
-        let object = self.fetchedResultsController.fetchedObjects?[indexPath.row] as! Palette
-        return object
+        let object = self.fetchedResultsController.fetchedObjects?[(indexPath as NSIndexPath).row]
+        return object!
     }
 }

@@ -10,10 +10,10 @@ import Foundation
 import UIKit
 
 extension Palette {
-    func transformWithDictionary(dictionary: NSDictionary) {
+    func transformWithDictionary(_ dictionary: NSDictionary) {
         self.name = dictionary.stringValueForKey("title")
         self.id = dictionary.numberValueForKey("id").stringValue
-        self.rank = dictionary.numberValueForKey("rank").integerValue
+        self.rank = dictionary.numberValueForKey("rank").intValue
         self.username = dictionary.stringValueForKey("userName")
         self.widths = dictionary.numberArrayValueForKey("colorWidths")
         self.colors = dictionary.stringArrayValueForKey("colors").map({ (string) -> UIColor in
@@ -23,7 +23,7 @@ extension Palette {
         assert(colors.count == widths.count, "color and color width should be equal")
     }
     
-    func transformWithPalette(palette: Palette) {
+    func transformWithPalette(_ palette: Palette) {
         self.name = palette.name
         self.id = palette.id
         self.rank = palette.rank
@@ -32,12 +32,12 @@ extension Palette {
         self.colors = palette.colors
     }
     
-    class func extractAttributeValues(dictionary: NSDictionary) -> NSDictionary {
+    class func extractAttributeValues(_ dictionary: NSDictionary) -> NSDictionary {
 //        let values = NSMutableDictionary()
         
         let name = dictionary.stringValueForKey("title")
         let id = dictionary.numberValueForKey("id").stringValue
-        let rank = dictionary.numberValueForKey("rank").integerValue
+        let rank = dictionary.numberValueForKey("rank").intValue
         let username = dictionary.stringValueForKey("userName")
         let widths = dictionary.numberArrayValueForKey("colorWidths")
         let colors = dictionary.stringArrayValueForKey("colors").map({ (string) -> UIColor in

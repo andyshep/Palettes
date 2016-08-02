@@ -33,7 +33,7 @@ class LocalIncrementalStoreTests: XCTestCase {
         request.sortDescriptors = Palette.defaultSortDescriptors
         
         do {
-            guard let results = try managedObjectContext?.executeFetchRequest(request) as? [Palette] else {
+            guard let results = try managedObjectContext?.fetch(request) as? [Palette] else {
                 fatalError()
             }
             

@@ -9,29 +9,29 @@
 import Foundation
 
 extension NSDictionary {
-    func stringValueForKey(key: String) -> String {
+    func stringValueForKey(_ key: String) -> String {
         if let string = self[key] as? String {
             return string
         }
         return ""
     }
     
-    func numberValueForKey(key: String) -> NSNumber {
+    func numberValueForKey(_ key: String) -> NSNumber {
         if let number = self[key] as? NSNumber {
             return number
         }
-        return NSNumber(integer: NSNotFound)
+        return NSNumber(value: NSNotFound)
     }
     
-    func numberArrayValueForKey(key: String) -> [NSNumber] {
-        if let numbers = self.valueForKey(key) as? [NSNumber] {
+    func numberArrayValueForKey(_ key: String) -> [NSNumber] {
+        if let numbers = self.value(forKey: key) as? [NSNumber] {
             return numbers
         }
         return []
     }
     
-    func stringArrayValueForKey(key: String) -> [NSString] {
-        if let strings = self.valueForKey(key) as? [NSString] {
+    func stringArrayValueForKey(_ key: String) -> [NSString] {
+        if let strings = self.value(forKey: key) as? [NSString] {
             return strings
         }
         return []

@@ -11,16 +11,16 @@ import Foundation
 // define a Result enum to represent the result of some operation
 
 public enum Result {
-    case Success(NSData)
-    case Failure(Reason)
+    case success(Data)
+    case failure(Reason)
 }
 
 extension Result {
     func description() -> String {
         switch self {
-        case .Success(let data):
-            return "Success: \(data.length)"
-        case .Failure(let reason):
+        case .success(let data):
+            return "Success: \(data.count)"
+        case .failure(let reason):
             return "Failure: \(reason.description())"
         }
     }
@@ -29,22 +29,22 @@ extension Result {
 // define a Reason enum to represent a reason for failure
 
 public enum Reason {
-    case BadResponse
-    case NoData
-    case NoSuccessStatusCode(statusCode: Int)
-    case Other(NSError)
+    case badResponse
+    case noData
+    case noSuccessStatusCode(statusCode: Int)
+    case other(NSError)
 }
 
 extension Reason {
     func description() -> String {
         switch self {
-        case .BadResponse:
+        case .badResponse:
             return "Bad response object returned"
-        case .NoData:
+        case .noData:
             return "No response data"
-        case .NoSuccessStatusCode(let code):
+        case .noSuccessStatusCode(let code):
             return "Bad status code: \(code)"
-        case .Other(let error):
+        case .other(let error):
             return "\(error)"
         }
     }
@@ -63,32 +63,32 @@ struct NetworkController {
     :returns: An NSURLSessionTask associated with the request
     */
     
-    static func task(request:NSURLRequest, result: TaskResult) -> NSURLSessionTask {
+    static func task(_ request:URLRequest, result: TaskResult) -> URLSessionTask {
         
         // handle the task completion job on the main thread
         let finished: TaskResult = {(taskResult) in
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            DispatchQueue.main.async(execute: { () -> Void in
                 result(result: taskResult)
             })
         }
         
         // return a basic NSURLSession for the request, with basic error handling
-        return NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data, response, err) -> Void in
+        return URLSession.shared.dataTask(with: request, completionHandler: { (data, response, err) -> Void in
             if err == nil {
-                if let httpResponse = response as? NSHTTPURLResponse {
+                if let httpResponse = response as? HTTPURLResponse {
                     switch httpResponse.statusCode {
                     case 200...204:
-                        finished(result: Result.Success(data!))
+                        finished(result: Result.success(data!))
                     default:
-                        let reason = Reason.NoSuccessStatusCode(statusCode: httpResponse.statusCode)
-                        finished(result: Result.Failure(reason))
+                        let reason = Reason.noSuccessStatusCode(statusCode: httpResponse.statusCode)
+                        finished(result: Result.failure(reason))
                     }
                 } else {
-                    finished(result: Result.Failure(Reason.BadResponse))
+                    finished(result: Result.failure(Reason.badResponse))
                 }
             }
             else {
-                finished(result: Result.Failure(Reason.Other(err!)))
+                finished(result: Result.failure(Reason.other(err!)))
             }
         })
     }

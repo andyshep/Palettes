@@ -15,7 +15,7 @@ class LocalIncrementalStore : NSIncrementalStore {
     private let cache = NSMutableDictionary()
     
     class var storeType: String {
-        return String(LocalIncrementalStore)
+        return String(LocalIncrementalStore.self)
     }
     
     override class func initialize() {
@@ -25,27 +25,26 @@ class LocalIncrementalStore : NSIncrementalStore {
     // MARK: - NSIncrementalStore
     
     override func loadMetadata() throws {
-        let uuid = NSProcessInfo.processInfo().globallyUniqueString
+        let uuid = ProcessInfo.processInfo.globallyUniqueString
         self.metadata = [NSStoreTypeKey : LocalIncrementalStore.storeType, NSStoreUUIDKey : uuid]
     }
     
-    override func executeRequest(request: NSPersistentStoreRequest, withContext context: NSManagedObjectContext?) throws -> AnyObject {
-        guard let context = context else {
-            fatalError("context is missing")
-        }
+    override func execute(_ request: NSPersistentStoreRequest, with context: NSManagedObjectContext?) throws -> AnyObject {
+
+        guard context != nil else { fatalError("missing context") }
         
-        if request.requestType == .FetchRequestType {
-            let fetchRequest = request as! NSFetchRequest
-            if fetchRequest.resultType == .ManagedObjectResultType {
-                return self.entitiesForFetchRequest(fetchRequest, inContext: context)
+        if request.requestType == .fetchRequestType {
+            let fetchRequest = request as! NSFetchRequest<NSManagedObject>
+            if fetchRequest.resultType == NSFetchRequestResultType() {
+                return self.entitiesForFetchRequest(fetchRequest, inContext: context!)
             }
         }
         
         return []
     }
     
-    override func newValuesForObjectWithID(objectID: NSManagedObjectID, withContext context: NSManagedObjectContext) throws -> NSIncrementalStoreNode {
-        guard let values = cache.objectForKey(objectID) as? [String: AnyObject] else {
+    override func newValuesForObject(with objectID: NSManagedObjectID, with context: NSManagedObjectContext) throws -> NSIncrementalStoreNode {
+        guard let values = cache.object(forKey: objectID) as? [String: AnyObject] else {
             fatalError("values are missing")
         }
         
@@ -63,12 +62,15 @@ class LocalIncrementalStore : NSIncrementalStore {
     :returns: An array of managed objects
     */
     
-    func entitiesForFetchRequest(request:NSFetchRequest, inContext context:NSManagedObjectContext) -> [AnyObject] {
+    func entitiesForFetchRequest(_ request:NSFetchRequest<NSManagedObject>, inContext context:NSManagedObjectContext) -> [AnyObject] {
         let items = self.loadPalettesFromJSON()
         
         let entities = items.map({ (item: NSDictionary) -> Palette in
-            let objectId = self.objectIdForNewObjectOfEntity(request.entity!, cacheValues: item)
-            guard let palette = context.objectWithID(objectId) as? Palette else {
+            guard let entity = request.entity else { fatalError("missing entity") }
+            guard let objectId = self.objectIdForNewObjectOfEntity(entity, cacheValues: item) else {
+                fatalError("missing object id")
+            }
+            guard let palette = context.object(with: objectId) as? Palette else {
                 fatalError("wrong object found")
             }
             return palette
@@ -86,12 +88,12 @@ class LocalIncrementalStore : NSIncrementalStore {
     :returns: A managed object ID
     */
 
-    func objectIdForNewObjectOfEntity(entityDescription:NSEntityDescription, cacheValues values:AnyObject!) -> NSManagedObjectID! {
+    func objectIdForNewObjectOfEntity(_ entityDescription:NSEntityDescription, cacheValues values:AnyObject!) -> NSManagedObjectID! {
         if let dict = values as? NSDictionary {
             let _ = entityDescription.name
             
-            if let referenceId = dict.objectForKey("id")?.stringValue {
-                let objectId = self.newObjectIDForEntity(entityDescription, referenceObject: referenceId)
+            if let referenceId = dict.object(forKey: "id")?.stringValue {
+                let objectId = self.newObjectID(for: entityDescription, referenceObject: referenceId)
                 let values = Palette.extractAttributeValues(dict)
                 cache.setObject(values, forKey: objectId)
                 return objectId
@@ -108,11 +110,11 @@ class LocalIncrementalStore : NSIncrementalStore {
     */
     
     func loadPalettesFromJSON() -> [NSDictionary] {
-        let filePath: String? = NSBundle.mainBundle().pathForResource("palettes", ofType: "json")
-        let data: NSData = NSData(contentsOfFile: filePath!)!
+        let filePath: String? = Bundle.main.path(forResource: "palettes", ofType: "json")
+        let data: Data = try! Data(contentsOf: URL(fileURLWithPath: filePath!))
         
         do {
-            let results = try NSJSONSerialization.JSONObjectWithData(data, options: [])
+            let results = try JSONSerialization.jsonObject(with: data, options: [])
             guard let palettes = results as? [NSDictionary] else {
                 return [[:]]
             }

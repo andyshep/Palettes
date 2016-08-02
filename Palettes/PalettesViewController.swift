@@ -19,10 +19,10 @@ class PalettesViewController: UIViewController {
 
         self.title = "Palettes"
         
-        self.collectionView.registerClass(PaletteCell.self, forCellWithReuseIdentifier: PaletteCell.reuseIdentifier)
+        self.collectionView.register(PaletteCell.self, forCellWithReuseIdentifier: PaletteCell.reuseIdentifier)
         self.collectionView.collectionViewLayout = PalettesFlowLayout()
-        self.collectionView.backgroundColor = UIColor.blackColor()
-        self.collectionView.indicatorStyle = .White
+        self.collectionView.backgroundColor = UIColor.black
+        self.collectionView.indicatorStyle = .white
         
         self.contentStore.collectionView = self.collectionView
         self.collectionView.dataSource = self.contentStore

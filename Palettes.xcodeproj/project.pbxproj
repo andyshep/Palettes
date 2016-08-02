@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F70456421D1301B0005138EF /* RemoteIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */; };
+		F70456431D1301B0005138EF /* RemoteIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */; };
 		F7199F301A3F53A700CA4FFB /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */; };
 		F72BEE0A1A5EFE50001FF832 /* palettes.json in Resources */ = {isa = PBXBuildFile; fileRef = F72BEE091A5EFE50001FF832 /* palettes.json */; };
 		F72F21691A3F9F9600FA397C /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72F21681A3F9F9600FA397C /* DataController.swift */; };
@@ -40,10 +42,6 @@
 		F7C0B8D11A646B3400E0721B /* NSData+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */; };
 		F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */; };
 		F7C1A4561A3A8F530000B2C7 /* NSDictionary+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */; };
-		F7C4FDFE1BE7E4C90084BED5 /* RemoteIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */; };
-		F7C4FE011BE7E7C00084BED5 /* RemoteIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */; };
-		F7C4FE021BE7EE3C0084BED5 /* CachingIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */; };
-		F7C4FE031BE7EE3D0084BED5 /* CachingIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */; };
 		F7C4FE041BE7F42F0084BED5 /* CachingIncrementalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD532D1A64908A00737800 /* CachingIncrementalStoreTests.swift */; };
 		F7E2D8AA1A5E404A00995BC0 /* LocalIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */; };
 		F7EB5C581A402C3C00989A04 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB5C571A402C3C00989A04 /* Palette.swift */; };
@@ -264,14 +262,16 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Andrew Shepard";
 				TargetAttributes = {
 					F77A44441A3A5D64004C0990 = {
 						CreatedOnToolsVersion = 6.2;
+						LastSwiftMigration = 0800;
 					};
 					F77A44591A3A5D64004C0990 = {
 						CreatedOnToolsVersion = 6.2;
+						LastSwiftMigration = 0800;
 						TestTargetID = F77A44441A3A5D64004C0990;
 					};
 				};
@@ -325,10 +325,9 @@
 				F77A44781A3A5D95004C0990 /* PalettesContentStore.swift in Sources */,
 				F77A44771A3A5D95004C0990 /* PalettesViewController.swift in Sources */,
 				F75B0DCC1A40286F00B0F10D /* ArrayTransformer.swift in Sources */,
-				F7C4FDFE1BE7E4C90084BED5 /* RemoteIncrementalStore.swift in Sources */,
+				F70456421D1301B0005138EF /* RemoteIncrementalStore.swift in Sources */,
 				F7B42DE01A5F57B1004F7198 /* Palette+AttributeMapping.swift in Sources */,
 				F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */,
-				F7C4FE021BE7EE3C0084BED5 /* CachingIncrementalStore.swift in Sources */,
 				F77A44721A3A5D95004C0990 /* ColourLovers.swift in Sources */,
 				F7E2D8AA1A5E404A00995BC0 /* LocalIncrementalStore.swift in Sources */,
 				F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */,
@@ -352,11 +351,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7C4FE041BE7F42F0084BED5 /* CachingIncrementalStoreTests.swift in Sources */,
-				F7C4FE011BE7E7C00084BED5 /* RemoteIncrementalStore.swift in Sources */,
 				F7C0B8D11A646B3400E0721B /* NSData+JSON.swift in Sources */,
+				F70456431D1301B0005138EF /* RemoteIncrementalStore.swift in Sources */,
 				F7C0B8C91A64666700E0721B /* Palette.swift in Sources */,
 				F7FD53301A6490BF00737800 /* NetworkController.swift in Sources */,
-				F7C4FE031BE7EE3D0084BED5 /* CachingIncrementalStore.swift in Sources */,
 				F7C0B8CB1A64667700E0721B /* NSDictionary+Parsing.swift in Sources */,
 				F7C0B8C81A6465CF00E0721B /* LocalIncrementalStore.swift in Sources */,
 				F7C0B8CC1A64668100E0721B /* UIColor+HexColors.swift in Sources */,
@@ -424,6 +422,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -466,6 +465,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -489,6 +489,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -503,6 +504,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -523,6 +526,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Palettes.app/Palettes";
 			};
 			name = Debug;
@@ -539,6 +543,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Palettes.app/Palettes";
 			};
 			name = Release;

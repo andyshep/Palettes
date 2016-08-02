@@ -14,11 +14,11 @@ typealias LoadCompletion = (objects: [AnyObject]) -> Void
 class DataController: NSObject {
     
     class func loadPalettesFromJSON() -> [AnyObject] {
-        guard let filePath = NSBundle.mainBundle().pathForResource("palettes", ofType: "json") else { return [] }
-        guard let data = NSData(contentsOfFile: filePath) else { return [] }
+        guard let filePath = Bundle.main.path(forResource: "palettes", ofType: "json") else { return [] }
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) else { return [] }
         
         do {
-            guard let jsonResult = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? NSArray else {
+            guard let jsonResult = try JSONSerialization.jsonObject(with: data, options: []) as? NSArray else {
                 return []
             }
             
@@ -37,21 +37,17 @@ class DataController: NSObject {
         }
     }
     
-    class func loadPalettesFromJSON(completion: LoadCompletion) -> Void {
+    class func loadPalettesFromJSON(_ completion: LoadCompletion) -> Void {
         let palettes = loadPalettesFromJSON()
         completion(objects: palettes)
     }
     
-    class func loadPalettes(completion: LoadCompletion) -> Void {
+    class func loadPalettes(_ completion: LoadCompletion) -> Void {
         guard let context = CoreDataManager.sharedManager.managedObjectContext else { return }
-        let request = NSFetchRequest(entityName: "Palette")
+        let request = NSFetchRequest<Palette>(entityName: "Palette")
         
         do {
-            guard let results = try context.executeFetchRequest(request) as? [Palette] else {
-                completion(objects: [])
-                return
-            }
-            
+            let results = try context.fetch(request)
             completion(objects: results)
         }
         catch (let error) {
