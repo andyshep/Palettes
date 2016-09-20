@@ -19,6 +19,13 @@ For more information, see the complete write up about [Building an NSIncremental
 
 Palettes is setup to use the `CachingIncrementalStore` by default. To change stores, modify the `storeType` passed into the `NSPersistentStoreCoordinator`, as it's initialized inside [`CoreDataManager`](https://github.com/andyshep/Palettes/blob/master/Palettes/CoreDataManager.swift#L76).
 
-<br>
+## Requirements
+
+* Xcode 8
+* Swift 3
+	
+## License
+
+The MIT License (MIT)
 
 ![palettes.png](http://i.imgur.com/StQwM9T.png)
