@@ -12,7 +12,7 @@ import XCTest
 struct TestingContextProvider {
     
     static func contextWithStoreType(_ storeType: String) -> NSManagedObjectContext? {
-        let modelURL = Bundle.main().urlForResource("Palettes", withExtension: "momd")!
+        let modelURL = Bundle.main.url(forResource: "Palettes", withExtension: "momd")!
         let model = NSManagedObjectModel(contentsOf: modelURL)
         XCTAssertNotNil(model, "model should not be nil")
         

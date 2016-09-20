@@ -29,6 +29,8 @@
 		F77A447C1A3A5DD2004C0990 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F77A447A1A3A5DD2004C0990 /* Main.storyboard */; };
 		F78C88EB1A3B65F200145D3B /* PaletteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78C88EA1A3B65F200145D3B /* PaletteViewModel.swift */; };
 		F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79165EA1A420613006E601E /* NSURL+Directories.swift */; };
+		F79C9ACD1D919ECD0071BA89 /* CachingIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */; };
+		F79C9ACE1D91AB180071BA89 /* CachingIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */; };
 		F7B42DE01A5F57B1004F7198 /* Palette+AttributeMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */; };
 		F7C0B8C81A6465CF00E0721B /* LocalIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */; };
 		F7C0B8C91A64666700E0721B /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB5C571A402C3C00989A04 /* Palette.swift */; };
@@ -328,6 +330,7 @@
 				F70456421D1301B0005138EF /* RemoteIncrementalStore.swift in Sources */,
 				F7B42DE01A5F57B1004F7198 /* Palette+AttributeMapping.swift in Sources */,
 				F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */,
+				F79C9ACD1D919ECD0071BA89 /* CachingIncrementalStore.swift in Sources */,
 				F77A44721A3A5D95004C0990 /* ColourLovers.swift in Sources */,
 				F7E2D8AA1A5E404A00995BC0 /* LocalIncrementalStore.swift in Sources */,
 				F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */,
@@ -355,6 +358,7 @@
 				F70456431D1301B0005138EF /* RemoteIncrementalStore.swift in Sources */,
 				F7C0B8C91A64666700E0721B /* Palette.swift in Sources */,
 				F7FD53301A6490BF00737800 /* NetworkController.swift in Sources */,
+				F79C9ACE1D91AB180071BA89 /* CachingIncrementalStore.swift in Sources */,
 				F7C0B8CB1A64667700E0721B /* NSDictionary+Parsing.swift in Sources */,
 				F7C0B8C81A6465CF00E0721B /* LocalIncrementalStore.swift in Sources */,
 				F7C0B8CC1A64668100E0721B /* UIColor+HexColors.swift in Sources */,

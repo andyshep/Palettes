@@ -40,7 +40,7 @@ class RemoteIncrementalStoreTests: XCTestCase {
     }
     
     func testRemoteObjectsCanBeFetchedAsynchronously() {
-        let expectation = self.expectation(withDescription: "asynchronous requests should succeed")
+        let expectation = self.expectation(description: "asynchronous requests should succeed")
         
         let request = self.fetchRequest()
         let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
@@ -50,11 +50,11 @@ class RemoteIncrementalStoreTests: XCTestCase {
         
         try! self.managedObjectContext?.execute(asyncRequest)
         
-        waitForExpectations(withTimeout: 60, handler:nil)
+        waitForExpectations(timeout: 60, handler: nil)
     }
     
-    func fetchRequest() -> NSFetchRequest<AnyObject> {
-        let request = NSFetchRequest(entityName: "Palette")
+    func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Palette")
         request.fetchLimit = 30
         request.sortDescriptors = Palette.defaultSortDescriptors
         return request

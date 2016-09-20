@@ -10,9 +10,9 @@ import XCTest
 import CoreData
 
 class CachingIncrementalStoreTests: XCTestCase {
-    private static var __once: () = {
-                expectation.fulfill()
-            }()
+//    private static var __once: () = {
+//                expectation.fulfill()
+//            }()
     var managedObjectContext: NSManagedObjectContext?
     
     override func setUp() {
@@ -32,18 +32,18 @@ class CachingIncrementalStoreTests: XCTestCase {
     }
     
     func testRemoteObjectsCanBeFetched() {
-        let request = NSFetchRequest(entityName: "Palette")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Palette")
         request.fetchLimit = 30
         request.sortDescriptors = Palette.defaultSortDescriptors
         
-        let expectation = self.expectation(withDescription: "save notification should be observed")
+        let expectation = self.expectation(description: "save notification should be observed")
         
-        NotificationCenter.default().addObserver(forName: NSNotification.Name.NSManagedObjectContextDidSave, object: nil, queue: nil) { (notification) -> Void in
-            struct Static {
-                static var onceToken : Int = 0
-            }
-            _ = CachingIncrementalStoreTests.__once
-        }
+//        NotificationCenter.default.addObserver(forName: NSNotification.Name.NSManagedObjectContextDidSave, object: nil, queue: nil) { (notification) -> Void in
+//            struct Static {
+//                static var onceToken : Int = 0
+//            }
+//            _ = CachingIncrementalStoreTests.__once
+//        }
         
         do {
             guard let results = try managedObjectContext?.fetch(request) as? [Palette] else {
@@ -56,17 +56,16 @@ class CachingIncrementalStoreTests: XCTestCase {
             XCTFail("fetch request should not fail")
         }
         
-        waitForExpectations(withTimeout: 60, handler: nil)
+        waitForExpectations(timeout: 60, handler: nil)
     }
     
     func removeSQLCache() -> Void {
         let path = CachingIncrementalStore.storeType + ".sqlite"
-        let url = try! URL.applicationDocumentsDirectory().appendingPathComponent(path)
+        let url = URL.applicationDocumentsDirectory().appendingPathComponent(path)
         
         do {
-            try FileManager.default().removeItem(at: url)
-        }
-        catch {
+            try FileManager.default.removeItem(at: url)
+        } catch {
             // no-op
         }
     }

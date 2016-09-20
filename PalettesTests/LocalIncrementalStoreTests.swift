@@ -28,7 +28,7 @@ class LocalIncrementalStoreTests: XCTestCase {
     }
     
     func testLocalObjectsCanBeFetched() {
-        let request = NSFetchRequest(entityName: "Palette")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Palette")
         request.fetchLimit = 30
         request.sortDescriptors = Palette.defaultSortDescriptors
         
