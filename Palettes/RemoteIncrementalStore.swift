@@ -15,7 +15,7 @@ class RemoteIncrementalStore : NSIncrementalStore {
     private let cache = NSMutableDictionary()
     
     class var storeType: String {
-        return String(RemoteIncrementalStore.self)
+        return String(describing: RemoteIncrementalStore.self)
     }
     
     override class func initialize() {
@@ -29,7 +29,7 @@ class RemoteIncrementalStore : NSIncrementalStore {
         self.metadata = [NSStoreTypeKey : RemoteIncrementalStore.storeType, NSStoreUUIDKey : uuid]
     }
     
-    override func execute(_ request: NSPersistentStoreRequest, with context: NSManagedObjectContext?) throws -> AnyObject {
+    override func execute(_ request: NSPersistentStoreRequest, with context: NSManagedObjectContext?) throws -> Any {
         if request.requestType == .fetchRequestType {
             var error: NSError? = nil
             return self.executeFetchRequest(request, withContext: context, error: &error)
@@ -61,12 +61,13 @@ class RemoteIncrementalStore : NSIncrementalStore {
         if let dict = values as? NSDictionary {
             let _ = entityDescription.name
             
-            if let referenceId = dict.object(forKey: "id")?.stringValue {
-                let objectId = self.newObjectID(for: entityDescription, referenceObject: referenceId)
-                let values = Palette.extractAttributeValues(dict)
-                cache.setObject(values, forKey: objectId)
-                return objectId
-            }
+            let referenceId = dict.numberValueForKey("id").stringValue
+            guard referenceId != "" else { return nil }
+            
+            let objectId = self.newObjectID(for: entityDescription, referenceObject: referenceId)
+            let values = Palette.extractAttributeValues(dict)
+            cache.setObject(values, forKey: objectId)
+            return objectId
         }
         
         return nil

@@ -75,7 +75,7 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     func executeFetchRequest(_ offset: Int) -> Void {
         let request = palettesFetchRequest(offset)
         let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
-            let count = result.finalResult?.count
+            let count = result.finalResult?.count ?? 0
             if count > 0 {
                 if let palettes = result.finalResult {
                     self.objects += palettes

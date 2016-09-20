@@ -13,7 +13,7 @@ extension Palette {
     func transformWithDictionary(_ dictionary: NSDictionary) {
         self.name = dictionary.stringValueForKey("title")
         self.id = dictionary.numberValueForKey("id").stringValue
-        self.rank = dictionary.numberValueForKey("rank").intValue
+        self.rank = dictionary.numberValueForKey("rank")
         self.username = dictionary.stringValueForKey("userName")
         self.widths = dictionary.numberArrayValueForKey("colorWidths")
         self.colors = dictionary.stringArrayValueForKey("colors").map({ (string) -> UIColor in

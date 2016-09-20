@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-typealias LoadCompletion = (objects: [AnyObject]) -> Void
+typealias LoadCompletion = (_ objects: [AnyObject]) -> Void
 
 class DataController: NSObject {
     
@@ -39,7 +39,7 @@ class DataController: NSObject {
     
     class func loadPalettesFromJSON(_ completion: LoadCompletion) -> Void {
         let palettes = loadPalettesFromJSON()
-        completion(objects: palettes)
+        completion(palettes)
     }
     
     class func loadPalettes(_ completion: LoadCompletion) -> Void {
@@ -48,11 +48,11 @@ class DataController: NSObject {
         
         do {
             let results = try context.fetch(request)
-            completion(objects: results)
+            completion(results)
         }
         catch (let error) {
             print("error loading palettes from context: \(error)")
-            completion(objects: [])
+            completion([])
         }
     }
 }

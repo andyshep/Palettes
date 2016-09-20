@@ -57,7 +57,7 @@ class PaletteCell: UICollectionViewCell {
     // MARK: - Constraints
     
     lazy var titleLabelConstraints: [NSLayoutConstraint] = {
-        let views = ["titleLabel": self.titleLabel, "colorView": self.colorView]
+        let views: [String: Any] = ["titleLabel": self.titleLabel, "colorView": self.colorView]
         let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[titleLabel]", options: NSLayoutFormatOptions(), metrics: nil, views: views)
         let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[colorView]-8-[titleLabel]-8-|", options: NSLayoutFormatOptions(), metrics: nil, views: views)
         
@@ -69,7 +69,7 @@ class PaletteCell: UICollectionViewCell {
     }()
     
     lazy var subtitleLabelConstraints: [NSLayoutConstraint] = {
-        let views = ["subtitleLabel": self.subtitleLabel, "colorView": self.colorView]
+        let views: [String: Any] = ["subtitleLabel": self.subtitleLabel, "colorView": self.colorView]
         let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[subtitleLabel]-8-|", options: NSLayoutFormatOptions(), metrics: nil, views: views)
         let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[colorView]-8-[subtitleLabel]-8-|", options: NSLayoutFormatOptions(), metrics: nil, views: views)
         

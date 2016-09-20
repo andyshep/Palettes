@@ -64,8 +64,8 @@ class CoreDataManager: NSObject {
     // MARK: - Private
     
     private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
-        let storeType = LocalIncrementalStore.storeType
-//        let storeType = RemoteIncrementalStore.storeType
+//        let storeType = LocalIncrementalStore.storeType
+        let storeType = RemoteIncrementalStore.storeType
 //        let storeType = CachingIncrementalStore.storeType
         
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)

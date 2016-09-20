@@ -17,11 +17,11 @@ class ArrayTransformer: ValueTransformer {
         return true
     }
     
-    override func transformedValue(_ value: AnyObject?) -> AnyObject? {
+    override func transformedValue(_ value: Any?) -> Any? {
         return NSKeyedArchiver.archivedData(withRootObject: value!)
     }
     
-    override func reverseTransformedValue(_ value: AnyObject?) -> AnyObject? {
+    override func reverseTransformedValue(_ value: Any?) -> Any? {
         if let data = value as? Data {
             return NSKeyedUnarchiver.unarchiveObject(with: data)
         }

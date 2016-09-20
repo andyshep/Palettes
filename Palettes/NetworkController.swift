@@ -12,7 +12,7 @@ import Foundation
 
 public enum Result {
     case success(Data)
-    case failure(Reason)
+    case failure(Error)
 }
 
 extension Result {
@@ -20,37 +20,19 @@ extension Result {
         switch self {
         case .success(let data):
             return "Success: \(data.count)"
-        case .failure(let reason):
-            return "Failure: \(reason.description())"
+        case .failure(let error):
+            return "Failure: \(error)"
         }
     }
 }
 
-// define a Reason enum to represent a reason for failure
-
-public enum Reason {
+public enum NetworkError: Error {
     case badResponse
-    case noData
     case noSuccessStatusCode(statusCode: Int)
-    case other(NSError)
+    case other(Error?)
 }
 
-extension Reason {
-    func description() -> String {
-        switch self {
-        case .badResponse:
-            return "Bad response object returned"
-        case .noData:
-            return "No response data"
-        case .noSuccessStatusCode(let code):
-            return "Bad status code: \(code)"
-        case .other(let error):
-            return "\(error)"
-        }
-    }
-}
-
-typealias TaskResult = (result: Result) -> Void
+typealias TaskResult = (_ result: Result) -> Void
 
 struct NetworkController {
     
@@ -63,12 +45,12 @@ struct NetworkController {
     :returns: An NSURLSessionTask associated with the request
     */
     
-    static func task(_ request:URLRequest, result: TaskResult) -> URLSessionTask {
+    static func task(_ request: URLRequest, result: @escaping TaskResult) -> URLSessionTask {
         
         // handle the task completion job on the main thread
         let finished: TaskResult = {(taskResult) in
             DispatchQueue.main.async(execute: { () -> Void in
-                result(result: taskResult)
+                result(taskResult)
             })
         }
         
@@ -78,17 +60,16 @@ struct NetworkController {
                 if let httpResponse = response as? HTTPURLResponse {
                     switch httpResponse.statusCode {
                     case 200...204:
-                        finished(result: Result.success(data!))
+                        finished(Result.success(data!))
                     default:
-                        let reason = Reason.noSuccessStatusCode(statusCode: httpResponse.statusCode)
-                        finished(result: Result.failure(reason))
+                        let error = NetworkError.noSuccessStatusCode(statusCode: httpResponse.statusCode)
+                        finished(Result.failure(error))
                     }
                 } else {
-                    finished(result: Result.failure(Reason.badResponse))
+                    finished(Result.failure(NetworkError.badResponse))
                 }
-            }
-            else {
-                finished(result: Result.failure(Reason.other(err!)))
+            } else {
+                finished(Result.failure(NetworkError.other(err)))
             }
         })
     }
