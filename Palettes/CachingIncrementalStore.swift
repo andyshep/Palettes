@@ -230,12 +230,14 @@ class CachingIncrementalStore : NSIncrementalStore {
                             }
                         }
                         else {
-                            guard let backingObject = NSEntityDescription.insertNewObject(forEntityName: entity.name!, into: backingContext) as? Palette else {
+                            guard let backingObj = NSEntityDescription.insertNewObject(forEntityName: entity.name!, into: backingContext) as? Palette else {
                                 fatalError("backingObject not found")
                             }
                             
+                            backingObject = backingObj
+                            
                             do {
-                                try backingObject.managedObjectContext?.obtainPermanentIDs(for: [backingObject])
+                                try backingObject!.managedObjectContext?.obtainPermanentIDs(for: [backingObject!])
                             }
                             catch {
                                 fatalError("permanent object ids could not be obtained")
