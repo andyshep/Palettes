@@ -31,10 +31,6 @@ class CachingIncrementalStore : NSIncrementalStore {
         return String(describing: CachingIncrementalStore.self)
     }
     
-    override class func initialize() {
-        NSPersistentStoreCoordinator.registerStoreClass(self, forStoreType:self.storeType)
-    }
-    
     // MARK: - Lazy Accessors
     
     /// The persistent store coordinator attached to the backing store.
@@ -440,7 +436,7 @@ extension NSManagedObjectContext {
             try self.save()
         } catch let error1 as NSError {
             error = error1
-            print("error saving context: \(error)")
+            print("error saving context: \(String(describing: error))")
         }
     }
 }

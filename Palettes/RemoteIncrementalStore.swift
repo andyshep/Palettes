@@ -18,10 +18,6 @@ class RemoteIncrementalStore : NSIncrementalStore {
         return String(describing: RemoteIncrementalStore.self)
     }
     
-    override class func initialize() {
-        NSPersistentStoreCoordinator.registerStoreClass(self, forStoreType:self.storeType)
-    }
-    
     // MARK: - NSIncrementalStore
     
     override func loadMetadata() throws {
