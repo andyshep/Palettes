@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F70456421D1301B0005138EF /* RemoteIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */; };
-		F70456431D1301B0005138EF /* RemoteIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8AB1A5E407A00995BC0 /* RemoteIncrementalStore.swift */; };
 		F7199F301A3F53A700CA4FFB /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7199F2F1A3F53A700CA4FFB /* CoreDataManager.swift */; };
 		F72BEE0A1A5EFE50001FF832 /* palettes.json in Resources */ = {isa = PBXBuildFile; fileRef = F72BEE091A5EFE50001FF832 /* palettes.json */; };
 		F72F21691A3F9F9600FA397C /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72F21681A3F9F9600FA397C /* DataController.swift */; };
@@ -30,17 +29,11 @@
 		F78C88EB1A3B65F200145D3B /* PaletteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78C88EA1A3B65F200145D3B /* PaletteViewModel.swift */; };
 		F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79165EA1A420613006E601E /* NSURL+Directories.swift */; };
 		F79C9ACD1D919ECD0071BA89 /* CachingIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */; };
-		F79C9ACE1D91AB180071BA89 /* CachingIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */; };
 		F7B42DE01A5F57B1004F7198 /* Palette+AttributeMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */; };
-		F7C0B8C81A6465CF00E0721B /* LocalIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */; };
-		F7C0B8C91A64666700E0721B /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB5C571A402C3C00989A04 /* Palette.swift */; };
-		F7C0B8CA1A64667000E0721B /* Palette+AttributeMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */; };
 		F7C0B8CB1A64667700E0721B /* NSDictionary+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */; };
 		F7C0B8CC1A64668100E0721B /* UIColor+HexColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A44711A3A5D95004C0990 /* UIColor+HexColors.swift */; };
 		F7C0B8CD1A6468D900E0721B /* palettes.json in Resources */ = {isa = PBXBuildFile; fileRef = F72BEE091A5EFE50001FF832 /* palettes.json */; };
 		F7C0B8CE1A6469CB00E0721B /* NSURL+Directories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79165EA1A420613006E601E /* NSURL+Directories.swift */; };
-		F7C0B8CF1A646AFD00E0721B /* Palettes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F72F216C1A3FA1AE00FA397C /* Palettes.xcdatamodeld */; };
-		F7C0B8D01A646B2000E0721B /* ArrayTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */; };
 		F7C0B8D11A646B3400E0721B /* NSData+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */; };
 		F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */; };
 		F7C1A4561A3A8F530000B2C7 /* NSDictionary+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */; };
@@ -48,20 +41,8 @@
 		F7E2D8AA1A5E404A00995BC0 /* LocalIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */; };
 		F7EB5C581A402C3C00989A04 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB5C571A402C3C00989A04 /* Palette.swift */; };
 		F7FD532A1A64804500737800 /* TestingContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD53291A64804500737800 /* TestingContextProvider.swift */; };
-		F7FD532C1A6481ED00737800 /* ColourLovers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A446A1A3A5D95004C0990 /* ColourLovers.swift */; };
-		F7FD53301A6490BF00737800 /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A446B1A3A5D95004C0990 /* NetworkController.swift */; };
 		F7FD53321A649F5700737800 /* RemoteIncrementalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD53271A647FFA00737800 /* RemoteIncrementalStoreTests.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		F77A445B1A3A5D64004C0990 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F77A443D1A3A5D64004C0990 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F77A44441A3A5D64004C0990;
-			remoteInfo = Palettes;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Palette+AttributeMapping.swift"; sourceTree = "<group>"; };
@@ -250,7 +231,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				F77A445C1A3A5D64004C0990 /* PBXTargetDependency */,
 			);
 			name = PalettesTests;
 			productName = PalettesTests;
@@ -264,16 +244,20 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Andrew Shepard";
 				TargetAttributes = {
 					F77A44441A3A5D64004C0990 = {
 						CreatedOnToolsVersion = 6.2;
-						LastSwiftMigration = 0800;
+						DevelopmentTeam = 9XH5KEL8D8;
+						LastSwiftMigration = 0900;
+						ProvisioningStyle = Automatic;
 					};
 					F77A44591A3A5D64004C0990 = {
 						CreatedOnToolsVersion = 6.2;
-						LastSwiftMigration = 0800;
+						DevelopmentTeam = 9XH5KEL8D8;
+						LastSwiftMigration = 0900;
+						ProvisioningStyle = Manual;
 						TestTargetID = F77A44441A3A5D64004C0990;
 					};
 				};
@@ -355,33 +339,16 @@
 			files = (
 				F7C4FE041BE7F42F0084BED5 /* CachingIncrementalStoreTests.swift in Sources */,
 				F7C0B8D11A646B3400E0721B /* NSData+JSON.swift in Sources */,
-				F70456431D1301B0005138EF /* RemoteIncrementalStore.swift in Sources */,
-				F7C0B8C91A64666700E0721B /* Palette.swift in Sources */,
-				F7FD53301A6490BF00737800 /* NetworkController.swift in Sources */,
-				F79C9ACE1D91AB180071BA89 /* CachingIncrementalStore.swift in Sources */,
 				F7C0B8CB1A64667700E0721B /* NSDictionary+Parsing.swift in Sources */,
-				F7C0B8C81A6465CF00E0721B /* LocalIncrementalStore.swift in Sources */,
 				F7C0B8CC1A64668100E0721B /* UIColor+HexColors.swift in Sources */,
 				F7C0B8CE1A6469CB00E0721B /* NSURL+Directories.swift in Sources */,
-				F7FD532C1A6481ED00737800 /* ColourLovers.swift in Sources */,
 				F7FD53321A649F5700737800 /* RemoteIncrementalStoreTests.swift in Sources */,
-				F7C0B8D01A646B2000E0721B /* ArrayTransformer.swift in Sources */,
 				F77A44611A3A5D64004C0990 /* LocalIncrementalStoreTests.swift in Sources */,
 				F7FD532A1A64804500737800 /* TestingContextProvider.swift in Sources */,
-				F7C0B8CA1A64667000E0721B /* Palette+AttributeMapping.swift in Sources */,
-				F7C0B8CF1A646AFD00E0721B /* Palettes.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		F77A445C1A3A5D64004C0990 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F77A44441A3A5D64004C0990 /* Palettes */;
-			targetProxy = F77A445B1A3A5D64004C0990 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F77A44531A3A5D64004C0990 /* LaunchScreen.xib */ = {
@@ -411,13 +378,21 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -455,13 +430,21 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -487,12 +470,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9XH5KEL8D8;
 				INFOPLIST_FILE = Palettes/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -502,13 +490,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9XH5KEL8D8;
 				INFOPLIST_FILE = Palettes/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -518,6 +511,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 9XH5KEL8D8;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -530,6 +525,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Palettes.app/Palettes";
 			};
@@ -539,6 +536,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -547,7 +546,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Palettes.app/Palettes";
 			};

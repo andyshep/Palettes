@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6738" systemVersion="14C81f" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13154.26" systemVersion="16F73" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Palette" representedClassName="Palettes.Palette" syncable="YES">
         <attribute name="colors" optional="YES" attributeType="Transformable" valueTransformerName="Palettes.ArrayTransformer" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="String" defaultValueString="-1" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" defaultValueString="empty" syncable="YES"/>
-        <attribute name="rank" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="rank" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" defaultValueString="empty" syncable="YES"/>
         <attribute name="widths" optional="YES" attributeType="Transformable" valueTransformerName="Palettes.ArrayTransformer" syncable="YES"/>
     </entity>
