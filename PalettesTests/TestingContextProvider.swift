@@ -8,6 +8,7 @@
 
 import CoreData
 import XCTest
+@testable import Palettes
 
 struct TestingContextProvider {
     

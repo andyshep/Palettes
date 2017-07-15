@@ -8,6 +8,7 @@
 
 import XCTest
 import CoreData
+@testable import Palettes
 
 class RemoteIncrementalStoreTests: XCTestCase {
     var managedObjectContext: NSManagedObjectContext?
@@ -16,6 +17,8 @@ class RemoteIncrementalStoreTests: XCTestCase {
         super.setUp()
         
         let storeType = RemoteIncrementalStore.storeType
+        NSPersistentStoreCoordinator.registerStoreClass(RemoteIncrementalStore.self, forStoreType:storeType)
+        
         self.managedObjectContext = TestingContextProvider.contextWithStoreType(storeType)
         
         XCTAssertNotNil(managedObjectContext, "context should not be nil")

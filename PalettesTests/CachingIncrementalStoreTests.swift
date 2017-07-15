@@ -8,11 +8,9 @@
 
 import XCTest
 import CoreData
+@testable import Palettes
 
 class CachingIncrementalStoreTests: XCTestCase {
-//    private static var __once: () = {
-//                expectation.fulfill()
-//            }()
     var managedObjectContext: NSManagedObjectContext?
     
     override func setUp() {
@@ -21,6 +19,8 @@ class CachingIncrementalStoreTests: XCTestCase {
         self.removeSQLCache()
         
         let storeType = CachingIncrementalStore.storeType
+        NSPersistentStoreCoordinator.registerStoreClass(CachingIncrementalStore.self, forStoreType:storeType)
+        
         self.managedObjectContext = TestingContextProvider.contextWithStoreType(storeType)
         
         XCTAssertNotNil(managedObjectContext, "context should not be nil")
@@ -37,13 +37,6 @@ class CachingIncrementalStoreTests: XCTestCase {
         request.sortDescriptors = Palette.defaultSortDescriptors
         
         let expectation = self.expectation(description: "save notification should be observed")
-        
-//        NotificationCenter.default.addObserver(forName: NSNotification.Name.NSManagedObjectContextDidSave, object: nil, queue: nil) { (notification) -> Void in
-//            struct Static {
-//                static var onceToken : Int = 0
-//            }
-//            _ = CachingIncrementalStoreTests.__once
-//        }
         
         do {
             guard let results = try managedObjectContext?.fetch(request) as? [Palette] else {

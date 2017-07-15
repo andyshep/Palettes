@@ -9,6 +9,7 @@
 import XCTest
 import CoreData
 import Foundation
+@testable import Palettes
 
 class LocalIncrementalStoreTests: XCTestCase {
     
@@ -18,6 +19,8 @@ class LocalIncrementalStoreTests: XCTestCase {
         super.setUp()
         
         let storeType = LocalIncrementalStore.storeType
+        NSPersistentStoreCoordinator.registerStoreClass(LocalIncrementalStore.self, forStoreType:storeType)
+        
         self.managedObjectContext = TestingContextProvider.contextWithStoreType(storeType)
         
         XCTAssertNotNil(managedObjectContext, "context should not be nil")
