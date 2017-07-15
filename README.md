@@ -5,7 +5,7 @@ Palettes contains three `NSIncrementalStore` subclasses for loading data from va
 
 Palettes is setup to work with data from the from the [COLOURlovers API](http://www.colourlovers.com/api) but the stores are simple enough to be adapted for other data formats. The JSON modeling is not central to the implementation.
 
-###Stores
+### Stores
 
 [`LocalIncrementalStore`](https://github.com/andyshep/Palettes/blob/master/Palettes/LocalIncrementalStore.swift) provides the most basic building blocks and a disk based read-only Incremental Store.
 
@@ -15,14 +15,14 @@ Palettes is setup to work with data from the from the [COLOURlovers API](http://
 
 For more information, see the complete write up about [Building an NSIncrementalStore](http://www.andyshep.org/2015/01/10/building-basic-nsincrementalstore.html).
 
-###Default Setup
+### Default Setup
 
 Palettes is setup to use the `CachingIncrementalStore` by default. To change stores, modify the `storeType` passed into the `NSPersistentStoreCoordinator`, as it's initialized inside [`CoreDataManager`](https://github.com/andyshep/Palettes/blob/master/Palettes/CoreDataManager.swift#L76).
 
 ## Requirements
 
-* Xcode 8
-* Swift 3
+* Xcode 8.3.3
+* Swift 3.2
 	
 ## License
 
