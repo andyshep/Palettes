@@ -13,7 +13,7 @@ Palettes is setup to work with data from the from the [COLOURlovers API](http://
 
 [`CachingIncrementalStore`](https://github.com/andyshep/Palettes/blob/master/Palettes/CachingIncrementalStore.swift) utilizes a second internal Core Data stack to serve requests from local cache while asynchronously updating from a remote data source. As remote objects are fetched, the local cache context is updated in addition to the main context. Using an `NSFetchedResultsController` is recommended for observing and responding to change notifications.
 
-For more information, see the complete write up about [Building an NSIncrementalStore](http://www.andyshep.org/2015/01/10/building-basic-nsincrementalstore.html).
+For more information, see the complete write up about [Building an NSIncrementalStore](https://andyshep.org/2015/01/2015-01-10-building-basic-nsincrementalstore/).
 
 ### Default Setup
 
