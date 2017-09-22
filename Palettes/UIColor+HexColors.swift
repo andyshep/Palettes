@@ -16,8 +16,8 @@ extension UIColor {
         let set = CharacterSet.whitespacesAndNewlines
         var colorString = string.trimmingCharacters(in: set).uppercased()
         
-        if (colorString.hasPrefix("#")) {
-            colorString = colorString.substring(from: colorString.index(colorString.startIndex, offsetBy: 1))
+        if let index = colorString.index(of: "#") {
+            colorString = String(colorString[index...])
         }
         
         if (colorString.characters.count != 6) {
