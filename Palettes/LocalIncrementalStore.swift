@@ -48,15 +48,12 @@ class LocalIncrementalStore : NSIncrementalStore {
     
     // MARK: - Private
     
-    /**
-    Executes a fetch request within the context provided
-    
-    :param: request The request for the store.
-    :param: context The context to execure the request within
-    
-    :returns: An array of managed objects
-    */
-    
+    /// Executes a fetch request within the context provided
+    ///
+    /// - Parameters:
+    ///   - request: The request for the store.
+    ///   - context: The context to execure the request within
+    /// - Returns: An array of managed objects
     func entitiesForFetchRequest(_ request:NSFetchRequest<NSManagedObject>, inContext context:NSManagedObjectContext) -> [AnyObject] {
         let items = self.loadPalettesFromJSON()
         
@@ -74,15 +71,11 @@ class LocalIncrementalStore : NSIncrementalStore {
         return entities
     }
     
-    /**
-    Returns a new object id for the entity, and caches the values provided.
-    
-    :param: entityDescription
-    :param: values
-    
-    :returns: A managed object ID
-    */
-
+    /// Returns a new object id for the entity, and caches the values provided.
+    ///
+    /// - Parameters:
+    ///   - entityDescription
+    ///   - values
     func objectIdForNewObjectOfEntity(_ entityDescription:NSEntityDescription, cacheValues values:AnyObject!) -> NSManagedObjectID! {
         if let dict = values as? NSDictionary {
             let _ = entityDescription.name
@@ -99,12 +92,9 @@ class LocalIncrementalStore : NSIncrementalStore {
         return nil
     }
     
-    /**
-    Loads Palette data from a local JSON file
-    
-    :returns: Array of Palette objects in dictionary form.
-    */
-    
+    /// Loads Palette data from a local JSON file
+    ///
+    /// - Returns: Array of Palette objects in dictionary form.
     func loadPalettesFromJSON() -> [NSDictionary] {
         let filePath: String? = Bundle.main.path(forResource: "palettes", ofType: "json")
         let data: Data = try! Data(contentsOf: URL(fileURLWithPath: filePath!))
