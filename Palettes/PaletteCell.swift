@@ -58,8 +58,8 @@ class PaletteCell: UICollectionViewCell {
     
     lazy var titleLabelConstraints: [NSLayoutConstraint] = {
         let views: [String: Any] = ["titleLabel": self.titleLabel, "colorView": self.colorView]
-        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[titleLabel]", options: NSLayoutFormatOptions(), metrics: nil, views: views)
-        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[colorView]-8-[titleLabel]-8-|", options: NSLayoutFormatOptions(), metrics: nil, views: views)
+        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[titleLabel]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: views)
+        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[colorView]-8-[titleLabel]-8-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: views)
         
         var constraints: [NSLayoutConstraint] = []
         constraints.append(contentsOf: horizontalConstraints)
@@ -70,8 +70,8 @@ class PaletteCell: UICollectionViewCell {
     
     lazy var subtitleLabelConstraints: [NSLayoutConstraint] = {
         let views: [String: Any] = ["subtitleLabel": self.subtitleLabel, "colorView": self.colorView]
-        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[subtitleLabel]-8-|", options: NSLayoutFormatOptions(), metrics: nil, views: views)
-        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[colorView]-8-[subtitleLabel]-8-|", options: NSLayoutFormatOptions(), metrics: nil, views: views)
+        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:[subtitleLabel]-8-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: views)
+        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[colorView]-8-[subtitleLabel]-8-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: views)
         
         var constraints: [NSLayoutConstraint] = []
         constraints.append(contentsOf: horizontalConstraints)
@@ -82,8 +82,8 @@ class PaletteCell: UICollectionViewCell {
     
     lazy var colorViewConstraints: [NSLayoutConstraint] = {
         let views = ["colorView": self.colorView]
-        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[colorView]-8-|", options: NSLayoutFormatOptions(), metrics: nil, views: views)
-        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-8-[colorView]-40-|", options: NSLayoutFormatOptions(), metrics: nil, views: views)
+        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[colorView]-8-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: views)
+        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-8-[colorView]-40-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: views)
         
         var constraints: [NSLayoutConstraint] = []
         constraints.append(contentsOf: horizontalConstraints)
