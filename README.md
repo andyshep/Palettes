@@ -21,8 +21,8 @@ Palettes is setup to use the `CachingIncrementalStore` by default. To change sto
 
 ## Requirements
 
-* Xcode 10
-* Swift 4.2
+* Xcode 10.2
+* Swift 5
 	
 ## License
 
