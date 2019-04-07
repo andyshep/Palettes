@@ -16,7 +16,7 @@ extension UIColor {
         let set = CharacterSet.whitespacesAndNewlines
         var colorString = string.trimmingCharacters(in: set).uppercased()
         
-        if let index = colorString.index(of: "#") {
+        if let index = colorString.firstIndex(of: "#") {
             colorString = String(colorString[index...])
         }
         

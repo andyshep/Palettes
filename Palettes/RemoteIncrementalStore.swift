@@ -28,7 +28,7 @@ class RemoteIncrementalStore : NSIncrementalStore {
     override func execute(_ request: NSPersistentStoreRequest, with context: NSManagedObjectContext?) throws -> Any {
         if request.requestType == .fetchRequestType {
             var error: NSError? = nil
-            return self.executeFetchRequest(request, withContext: context, error: &error)
+            return self.executeFetchRequest(request, withContext: context, error: &error) as Any
         }
         
         return []
