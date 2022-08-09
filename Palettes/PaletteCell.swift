@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PaletteCell: UICollectionViewCell {
+final class PaletteCell: UICollectionViewCell {
     
     class var reuseIdentifier: String {
         return "PaletteCell"

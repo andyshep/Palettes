@@ -9,45 +9,19 @@
 import UIKit
 import CoreData
 
-class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
+final class PalettesContentStore: NSObject {
     private var objects: [Palette] = []
     
     weak var collectionView: UICollectionView? {
         didSet {
             self.objects = []
-            self.collectionView?.reloadData()
-            self.performFetch()
+            collectionView?.reloadData()
+            try? fetchedResultsController.performFetch()
         }
     }
     
-    // MARK: - UICollectionViewDataSource
-    
-    override init() {
-        super.init()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return self.objects.count
-        return self.fetchedResultsController.fetchedObjects?.count ?? 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PaletteCell.reuseIdentifier, for: indexPath) as! PaletteCell
-        let palette = self.objectAtIndexPath(indexPath)
-        
-        let viewModel = PaletteViewModel(palette: palette)
-        cell.viewModel = viewModel
-        
-        return cell
-    }
-    
-    // MARK: - NSFetchedResultsControllerDelegate
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        self.collectionView?.reloadData()
-    }
-    
-    var fetchedResultsController: NSFetchedResultsController<Palette> {
+    // lazy? also FIXME
+    lazy var fetchedResultsController: NSFetchedResultsController<Palette> = {
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
@@ -60,10 +34,15 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
         _fetchedResultsController = aFetchedResultsController
         
         return _fetchedResultsController!
-    }
-    var _fetchedResultsController: NSFetchedResultsController<Palette>? = nil
+    }()
     
-    // MARK: - Private
+    private var _fetchedResultsController: NSFetchedResultsController<Palette>? = nil
+    
+    override init() {
+        super.init()
+    }
+    
+    // MARK: Private
     
     /**
     Executes an asynchronous fetch reqest for the model objects at an offset
@@ -72,44 +51,32 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
     
     */
     
-    func executeFetchRequest(_ offset: Int) -> Void {
-        let request = palettesFetchRequest(offset)
-        let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
-            let count = result.finalResult?.count ?? 0
-            if count > 0 {
-                if let palettes = result.finalResult {
-                    self.objects += palettes
-                    self.collectionView?.reloadData()
-                }
-            }
-        }
-
-        guard let context = CoreDataManager.sharedManager.managedObjectContext else { return }
-        
-        do {
-            try context.execute(asyncRequest)
-        }
-        catch (let error) {
-            print("error executing fetch request: \(error)")
-        }
-        
-    }
+//    private func executeFetchRequest(_ offset: Int) throws -> Void {
+//        let request = palettesFetchRequest(offset)
+//        let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
+//            let count = result.finalResult?.count ?? 0
+//            if count > 0 {
+//                if let palettes = result.finalResult {
+//                    self.objects += palettes
+//                    self.collectionView?.reloadData()
+//                }
+//            }
+//        }
+//
+//        guard let context = CoreDataManager.sharedManager.managedObjectContext else { return }
+//        try context.execute(asyncRequest)
+//    }
     
     /**
     Executes the fetch request associated with the fetched results controller
     
     */
     
-    func performFetch() -> Void {
-        do {
-            try self.fetchedResultsController.performFetch()
-        }
-        catch (let error) {
-            print("error performing fetch: \(error)")
-        }
-    }
+//    private func performFetch() throws -> Void {
+//        try self.fetchedResultsController.performFetch()
+//    }
     
-    func palettesFetchRequest(_ offset:Int) -> NSFetchRequest<Palette> {
+    private func palettesFetchRequest(_ offset:Int) -> NSFetchRequest<Palette> {
         let request = NSFetchRequest<Palette>(entityName: Palette.entityName)
         request.fetchOffset = offset
         request.fetchLimit = 30
@@ -118,9 +85,35 @@ class PalettesContentStore: NSObject, UICollectionViewDataSource, NSFetchedResul
         return request
     }
     
-    func objectAtIndexPath(_ indexPath:IndexPath) -> Palette {
+    private func objectAtIndexPath(_ indexPath: IndexPath) -> Palette {
 //        let object = self.objects[indexPath.row]
-        let object = self.fetchedResultsController.fetchedObjects?[(indexPath as NSIndexPath).row]
+        let object = fetchedResultsController.fetchedObjects?[(indexPath as NSIndexPath).row]
         return object!
+    }
+}
+
+// MARK: UICollectionViewDataSource
+
+extension PalettesContentStore: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return fetchedResultsController.fetchedObjects?.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PaletteCell.reuseIdentifier, for: indexPath) as! PaletteCell
+        let palette = objectAtIndexPath(indexPath)
+        
+        let viewModel = PaletteViewModel(palette: palette)
+        cell.viewModel = viewModel
+        
+        return cell
+    }
+}
+
+// MARK: NSFetchedResultsControllerDelegate
+
+extension PalettesContentStore: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        collectionView?.reloadData()
     }
 }

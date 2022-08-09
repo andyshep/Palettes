@@ -8,31 +8,11 @@
 
 import Foundation
 
-// define a Result enum to represent the result of some operation
-
-public enum Result {
-    case success(Data)
-    case failure(Error)
-}
-
-extension Result {
-    func description() -> String {
-        switch self {
-        case .success(let data):
-            return "Success: \(data.count)"
-        case .failure(let error):
-            return "Failure: \(error)"
-        }
-    }
-}
-
-public enum NetworkError: Error {
+enum NetworkError: Error {
     case badResponse
     case noSuccessStatusCode(statusCode: Int)
     case other(Error?)
 }
-
-typealias TaskResult = (_ result: Result) -> Void
 
 struct NetworkController {
     
@@ -45,12 +25,12 @@ struct NetworkController {
     :returns: An NSURLSessionTask associated with the request
     */
     
-    static func task(_ request: URLRequest, result: @escaping TaskResult) -> URLSessionTask {
+    static func task(_ request: URLRequest, completion: @escaping (Result<Data, Error>) -> ()) -> URLSessionTask {
         
         // handle the task completion job on the main thread
-        let finished: TaskResult = {(taskResult) in
+        let finished: (Result<Data, Error>) -> () = { result in
             DispatchQueue.main.async(execute: { () -> Void in
-                result(taskResult)
+                completion(result)
             })
         }
         

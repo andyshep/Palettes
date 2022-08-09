@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PaletteColorView: UIView {
+final class PaletteColorView: UIView {
     
     var colors: [PaletteColor]? {
         didSet {

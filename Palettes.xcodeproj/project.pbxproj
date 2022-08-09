@@ -13,7 +13,8 @@
 		F72F21691A3F9F9600FA397C /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72F21681A3F9F9600FA397C /* DataController.swift */; };
 		F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F72F216C1A3FA1AE00FA397C /* Palettes.xcdatamodeld */; };
 		F75B0DCC1A40286F00B0F10D /* ArrayTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */; };
-		F766D3A01A3A8042003E4A7C /* NSData+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */; };
+		F774005428A1DF200096F931 /* LocalIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */; };
+		F774005528A1EFCF0096F931 /* CachingIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */; };
 		F77A444B1A3A5D64004C0990 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A444A1A3A5D64004C0990 /* AppDelegate.swift */; };
 		F77A44521A3A5D64004C0990 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F77A44511A3A5D64004C0990 /* Images.xcassets */; };
 		F77A44551A3A5D64004C0990 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F77A44531A3A5D64004C0990 /* LaunchScreen.xib */; };
@@ -28,17 +29,14 @@
 		F77A447C1A3A5DD2004C0990 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F77A447A1A3A5DD2004C0990 /* Main.storyboard */; };
 		F78C88EB1A3B65F200145D3B /* PaletteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78C88EA1A3B65F200145D3B /* PaletteViewModel.swift */; };
 		F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79165EA1A420613006E601E /* NSURL+Directories.swift */; };
-		F79C9ACD1D919ECD0071BA89 /* CachingIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72BEE0B1A5F10BF001FF832 /* CachingIncrementalStore.swift */; };
 		F7B42DE01A5F57B1004F7198 /* Palette+AttributeMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71375D21A4362720061D86D /* Palette+AttributeMapping.swift */; };
 		F7C0B8CB1A64667700E0721B /* NSDictionary+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */; };
 		F7C0B8CC1A64668100E0721B /* UIColor+HexColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77A44711A3A5D95004C0990 /* UIColor+HexColors.swift */; };
 		F7C0B8CD1A6468D900E0721B /* palettes.json in Resources */ = {isa = PBXBuildFile; fileRef = F72BEE091A5EFE50001FF832 /* palettes.json */; };
 		F7C0B8CE1A6469CB00E0721B /* NSURL+Directories.swift in Sources */ = {isa = PBXBuildFile; fileRef = F79165EA1A420613006E601E /* NSURL+Directories.swift */; };
-		F7C0B8D11A646B3400E0721B /* NSData+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */; };
 		F7C1A4531A3A87A10000B2C7 /* PaletteColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4521A3A87A10000B2C7 /* PaletteColorView.swift */; };
 		F7C1A4561A3A8F530000B2C7 /* NSDictionary+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */; };
 		F7C4FE041BE7F42F0084BED5 /* CachingIncrementalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD532D1A64908A00737800 /* CachingIncrementalStoreTests.swift */; };
-		F7E2D8AA1A5E404A00995BC0 /* LocalIncrementalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E2D8A91A5E404A00995BC0 /* LocalIncrementalStore.swift */; };
 		F7EB5C581A402C3C00989A04 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB5C571A402C3C00989A04 /* Palette.swift */; };
 		F7FD532A1A64804500737800 /* TestingContextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD53291A64804500737800 /* TestingContextProvider.swift */; };
 		F7FD53321A649F5700737800 /* RemoteIncrementalStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD53271A647FFA00737800 /* RemoteIncrementalStoreTests.swift */; };
@@ -52,7 +50,6 @@
 		F72F21681A3F9F9600FA397C /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F72F216D1A3FA1AE00FA397C /* Palettes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Palettes.xcdatamodel; sourceTree = "<group>"; };
 		F75B0DCB1A40286F00B0F10D /* ArrayTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTransformer.swift; sourceTree = "<group>"; };
-		F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+JSON.swift"; sourceTree = "<group>"; };
 		F77A44451A3A5D64004C0990 /* Palettes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Palettes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F77A44491A3A5D64004C0990 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F77A444A1A3A5D64004C0990 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -86,7 +83,6 @@
 			isa = PBXGroup;
 			children = (
 				F77A44711A3A5D95004C0990 /* UIColor+HexColors.swift */,
-				F766D39F1A3A8042003E4A7C /* NSData+JSON.swift */,
 				F7C1A4551A3A8F530000B2C7 /* NSDictionary+Parsing.swift */,
 				F79165EA1A420613006E601E /* NSURL+Directories.swift */,
 			);
@@ -244,7 +240,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = "Andrew Shepard";
 				TargetAttributes = {
 					F77A44441A3A5D64004C0990 = {
@@ -312,9 +308,8 @@
 				F70456421D1301B0005138EF /* RemoteIncrementalStore.swift in Sources */,
 				F7B42DE01A5F57B1004F7198 /* Palette+AttributeMapping.swift in Sources */,
 				F72F216E1A3FA1AE00FA397C /* Palettes.xcdatamodeld in Sources */,
-				F79C9ACD1D919ECD0071BA89 /* CachingIncrementalStore.swift in Sources */,
+				F774005528A1EFCF0096F931 /* CachingIncrementalStore.swift in Sources */,
 				F77A44721A3A5D95004C0990 /* ColourLovers.swift in Sources */,
-				F7E2D8AA1A5E404A00995BC0 /* LocalIncrementalStore.swift in Sources */,
 				F79165EB1A420613006E601E /* NSURL+Directories.swift in Sources */,
 				F77A44761A3A5D95004C0990 /* PalettesFlowLayout.swift in Sources */,
 				F77A444B1A3A5D64004C0990 /* AppDelegate.swift in Sources */,
@@ -322,7 +317,7 @@
 				F72F21691A3F9F9600FA397C /* DataController.swift in Sources */,
 				F77A44731A3A5D95004C0990 /* NetworkController.swift in Sources */,
 				F77A44791A3A5D95004C0990 /* UIColor+HexColors.swift in Sources */,
-				F766D3A01A3A8042003E4A7C /* NSData+JSON.swift in Sources */,
+				F774005428A1DF200096F931 /* LocalIncrementalStore.swift in Sources */,
 				F78C88EB1A3B65F200145D3B /* PaletteViewModel.swift in Sources */,
 				F77A44751A3A5D95004C0990 /* PaletteCell.swift in Sources */,
 				F7199F301A3F53A700CA4FFB /* CoreDataManager.swift in Sources */,
@@ -336,7 +331,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7C4FE041BE7F42F0084BED5 /* CachingIncrementalStoreTests.swift in Sources */,
-				F7C0B8D11A646B3400E0721B /* NSData+JSON.swift in Sources */,
 				F7C0B8CB1A64667700E0721B /* NSDictionary+Parsing.swift in Sources */,
 				F7C0B8CC1A64668100E0721B /* UIColor+HexColors.swift in Sources */,
 				F7C0B8CE1A6469CB00E0721B /* NSURL+Directories.swift in Sources */,
@@ -391,6 +385,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -415,10 +410,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
@@ -446,6 +442,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -457,15 +454,17 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -478,8 +477,9 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Palettes/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -497,14 +497,15 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Palettes/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -549,7 +550,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.andyshep.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Palettes.app/Palettes";
 			};

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PalettesFlowLayout: UICollectionViewFlowLayout {
+final class PalettesFlowLayout: UICollectionViewFlowLayout {
     
     override init() {
         super.init()

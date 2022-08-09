@@ -21,8 +21,7 @@ protocol Path {
 }
 
 protocol Request {
-    func request(_ offset:Int) -> URLRequest
-    func request(_ offset:Int, limit:Int) -> URLRequest
+    func request(offset: Int, limit: Int) -> URLRequest
 }
 
 extension ColourLovers: Path {
@@ -43,18 +42,13 @@ extension ColourLovers: Path {
 }
 
 extension ColourLovers: Request {
-    func request() -> URLRequest {
-        return self.request(0)
-    }
-    
-    func request(_ offset:Int) -> URLRequest {
-        let parameters = ["format": "json", "showPaletteWidths": "1", "numResults": "50", "resultOffset": String(offset)]
-        return self.request(parameters)
-    }
-    
-    func request(_ offset:Int, limit:Int) -> URLRequest {
-        let parameters = ["format": "json", "showPaletteWidths": "1", "numResults": String(limit), "resultOffset": String(offset)]
-        return self.request(parameters)
+    func request(offset: Int = 0, limit: Int = 50) -> URLRequest {
+        return request([
+            "format": "json",
+            "showPaletteWidths": "1",
+            "numResults": String(limit),
+            "resultOffset": String(offset)
+        ])
     }
     
     func countRequest() -> URLRequest {

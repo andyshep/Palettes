@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PalettesViewController: UIViewController {
+final class PalettesViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     

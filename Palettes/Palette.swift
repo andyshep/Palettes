@@ -22,7 +22,7 @@ class Palette: NSManagedObject {
 
 extension Palette {
     class var entityName: String {
-        return "Palette"
+        return String(describing: Palette.self)
     }
     
     class var defaultSortDescriptors: [NSSortDescriptor] {

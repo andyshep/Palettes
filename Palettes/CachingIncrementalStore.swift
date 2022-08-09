@@ -162,7 +162,7 @@ class CachingIncrementalStore : NSIncrementalStore {
                 let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, resourceId)
                 let backingObj = results.filtered(using: predicate).first as! Palette
                 
-                managedObject.transformWithPalette(backingObj)
+                managedObject.transform(using: backingObj)
                 return managedObject
             })
             
@@ -170,7 +170,7 @@ class CachingIncrementalStore : NSIncrementalStore {
         }
         else if fetchRequest.resultType == .managedObjectIDResultType {
             do {
-                try backingContext.fetch(fetchRequest)
+                try _ = backingContext.fetch(fetchRequest)
             } catch let error as NSError {
                 print("erorr fetching object ids: \(error)")
             }
@@ -242,7 +242,7 @@ class CachingIncrementalStore : NSIncrementalStore {
                     }
                     
                     backingObject?.setValue(uniqueId, forKey: kPALResourceIdentifierAttributeName)
-                    backingObject?.transformWithDictionary(paletteObj)
+                    backingObject?.transform(using: paletteObj)
                     
                     var managedObject: Palette? = nil
                     context.performAndWait({ () -> Void in
@@ -258,7 +258,7 @@ class CachingIncrementalStore : NSIncrementalStore {
                         }
                     })
                     
-                    managedObject?.transformWithDictionary(paletteObj)
+                    managedObject?.transform(using: paletteObj)
                     
                     guard let _ = managedObject else {
                         fatalError("managedObject should not be nil")
@@ -416,10 +416,10 @@ class CachingIncrementalStore : NSIncrementalStore {
         
         let offset = fetchRequest.fetchOffset
         let limit = fetchRequest.fetchLimit
-        let httpRequest = ColourLovers.topPalettes.request(offset, limit: limit)
+        let httpRequest = ColourLovers.topPalettes.request(offset: offset, limit: limit)
         
-        NetworkController.task(httpRequest, result: { (taskResult) -> Void in
-            switch taskResult {
+        NetworkController.task(httpRequest, completion: { result in
+            switch result {
             case .success(let data):
                 responseHandler(data)
             case .failure(let error):

@@ -10,12 +10,11 @@ import UIKit
 
 typealias PaletteColor = (fillColor: UIColor, width: Double)
 
-class PaletteViewModel: NSObject {
+struct PaletteViewModel {
     var palette: Palette
     
     init(palette: Palette) {
         self.palette = palette
-        super.init()
     }
     
     var name: String {

@@ -37,3 +37,33 @@ extension NSDictionary {
         return []
     }
 }
+
+extension Dictionary where Key == String, Value == Any {
+    func stringValueForKey(_ key: String) -> String {
+        if let string = self[key] as? String {
+            return string
+        }
+        return ""
+    }
+    
+    func numberValueForKey(_ key: String) -> NSNumber {
+        if let number = self[key] as? NSNumber {
+            return number
+        }
+        return NSNumber(value: NSNotFound)
+    }
+    
+    func numberArrayValueForKey(_ key: String) -> [NSNumber] {
+        if let numbers = self[key] as? [NSNumber] {
+            return numbers
+        }
+        return []
+    }
+    
+    func stringArrayValueForKey(_ key: String) -> [NSString] {
+        if let strings = self[key] as? [NSString] {
+            return strings
+        }
+        return []
+    }
+}
