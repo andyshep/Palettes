@@ -24,8 +24,8 @@ final class PalettesViewController: UIViewController {
         self.collectionView.backgroundColor = UIColor.black
         self.collectionView.indicatorStyle = .white
         
-        self.contentStore.collectionView = self.collectionView
-        self.collectionView.dataSource = self.contentStore
+        self.contentStore.collectionView = collectionView
+        self.collectionView.dataSource = contentStore
     }
 
     override func didReceiveMemoryWarning() {

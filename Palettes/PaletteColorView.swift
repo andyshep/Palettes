@@ -12,13 +12,13 @@ final class PaletteColorView: UIView {
     
     var colors: [PaletteColor]? {
         didSet {
-            self.setNeedsLayout()
+            setNeedsLayout()
         }
     }
     
     override func layoutSublayers(of layer: CALayer) {
         let rect = layer.bounds
-        let colors = self.colors ?? [PaletteColor]()
+        let colors = colors ?? [PaletteColor]()
         
         var offset = rect.minX
         

@@ -11,21 +11,19 @@ import UIKit
 extension UIColor {
     
     // http://stackoverflow.com/a/27203691
-    
     class func hexColor(_ string: String) -> UIColor {
         let set = CharacterSet.whitespacesAndNewlines
         var colorString = string.trimmingCharacters(in: set).uppercased()
         
-        if let index = colorString.firstIndex(of: "#") {
-            colorString = String(colorString[index...])
+        if (colorString.hasPrefix("#")) {
+            let index = colorString.index(after: colorString.startIndex)
+            colorString = String(colorString[index..<colorString.endIndex])
         }
         
-        if (colorString.count != 6) {
-            return UIColor.gray
-        }
+        assert(colorString.count == 6, "expected hexidecimal color string")
         
-        var rgbValue: UInt32 = 0
-        Scanner(string: colorString).scanHexInt32(&rgbValue)
+        var rgbValue: UInt64 = 0
+        Scanner(string: colorString).scanHexInt64(&rgbValue)
         
         return UIColor(
             red:   CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,

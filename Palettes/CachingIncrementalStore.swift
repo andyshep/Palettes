@@ -8,46 +8,55 @@
 
 import CoreData
 
-let kPALResourceIdentifierAttributeName = "__pal__resourceIdentifier"
-let kPALLastModifiedAttributeName = "__pal__lastModified"
-
-typealias InsertOrUpdateCompletion = (_ managedObjects: [AnyObject], _ backingObjects:[AnyObject]) -> Void
-
 @objc(CachingIncrementalStore)
 
 /// An Incremental Store subclass for retrieving Palettes from the Colour Lovers API
 class CachingIncrementalStore : NSIncrementalStore {
     
-    /// The cache of managed object ids
-    private let cache = NSMutableDictionary()
+    enum Error: Swift.Error {
+        case objectIDMissing
+//        case cachedValuesMissing
+        case entityNotFound
+        case wrongObjectType
+        case wrongReferenceObjectType
+        case wrongRequestType
+        case missingContext
+        case invalidData
+        case cannotCopyRequest
+    }
+    
+    private enum Attributes {
+        static let resourceIdentifier = "__pal__resourceIdentifier"
+        static let lastModified = "__pal__lastModified"
+    }
     
     /// The cache of managed object ids for the backing store
     private let backingObjectIDCache = NSCache<NSManagedObjectID, NSManagedObjectID>()
-    
-    /// A map of registered objects ids
-    private let registeredObjectIDsMap = NSMutableDictionary()
     
     class var storeType: String {
         return String(describing: CachingIncrementalStore.self)
     }
     
-    // MARK: - Lazy Accessors
+    // MARK: Lazy Accessors
     
     /// The persistent store coordinator attached to the backing store.
     lazy var backingPersistentStoreCoordinator: NSPersistentStoreCoordinator = {
-        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.augmentedModel)
-        
-        var error: NSError? = nil
-        let storeType = NSSQLiteStoreType
-        let path = CachingIncrementalStore.storeType + ".sqlite"
-        let url = URL.applicationDocumentsDirectory().appendingPathComponent(path)
-        let options = [NSMigratePersistentStoresAutomaticallyOption: NSNumber(value: true),
-            NSInferMappingModelAutomaticallyOption: NSNumber(value: true)];
+        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: augmentedModel)
         
         do {
-            try coordinator.addPersistentStore(ofType: storeType, configurationName: nil, at: url, options: options)
-        }
-        catch (let error) {
+            try coordinator.addPersistentStore(
+                ofType: NSSQLiteStoreType,
+                configurationName: nil,
+                at: URL.applicationDocumentsDirectory()
+                    .appendingPathComponent(
+                        CachingIncrementalStore.storeType + ".sqlite"
+                    ),
+                options: [
+                    NSMigratePersistentStoresAutomaticallyOption: true,
+                    NSInferMappingModelAutomaticallyOption: true
+                ]
+            )
+        } catch {
             abort()
         }
         
@@ -56,29 +65,32 @@ class CachingIncrementalStore : NSIncrementalStore {
     
     /// The managed object context for the backing store
     lazy var backingManagedObjectContext: NSManagedObjectContext = {
-        let context = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.mainQueueConcurrencyType)
-        context.persistentStoreCoordinator = self.backingPersistentStoreCoordinator
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.persistentStoreCoordinator = backingPersistentStoreCoordinator
         context.retainsRegisteredObjects = true
+        
         return context
     }()
     
     /// The model for the backing store, augmented with custom attributes
     lazy var augmentedModel: NSManagedObjectModel = {
-        let augmentedModel = self.persistentStoreCoordinator?.managedObjectModel.copy() as! NSManagedObjectModel
+        guard
+            let originalModel = persistentStoreCoordinator?.managedObjectModel,
+            let augmentedModel = originalModel.copy() as? NSManagedObjectModel
+        else { abort() }
+        
         for entity in augmentedModel.entities {
-            if entity.superentity != nil {
-                continue
-            }
+            guard entity.superentity == nil else { continue }
             
             let resourceIdProperty = NSAttributeDescription()
-            resourceIdProperty.name = kPALResourceIdentifierAttributeName
-            resourceIdProperty.attributeType = NSAttributeType.stringAttributeType
-            resourceIdProperty.isIndexed = true
+            resourceIdProperty.name = Attributes.resourceIdentifier
+            resourceIdProperty.attributeType = .stringAttributeType
+//            resourceIdProperty.isIndexed = true
             
             let lastModifiedProperty = NSAttributeDescription()
-            lastModifiedProperty.name = kPALLastModifiedAttributeName
-            lastModifiedProperty.attributeType = NSAttributeType.dateAttributeType
-            lastModifiedProperty.isIndexed = false
+            lastModifiedProperty.name = Attributes.lastModified
+            lastModifiedProperty.attributeType = .dateAttributeType
+//            lastModifiedProperty.isIndexed = false
             
             var properties = entity.properties
             properties.append(resourceIdProperty)
@@ -93,350 +105,234 @@ class CachingIncrementalStore : NSIncrementalStore {
     // MARK: - NSIncrementalStore
     
     override func loadMetadata() throws {
-        let uuid = ProcessInfo.processInfo.globallyUniqueString
-        self.metadata = [NSStoreTypeKey : CachingIncrementalStore.storeType, NSStoreUUIDKey: uuid]
+        self.metadata = [
+            NSStoreTypeKey: CachingIncrementalStore.storeType,
+            NSStoreUUIDKey: ProcessInfo.processInfo.globallyUniqueString
+        ]
     }
     
     override func execute(_ request: NSPersistentStoreRequest, with context: NSManagedObjectContext?) throws -> Any {
-        let error: NSError? = nil
-        if request.requestType == .fetchRequestType {
-            return try self.executeFetchRequest(request, withContext: context)
-        }
-        
-        throw error!
+        guard request.requestType == .fetchRequestType else { throw Error.wrongRequestType }
+        return try executeFetchRequest(request, with: context)
     }
 
     override func newValuesForObject(with objectID: NSManagedObjectID, with context: NSManagedObjectContext) throws -> NSIncrementalStoreNode {
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: objectID.entity.name!)
-        fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
+        guard let referenceObj = referenceObject(for: objectID) as? NSString else {
+            throw Error.wrongReferenceObjectType
+        }
+        
+        guard let entityName = objectID.entity.name else { throw Error.entityNotFound }
+        
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
+        fetchRequest.resultType = .dictionaryResultType
         fetchRequest.fetchLimit = 1
         fetchRequest.includesSubentities = false
+        fetchRequest.predicate = NSPredicate(
+            format: "%K = %@", Attributes.resourceIdentifier, referenceObj.description
+        )
         
-        let refObj = self.referenceObject(for: objectID) as! NSString
-        let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, refObj.description)
-        fetchRequest.predicate = predicate
-        
-        var results: [AnyObject]? = nil
-        let privateContext = self.backingManagedObjectContext
-        privateContext.performAndWait(){
-            results = try! privateContext.fetch(fetchRequest)
+        let results: [AnyObject] = try backingManagedObjectContext.performAndWait {
+            try backingManagedObjectContext.fetch(fetchRequest)
         }
         
-        let values = results?.last as? [String: AnyObject] ?? [:]
-        let node = NSIncrementalStoreNode(objectID: objectID, withValues: values, version: 1)
-        return node
+        let values = results.last as? [String: AnyObject] ?? [:]
+        return NSIncrementalStoreNode(objectID: objectID, withValues: values, version: 1)
     }
-    
-    // MARK: - Private
-    
-    /**
-    Executes a fetch request within the context provided
-    
-    :param: request The request for the store.
-    :param: context The context to execure the request within
-    :param: error If an error occurs, on return contains an `NSError` object that describes the problem.
-    
-    :returns: An optional array of managed objects
-    */
-    
-    func executeFetchRequest(_ request: NSPersistentStoreRequest!, withContext context: NSManagedObjectContext!) throws -> [AnyObject] {
-        var error: NSError? = nil
-        guard let fetchRequest = request as? NSFetchRequest<NSFetchRequestResult> else { fatalError() }
-        let backingContext = self.backingManagedObjectContext
+}
+
+// MARK: - Private
+
+extension CachingIncrementalStore {
+    private func executeFetchRequest(_ request: NSPersistentStoreRequest, with context: NSManagedObjectContext?) throws -> [AnyObject] {
+        guard
+            let fetchRequest = request as? NSFetchRequest<NSFetchRequestResult>,
+            fetchRequest.resultType == .managedObjectResultType
+        else { throw Error.wrongRequestType }
         
-        if fetchRequest.resultType == NSFetchRequestResultType() {
-            self.fetchRemoteObjectsWithRequest(fetchRequest, context: context)
-            
-            let cacheFetchRequest = request.copy() as! NSFetchRequest<NSFetchRequestResult>
-            cacheFetchRequest.entity = NSEntityDescription.entity(forEntityName: fetchRequest.entityName!, in: backingContext)
-            cacheFetchRequest.resultType = NSFetchRequestResultType()
-            cacheFetchRequest.propertiesToFetch = [kPALResourceIdentifierAttributeName]
-            
-            let results = (try! backingContext.fetch(cacheFetchRequest)) as NSArray
-            let resourceIds = results.value(forKeyPath: kPALResourceIdentifierAttributeName) as! [NSString]
-            
-            let managedObjects = resourceIds.map({ (resourceId: NSString) -> NSManagedObject in
-                let objectId = self.objectIDForEntity(fetchRequest.entity!, withResourceIdentifier: resourceId)
-                let managedObject = context.object(with: objectId!) as! Palette
+        guard
+            let entity = fetchRequest.entity,
+            let entityName = fetchRequest.entityName
+        else { throw Error.entityNotFound }
+        
+        guard let context = context else { throw Error.missingContext }
+        
+        Task {
+            try await fetchRemoteObjects(matching: fetchRequest, with: context)
+        }
+        
+        let cacheFetchRequest = fetchRequest
+        cacheFetchRequest.entity = NSEntityDescription.entity(
+            forEntityName: entityName,
+            in: backingManagedObjectContext
+        )
+        cacheFetchRequest.resultType = .managedObjectResultType
+        cacheFetchRequest.propertiesToFetch = [Attributes.resourceIdentifier]
+        
+        let results: [AnyObject] = try backingManagedObjectContext.performAndWait {
+            try backingManagedObjectContext.fetch(cacheFetchRequest)
+        }
+        
+        return try results
+            .compactMap { $0.value(forKeyPath: Attributes.resourceIdentifier) as? String }
+            .compactMap { resourceId -> NSManagedObject? in
+                guard
+                    let objectId = objectID(for: entity, resourceIdentifier: resourceId)
+                else { throw Error.objectIDMissing }
                 
-                let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, resourceId)
-                let backingObj = results.filtered(using: predicate).first as! Palette
+                let predicate = NSPredicate(format: "%K = %@", Attributes.resourceIdentifier, resourceId)
                 
-                managedObject.transform(using: backingObj)
+                guard
+                    let managedObject = context.object(with: objectId) as? Palette,
+                    let backingObject = (results as NSArray).filtered(using: predicate).first as? Palette
+                else { throw Error.wrongObjectType }
+
+                managedObject.transform(using: backingObject)
+
                 return managedObject
-            })
+            }
+    }
+    
+    private func insertOrUpdateObjects(_ objects: [AnyObject], ofEntity entity: NSEntityDescription, with context: NSManagedObjectContext) throws {
+        for object in objects {
+            guard let paletteObj = object as? NSDictionary else { continue }
             
-            return managedObjects
-        }
-        else if fetchRequest.resultType == .managedObjectIDResultType {
-            do {
-                try _ = backingContext.fetch(fetchRequest)
-            } catch let error as NSError {
-                print("erorr fetching object ids: \(error)")
+            let uniqueId = paletteObj.numberValueForKey("id").stringValue
+            
+            let backingObjectId = try objectIDFromBackingContext(for: entity, resourceIdentifier: uniqueId)
+            let backingObject = try existingOrNewObject(for: entity, objectID: backingObjectId, context: backingManagedObjectContext)
+            
+            if let backingPaletteObject = backingObject as? Palette {
+                backingPaletteObject.setValue(uniqueId, forKey: Attributes.resourceIdentifier)
+                backingPaletteObject.transform(using: paletteObj)
             }
-            return []
-        }
-        else if fetchRequest.resultType == .countResultType || fetchRequest.resultType == .dictionaryResultType {
-            do {
-                return try backingContext.fetch(fetchRequest)
-            } catch let error1 as NSError {
-                error = error1
-                throw error!
+            
+            let managedObject = try context.performAndWait { () -> NSManagedObject in
+                guard
+                    let objectID = objectID(for: entity, resourceIdentifier: uniqueId)
+                else { throw Error.objectIDMissing }
+                
+                return try context.existingObject(with: objectID)
             }
-        }
-        else {
-            throw error!
+            
+            if let managedPaletteObject = managedObject as? Palette {
+                managedPaletteObject.transform(using: paletteObj)
+            }
+            
+            context.insert(managedObject)
         }
     }
     
-    /**
-    Insert or updates an entity set from the result provided. The entity set will be inserted into context provide
-    and into the backing context. The completion function will be called with valid references to the update objects.
-    
-    :param: result An set of `NSManagedObjects` that has been retrieved
-    :param: entity A valid entity within the model
-    :param: context A managed object context
-    :param: completion A function that accepts inserted objects and backing objects
-    
-    :returns: success A Bool representing success or failure
-    */
-    
-    func insertOrUpdateObjects(_ result: [AnyObject]?, ofEntity entity: NSEntityDescription, context: NSManagedObjectContext, completion: InsertOrUpdateCompletion) -> Bool {
-        if let objects = result {
-            var managedObjects: [AnyObject] = []
-            var backingObjects: [AnyObject] = []
-            
-            for obj in objects {
-                if let paletteObj = obj as? NSDictionary {
-                    let _ = paletteObj.stringValueForKey("title")
-                    let uniqueId = NSString(string: paletteObj.numberValueForKey("id").stringValue)
-                    
-                    var backingObject: Palette? = nil
-                    
-                    let backingObjectId = self.objectIDFromBackingContextForEntity(entity, withResourceIdentifier: uniqueId as NSString?)
-                    let backingContext = self.backingManagedObjectContext
-                    
-                    backingContext.performAndWait() {
-                        if let backingObjectId = backingObjectId {
-                            do {
-                                backingObject = try backingContext.existingObject(with: backingObjectId) as? Palette
-                            }
-                            catch {
-                                fatalError("existing object matching id not found")
-                            }
-                        }
-                        else {
-                            guard let backingObj = NSEntityDescription.insertNewObject(forEntityName: entity.name!, into: backingContext) as? Palette else {
-                                fatalError("backingObject not found")
-                            }
-                            
-                            backingObject = backingObj
-                            
-                            do {
-                                try backingObject!.managedObjectContext?.obtainPermanentIDs(for: [backingObject!])
-                            }
-                            catch {
-                                fatalError("permanent object ids could not be obtained")
-                            }
-                        }
-                    }
-                    
-                    backingObject?.setValue(uniqueId, forKey: kPALResourceIdentifierAttributeName)
-                    backingObject?.transform(using: paletteObj)
-                    
-                    var managedObject: Palette? = nil
-                    context.performAndWait({ () -> Void in
-                        if let objectId = self.objectIDForEntity(entity, withResourceIdentifier: uniqueId) {
-                            
-                            do {
-                                managedObject = try context.existingObject(with: objectId) as? Palette
-                            }
-                            catch {
-                                //
-                            }
-                            
-                        }
-                    })
-                    
-                    managedObject?.transform(using: paletteObj)
-                    
-                    guard let _ = managedObject else {
-                        fatalError("managedObject should not be nil")
-                    }
-                    
-                    if backingObjectId != nil {
-                        context.insert(managedObject!)
-                    }
-                    
-                    if let _ = managedObject {
-                        managedObjects.append(managedObject!)
-                    }
-                    
-                    if let _ = backingObject {
-                        backingObjects.append(backingObject!)
-                    }
-                }
-            }
-            
-            completion(managedObjects, backingObjects)
-            return true
-        }
+    private func existingOrNewObject(for entity: NSEntityDescription, objectID: NSManagedObjectID?, context: NSManagedObjectContext) throws -> NSManagedObject {
+        guard let entityName = entity.name else { throw Error.entityNotFound }
         
-        return false
+        return try context.performAndWait { () -> NSManagedObject in
+            if let objectId = objectID {
+                return try context.existingObject(with: objectId)
+            } else {
+                let object = NSEntityDescription.insertNewObject(forEntityName: entityName, into: context)
+                try object.managedObjectContext?.obtainPermanentIDs(for: [object])
+                return object
+            }
+        }
     }
     
-    /**
-    Finds an objectID for an entity using an associated resource identifier.
-    
-    :param: entity A valid entity within the model
-    :param: identifier A resource identifier
-    
-    :returns: objectId
-    */
-    
-    func objectIDForEntity(_ entity:NSEntityDescription, withResourceIdentifier identifier:NSString?) -> NSManagedObjectID? {
-        if identifier == nil {
-            return nil
-        }
+    private func objectID(for entity: NSEntityDescription, resourceIdentifier identifier: String) -> NSManagedObjectID? {
         
         var managedObjectId: NSManagedObjectID? = nil
-        if let objectIDsByResourceIdentifier = self.registeredObjectIDsMap.object(forKey: entity.name!) as? NSDictionary {
-            managedObjectId = objectIDsByResourceIdentifier.object(forKey: identifier!) as? NSManagedObjectID
-        }
+        
+        // FIXME: nothing ever inserted here
+//        if let objectIDsByResourceIdentifier = self.registeredObjectIDsMap.object(forKey: entity.name!) as? NSDictionary {
+//            managedObjectId = objectIDsByResourceIdentifier.object(forKey: identifier) as? NSManagedObjectID
+//        }
         
         if managedObjectId == nil {
-            let referenceObject = "__pal__" + String(identifier!)
-            managedObjectId = self.newObjectID(for: entity, referenceObject: referenceObject)
+            let referenceObject = "__pal__" + String(identifier)
+            managedObjectId = newObjectID(for: entity, referenceObject: referenceObject)
         }
         
         return managedObjectId
     }
     
-    /**
-    Finds an objectID for an entity using an associated resource identifier. The objectId returned
-    will belong to the backing context
-    
-    :param: entity A valid entity within the model
-    :param: identifier A resource identifier
-    
-    :returns: objectId
-    */
-    
-    func objectIDFromBackingContextForEntity(_ entity:NSEntityDescription, withResourceIdentifier identifier:NSString?) -> NSManagedObjectID? {
-        if identifier == nil {
-            return nil
-        }
+    private func objectIDFromBackingContext(for entity: NSEntityDescription, resourceIdentifier identifier: String) throws -> NSManagedObjectID {
+        guard
+            let objectId = objectID(for: entity, resourceIdentifier: identifier)
+        else { throw Error.objectIDMissing }
         
-        let objectId = self.objectIDForEntity(entity, withResourceIdentifier: identifier)
-        var backingObjectId = backingObjectIDCache.object(forKey: objectId!)
-        if backingObjectId != nil {
+        if let backingObjectId = backingObjectIDCache.object(forKey: objectId) {
             return backingObjectId
         }
         
-        let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: entity.name!)
-        fetchRequest.resultType = NSFetchRequestResultType.managedObjectIDResultType
+        guard let entityName = entity.name else { throw Error.entityNotFound }
+        
+        let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: entityName)
+        fetchRequest.resultType = .managedObjectIDResultType
         fetchRequest.fetchLimit = 1
+        fetchRequest.predicate = NSPredicate(format: "%K = %@", Attributes.resourceIdentifier, identifier)
         
-        let predicate = NSPredicate(format: "%K = %@", kPALResourceIdentifierAttributeName, identifier!)
-        fetchRequest.predicate = predicate
-        
-        let privateContext = self.backingManagedObjectContext
-        privateContext.performAndWait() {
-            do {
-                let results = try privateContext.fetch(fetchRequest)
-                backingObjectId = results.last
-                
-                if backingObjectId != nil {
-                    self.backingObjectIDCache.setObject(backingObjectId!, forKey: objectId!)
-                }
+        return try backingManagedObjectContext.performAndWait { () -> NSManagedObjectID in
+            guard let object = try backingManagedObjectContext.fetch(fetchRequest).last else {
+                throw Error.objectIDMissing
             }
-            catch (let error) {
-                print("error executing fetch request: \(error)")
-            }
+            
+            backingObjectIDCache.setObject(object, forKey: objectId)
+            return object
         }
-        
-        return backingObjectId
     }
     
-    /**
-    Fetches remote objects associated with a request. The remote objects will be inserted or updated
-    into the context provided. The objects will also be saved into the backing context.
-    
-    :param: fetchRequest The fetch request used to return remote objects.
-    :param: identifier A context
-    */
-    
-    func fetchRemoteObjectsWithRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>, context: NSManagedObjectContext) -> Void {
-        
-        let parseJsonData = { (data: Data) -> Void in
-            guard let jsonResult = try JSONSerialization.jsonObject(with: data, options: []) as? [AnyObject] else {
-                return
-            }
-            
-            let palettes = jsonResult.filter({ (obj: AnyObject) -> Bool in
-                return (obj is NSDictionary)
-            })
-            
-            context.performAndWait(){
-                let childContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-                childContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-                childContext.parent = context
-                
-                childContext.performAndWait(){
-                    let _ = self.insertOrUpdateObjects(palettes, ofEntity: fetchRequest.entity!, context: childContext, completion:{(managedObjects: [AnyObject], backingObjects: [AnyObject]) -> Void in
-                        
-                        childContext.saveOrLogError()
-                        
-                        self.backingManagedObjectContext.performAndWait() {
-                            self.backingManagedObjectContext.saveOrLogError()
-                        }
-                        
-                        context.performAndWait() {
-                            let objects = childContext.registeredObjects as NSSet
-                            
-                            objects.forEach({ (object) in
-                                let childObject = object as! NSManagedObject
-                                let parentObject = context.object(with: childObject.objectID)
-                                context.refresh(parentObject, mergeChanges: true)
-                            })
-                        }
-                    })
-                }
-            }
-        }
-        
-        let responseHandler: ((Data) -> Void) = {(data) in
-            do {
-                try parseJsonData(data)
-            }
-            catch (let error) {
-                print("error handling json response: \(error)")
-            }
-        }
+    private func fetchRemoteObjects(matching fetchRequest: NSFetchRequest<NSFetchRequestResult>, with context: NSManagedObjectContext) async throws -> Void {
+        guard let entity = fetchRequest.entity else { throw Error.entityNotFound }
         
         let offset = fetchRequest.fetchOffset
         let limit = fetchRequest.fetchLimit
         let httpRequest = ColourLovers.topPalettes.request(offset: offset, limit: limit)
-        
-        NetworkController.task(httpRequest, completion: { result in
-            switch result {
-            case .success(let data):
-                responseHandler(data)
-            case .failure(let error):
-                print(error)
+
+        let (data, _) = try await URLSession.shared.data(for: httpRequest)
+        guard
+            let palettes = try JSONSerialization.jsonObject(with: data, options: []) as? [NSDictionary]
+        else { throw Error.invalidData }
+
+        let childContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        childContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        childContext.parent = context
+
+        try await childContext.perform {
+            try self.insertOrUpdateObjects(palettes, ofEntity: entity, with: childContext)
+            try childContext.save()
+            
+            try self.backingManagedObjectContext.save()
+            
+            context.perform {
+                childContext.registeredObjects.forEach { object in
+                    let parentObject = context.object(with: object.objectID)
+                    context.refresh(parentObject, mergeChanges: true)
+                }
             }
-        }).resume()
+        }
     }
 }
 
+// https://oleb.net/blog/2018/02/performandwait/
+
 extension NSManagedObjectContext {
-    func saveOrLogError() -> Void {
-        var error: NSError? = nil
-        do {
-            try self.save()
-        } catch let error1 as NSError {
-            error = error1
-            print("error saving context: \(String(describing: error))")
+    func performAndWait<T>(_ block: () throws -> T) throws -> T {
+        var result: Result<T, Error>?
+        performAndWait {
+            result = Result { try block() }
         }
+        return try result!.get()
+    }
+
+    func performAndWait<T>(_ block: () -> T) -> T {
+        var result: T?
+        performAndWait {
+            result = block()
+        }
+        return result!
+    }
+}
+
+extension Array where Element == AnyObject {
+    func filtered(using predicate: NSPredicate) -> [Any] {
+        return (self as NSArray).filtered(using: predicate)
     }
 }

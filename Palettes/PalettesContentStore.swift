@@ -10,73 +10,39 @@ import UIKit
 import CoreData
 
 final class PalettesContentStore: NSObject {
-    private var objects: [Palette] = []
-    
     weak var collectionView: UICollectionView? {
         didSet {
-            self.objects = []
             collectionView?.reloadData()
             try? fetchedResultsController.performFetch()
         }
     }
     
-    // lazy? also FIXME
     lazy var fetchedResultsController: NSFetchedResultsController<Palette> = {
-        if _fetchedResultsController != nil {
-            return _fetchedResultsController!
-        }
+        let controller = NSFetchedResultsController(
+            fetchRequest: palettesFetchRequest(0),
+            managedObjectContext: CoreDataManager.sharedManager.managedObjectContext,
+            sectionNameKeyPath: nil,
+            cacheName: "Palettes"
+        )
         
-        let context = CoreDataManager.sharedManager.managedObjectContext!
-        let fetchRequest = self.palettesFetchRequest(0)
+        controller.delegate = self
         
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: "Palettes")
-        aFetchedResultsController.delegate = self
-        _fetchedResultsController = aFetchedResultsController
-        
-        return _fetchedResultsController!
+        return controller
     }()
-    
-    private var _fetchedResultsController: NSFetchedResultsController<Palette>? = nil
     
     override init() {
         super.init()
+        
+        // FIXME: make this a publisher?
+        Task {
+            let container = CoreDataManager.sharedManager.persistentStoreContainer
+            let _ = try? await container.loadPersistentStores()
+        }
     }
     
     // MARK: Private
     
-    /**
-    Executes an asynchronous fetch reqest for the model objects at an offset
-    
-    :param: offset The index into the collection to begin retrieving objects from
-    
-    */
-    
-//    private func executeFetchRequest(_ offset: Int) throws -> Void {
-//        let request = palettesFetchRequest(offset)
-//        let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: request) { (result) -> Void in
-//            let count = result.finalResult?.count ?? 0
-//            if count > 0 {
-//                if let palettes = result.finalResult {
-//                    self.objects += palettes
-//                    self.collectionView?.reloadData()
-//                }
-//            }
-//        }
-//
-//        guard let context = CoreDataManager.sharedManager.managedObjectContext else { return }
-//        try context.execute(asyncRequest)
-//    }
-    
-    /**
-    Executes the fetch request associated with the fetched results controller
-    
-    */
-    
-//    private func performFetch() throws -> Void {
-//        try self.fetchedResultsController.performFetch()
-//    }
-    
-    private func palettesFetchRequest(_ offset:Int) -> NSFetchRequest<Palette> {
+    private func palettesFetchRequest(_ offset: Int) -> NSFetchRequest<Palette> {
         let request = NSFetchRequest<Palette>(entityName: Palette.entityName)
         request.fetchOffset = offset
         request.fetchLimit = 30
@@ -86,9 +52,15 @@ final class PalettesContentStore: NSObject {
     }
     
     private func objectAtIndexPath(_ indexPath: IndexPath) -> Palette {
-//        let object = self.objects[indexPath.row]
-        let object = fetchedResultsController.fetchedObjects?[(indexPath as NSIndexPath).row]
-        return object!
+        assert(indexPath.row < fetchedResultsController.fetchedObjects!.count)
+        
+        guard
+            let object = fetchedResultsController.fetchedObjects?[indexPath.row]
+        else {
+            fatalError("object not found")
+        }
+        
+        return object
     }
 }
 

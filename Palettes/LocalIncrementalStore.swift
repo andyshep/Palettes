@@ -15,9 +15,7 @@ final class LocalIncrementalStore: NSIncrementalStore {
         case objectIDMissing
         case cachedValuesMissing
         case entityNotFound
-//        case wrongObjectType
         case wrongRequestType
-//        case missingContext
         case invalidData
     }
     
